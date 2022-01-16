@@ -9,6 +9,7 @@ class App extends Component{
       <div>
          <Routes>
               <Route exact path="/" element={<Login/>}/>
+               <Route exact path="/" element={<Login/>}/>
           </Routes>
       </div> 
      
