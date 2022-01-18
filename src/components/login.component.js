@@ -1,137 +1,88 @@
-import React, {Component} from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-import login from "../services/auth.service";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../App.css";
-import authHeader from "../services/auth.header";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthService from "../services/auth.service";
+import {
+    Box,
+    Heading,
+    Container,
+    Text,
+    Button,
+    Stack,
+    Input
+  } from '@chakra-ui/react';
+  import { Md12Mp } from "react-icons/md"
 
-const required = value =>{
-    if(!value){
-        return(
-            <span>This is required!</span>
-        );
-    }
-}
 
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.handleLogin = this.handleLogin.bind(this);
-        this.onChangeUsername = this.onChangeUsername.bind(this);
-        this.onChangePassword = this.onChangePassword.bind(this);
-        
-        this.state = {
-            username: "",
-            password: "",
-            loading: false,
-            message: ""
-        };
-    }
+const Login = () => {
 
-    onChangeUsername(e) {
-        e.preventDefault();
-        this.setState({username: e.target.value});
-    }
+  const [username, Setusername] = useState(()=>{
+      return "";
+  });
+  const [password, setPassword] = useState(()=>{
+      return "";
+  });
+  const navigate = useNavigate();
 
-    onChangePassword(e) {
-
-        e.preventDefault();
-        this.setState({password: e.target.value});
-    }
-
-    handleLogin(e) {
-        e.preventDefault();
-        this.setState({message: "", loading: true});
-        this.form.validateAll();
-
-     
-        if (this.checkBtn.context._errors.length === 0) {
-            login(this.state.username, this.state.password).then(() => {
-                    this.props.history.push("/dashboard");
-                    window.location.reload();
-                }, error => {
-                    const resMessage = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-
-                    this.setState({loading: false, message: resMessage});
-                });
-        } else {
-            this.setState({loading: false});
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+      await AuthService.login(username, password).then(
+        () => {
+          navigate("/dashboard");
+          window.location.reload();
+        },
+        (error) => {
+          console.log(error);
         }
+      );
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    render(){
-        return(
-            <div>
-            <section className="ftco-section">
-                    <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-md-12 col-lg-10">
-                            <div className="wrap d-md-flex">
-                                <div className="img">
-                                </div>
-                                <div className="login-wrap p-4 p-md-5">
-                                    <div className="d-flex">
-                                        <div className="w-100">
-                                            <h3 className="mb-4">Sign In</h3>
-                                        </div>
-                                    </div>
-                                    <Form
-                            onSubmit={this.handleLogin}
-                            ref={c => {
-                            this.form = c;
-                        }}>
-                                        <div className="form-group mb-3">
-                                            <label className="label">Username</label>
-                                            <Input type="text" name="username" value={this.state.username} onChange={this.onChangeUsername} validations={[required]} className="form-control" placeholder="Username" />
-                                        </div>
-                                        <div className="form-group mb-3">
-                                            <label className="label">Password</label>
-                                            <Input type="password" name="password" value={this.state.password} onChange={this.onChangePassword} validations={[required]}  className="form-control" placeholder="Password"/>
-                                        </div>
-                                        <div className="form-group">
-                                        <button
-                                                className="btn btn-branding-login float-right"
-                                                disabled={this.state.loading}>
-                                                {this.state.loading && (
-                                                    <span className="spinner-grow spinner-grow-sm"></span>
-                                                )}
-                                                <span>Login</span>
-                                          </button>
-                                        </div>
+  return (
+    <Container>
+        <Stack
+          as={Box}
+          textAlign={'center'}
+          spacing={{ base: 8, md: 14 }}
+          py={{ base: 20, md: 36 }} >
+            
+              <Heading
+                fontWeight={600}
+                fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
+                lineHeight={'110%'} align='center'>
+              Terminal
+                <Text as={'span'} color={'green.400'}>
+                Nine
+                </Text>
+            </Heading>
+ 
+            
+   
+            <form onSubmit={handleLogin}>
+                    <Stack direction='column' spacing={4} align='center'>
+                    <Input
+                        type="text"
+                        placeholder="username"
+                        value={username}
+                        onChange={(e) => Setusername(e.target.value)}
+                        variant={"outline"}
+                    />
+                    <Input
+                        type="password"
+                        placeholder="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button rightIcon={<Md12Mp />} type="submit" size={"md"} colorScheme={"green"} align="{right}">Log in</Button>
+                    </Stack>
+             </form>
+        </Stack>
+    </Container>
+  );
+};
 
-                                        {this.state.message && (
-                                            <div className="form-group error-message">
-                                                <div className="alert alert-danger" role="alert">
-                                                    <span>Invalid Login or password.</span>
-                                                </div>
-                                            </div>
-                                        )}
-                                                    <CheckButton
-                                            style={{
-                                            display: "none"
-                                        }}
-                                            ref={c => {
-                                            this.checkBtn = c;
-                                        }}/>
-
-                                        <br/>
-                
-                                    </Form>
-                               
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            </div>
-        );
-    }
-}
-
-
-
+export default Login;
 
 

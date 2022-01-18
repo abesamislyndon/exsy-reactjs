@@ -1,19 +1,16 @@
-import React, {Component} from "react";
-import { Route, Routes } from 'react-router-dom'
+
+import { Route, Routes, Link } from 'react-router-dom'
 import Login from "./components/login.component";
+import Dashboard from "./components/dashboard.component";
 import "./assets/css/login.scss";
 
-class App extends Component{
-  render(){
+function App(){ 
     return(  
-      <div>
-         <Routes>
-              <Route exact path="/" element={<Login/>}/>
+      
+        <Routes>
                <Route exact path="/" element={<Login/>}/>
-          </Routes>
-      </div> 
-     
+               <Route exact path="/dashboard" element={<Dashboard/>}/>
+        </Routes>
     );
-  }
 }
 export default App;
