@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
-
+import SidebarWithHeader from "../shared/SidebarProps";
 function Dashboard(){
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -17,13 +17,11 @@ function Dashboard(){
     }
   }, []);
 
-  const logOut = () => {
-    AuthService.logout();
-  };
   
   return(
       <div>
-           <Link to="/" onClick={logOut}>Logout</Link>
+
+           <SidebarWithHeader/>
       </div>
     )
 }
