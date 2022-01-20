@@ -9,28 +9,30 @@ import {
     Button,
     Stack,
     Input,
-    FormControl
+    FormControl,
+    CircularProgress
   } from '@chakra-ui/react';
-import { Md12Mp } from "react-icons/md"
+
 import { useForm } from "react-hook-form";
 
-const Login = () => {
+const Login = () =>{
     const [values, setValues] = useState({
         username: "",
         password: "",
         error: "",
-        loading: false,
-        redirectToReferrer: false
+        redirectToReferrer: false,
+        isLoading: false
     });
-  const { username, password, loading, error, redirectToReferrer } = values;
+  const { username, password,error } = values;
   const handleChange = name => event => {
            setValues({ ...values, error: false, [name]: event.target.value });
   };
   const { register, formState: { errors }, handleSubmit } = useForm({shouldFocusError: false,});
+ 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-      setValues({ ...values, error: false, loading: true });
+      setValues({ ...values, error: false, isLoading: true });
       try {
           await AuthService.login(username, password).then(
              ()=> {
@@ -42,6 +44,7 @@ const Login = () => {
             }
           );
         } catch (error) {
+            setValues({...values, isLoading: false });
         }
   };
 
@@ -93,7 +96,15 @@ return (
                     />
                      </FormControl>
                     <Text as = 'sup' color="tomato" className="login-error-msg">{errors.password?.message}</Text> 
-                    <Button  type="submit" size={"md"} colorScheme={"green"} align="{right}">Log in</Button>
+
+                    <Button colorScheme='green' variant='solid' type="submit" width="full" mt={4}>
+                        { values.isLoading ? (
+                            <CircularProgress isIndeterminate size="24px" color='green.300' />
+                        ) : (
+                            'Sign In'
+                        )}
+                     </Button>
+
                     </Stack>
              </form>
         </Stack>
