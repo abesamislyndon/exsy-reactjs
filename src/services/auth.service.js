@@ -12,9 +12,10 @@ const signup = (username, password) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-
       return response.data;
-    });
+    }).catch(function(error) {
+      console.log(error);
+    })
 };
 
 const login = (username, password) => {
@@ -28,7 +29,7 @@ const login = (username, password) => {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
-    });
+    })
 };
 
 const logout = () => {
