@@ -18,12 +18,14 @@ import {
   FormHelperText,
   InputRightElement,
   Text,
+  Image
 } from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
+
 const Login = () => {
   const [values, setValues] = useState({
     username: "",
@@ -71,31 +73,18 @@ const Login = () => {
     </div>
   );
 
-  return (
-    <Flex
-      flexDirection="column"
-      width="100wh"
-      height="100vh"
-      backgroundColor="gray.200"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Stack
-        flexDir="column"
-        mb="12"
-        justifyContent="center"
-        alignItems="center"
-      >
-      
-        <Heading color="black.400">Terminal 9</Heading>
+  return ( 
+    <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}> 
+     <Flex p={8} flex={1} align={'center'} justify={'center'}>
+     <Stack spacing={4} w={'full'} maxW={'md'}>
+        <Heading fontSize={'1xl'}>Sign in to your account</Heading>
         {showError()}
-        <Box minW={{ base: "90%", md: "520px" }}>
           <form onSubmit={handleSubmit(handleLogin)}>
             <Stack
-              spacing={2}
-              p="5rem 3rem"
-              backgroundColor="whiteAlpha.900"
-              boxShadow="md"
+              spacing={2.5}
+              p="1rem 0rem"
+              backgroundColor=""
+              boxShadow=""
             >
               <FormControl isInvalid={errors.username?.message}>
                 <InputGroup>
@@ -103,7 +92,9 @@ const Login = () => {
                     pointerEvents="none"
                     children={<CFaUserAlt color="gray.300" />}
                   />
-                  <Input
+                  <Input 
+                    borderColor="gray.300"
+                    background="white"
                     placeholder="username"
                     {...register("username", { required: "username required" })}
                     onChange={handleChange("username")}
@@ -127,6 +118,8 @@ const Login = () => {
                     children={<CFaLock color="gray.300" />}
                   />
                   <Input
+                  borderColor="gray.300"
+                  background="white"
                     type={showPassword ? "text" : "password"}
                     placeholder="password"
                     {...register("password", { required: "password required" })}
@@ -134,7 +127,7 @@ const Login = () => {
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.15rem" size="xs" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
+                      {showPassword ? <FaEye color="gray.300"/> : <FaEyeSlash color="gray.300"/> }
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -165,15 +158,21 @@ const Login = () => {
               </Button>
             </Stack>
           </form>
-        </Box>
+      
       </Stack>
-      <Box>
-        New to us?{" "}
-        <Link color="teal.500" href="#">
-          Sign Up
-        </Link>
-      </Box>
+
     </Flex>
+
+    <Flex flex={1}>
+        <Image
+          alt={'Login Image'}
+          objectFit={'cover'}
+          src={
+            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80'
+          }
+        />
+      </Flex>
+    </Stack> 
   );
 };
 export default Login;

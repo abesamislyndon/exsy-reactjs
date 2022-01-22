@@ -21,32 +21,38 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Collapse,
 } from '@chakra-ui/react';
 import {
   FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
+  FiClipboard,
+  FiUsers,
+  FiBarChart,
   FiSettings,
   FiMenu,
   FiBell,
-  FiChevronDown,
+  FiChevronDown
 } from 'react-icons/fi';
+import { HiCode, HiCollection } from "react-icons/hi";
+import { MdHome, MdKeyboardArrowRight } from "react-icons/md";
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 import AuthService from "../services/auth.service";
-import { Navigate, useNavigate} from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 
 interface LinkItemProps {
   name: string;
+  to: string;
   icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
+  { name: 'Dashboard', icon: FiHome, to:'dashboard'},
+  { name: 'Jobwork', icon: FiClipboard, to: 'jobwork'},
+  { name: 'Client', icon: FiUsers, to: 'client' },
+  { name: 'User Management', icon: FiBarChart, to: 'users' },
+  { name: 'Reports', icon: FiBarChart, to: 'reports' },
   { name: 'Settings', icon: FiSettings },
 ];
 
@@ -82,12 +88,13 @@ export default function SidebarWithHeader({
     </Box>
   );
 }
-
 interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
+  
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const integrations = useDisclosure();
   return (
     <Box
       transition="3s ease"
@@ -105,9 +112,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          {link.name}
+           
+        <NavItem key={link.name} icon={link.icon} to={link.to}>
+   
+            {link.name}
+      
         </NavItem>
+    
       ))}
     </Box>
   );
@@ -117,27 +128,27 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactText;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, to, children, ...rest }: NavItemProps) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link href={to} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
-        p="4"
+        p="2"
         mx="4"
         borderRadius="lg"
         role="group"
         cursor="pointer"
         _hover={{
-          bg: 'cyan.400',
-          color: 'white',
+          bg: '',
+          color: 'green',
         }}
         {...rest}>
         {icon && (
           <Icon
-            mr="4"
-            fontSize="16"
+            mr="3"
+            fontSize="12"
             _groupHover={{
-              color: 'white',
+              color: 'green',
             }}
             as={icon}
           />
@@ -158,22 +169,23 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
   const [currentUser, setCurrentUser] = useState(undefined);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-  
-  if (user.auth_status == "authenticated") {
+
+    if (user.auth_status == "authenticated") {
       setCurrentUser(user);
-    }else{
+    } else {
       navigate("/");
     }
   }, []);
-  
+
   const logOut = () => {
     AuthService.logout();
   };
 
   return (
+    <>
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
@@ -242,11 +254,12 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem as="a" href="/" onClick={logOut} isExternal>Logout</MenuItem>
+              <MenuItem><NavLink to ='/' onClick={logOut}>Logout</NavLink></MenuItem>
             </MenuList>
           </Menu>
         </Flex>
       </HStack>
-    </Flex>
+    </Flex>  
+  </>
   );
 };
