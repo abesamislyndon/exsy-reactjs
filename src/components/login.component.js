@@ -31,7 +31,6 @@ const Login = () => {
     username: "",
     password: "",
     error: "",
-    redirectToReferrer: false,
     isLoading: false,
   });
   const [showPassword, setShowPassword] = useState(false);

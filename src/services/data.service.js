@@ -1,26 +1,33 @@
 import axios from "axios";
 import authHeader from "./auth.header";
+import { useState } from "react";
 
 const header = authHeader();
+const API_URL = "/client";
+
 const clientView = async () => {
-  const endpoint_client = "/client";
   try {
-    const response = await axios.get(endpoint_client, { headers: header });
+    const response = await axios.get(API_URL, { headers: header });
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
 
-const CreateClient = (clientName) => {
-  const API_URL = "/client";
-  let client = { client_name: clientName };
-  axios.post(API_URL, { headers: header, client });
+const CreateClient = (clientName, pass) => {
+
+const client = { client_name: clientName };
+ axios.post(API_URL, {client },{ headers: header, }).then((res) => {
+   console.log(res.data)
+  
+})
+.catch((error) => {
+  console.error(error)
+})
 };
 
-const DeleteClient = (id, getClient) => {
-  const API_URL = `/client/${id}`;
-  axios.delete(API_URL, { headers: header });
+const DeleteClient = (id) => {
+  axios.delete(API_URL + `/${id}`, { headers: header });
 };
 
 const DataService = {
