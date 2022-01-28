@@ -17,7 +17,6 @@ function Dashboard() {
     }
   }, []);
   return (
-    <> 
       <SidebarWithHeader>
       <Flex>
           <p>
@@ -25,7 +24,6 @@ function Dashboard() {
       </p>
       </Flex>
       </SidebarWithHeader> 
-    </>      
     );
 }
 export default Dashboard;

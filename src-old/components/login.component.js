@@ -13,7 +13,7 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
+  //Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
@@ -158,9 +158,7 @@ const Login = () => {
               </Button>
             </Stack>
           </form>
-      
       </Stack>
-
     </Flex>
 
     <Flex flex={1}>

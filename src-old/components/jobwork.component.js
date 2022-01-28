@@ -4,7 +4,7 @@ import AuthService from "../services/auth.service";
 import SidebarWithHeader from "../shared/SidebarProps";
 import { Flex, Container} from "@chakra-ui/react";
 
-function Reports() {
+function Jobwork() {
   const [currentUser, setCurrentUser] = useState(undefined);
   const navigate = useNavigate();
   useEffect(() => {
@@ -20,12 +20,10 @@ function Reports() {
     <> 
       <SidebarWithHeader>
       <Flex>
-          <p>
-            Report Page
-         </p>
+         
       </Flex>
       </SidebarWithHeader> 
     </>      
     );
 }
-export default Reports;
+export default Jobwork;

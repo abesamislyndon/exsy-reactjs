@@ -7,6 +7,7 @@ import {
   CloseButton,
   Flex,
   HStack,
+  //Link,
   VStack,
   Icon,
   useColorModeValue,
@@ -33,6 +34,10 @@ import {
   FiBell,
   FiChevronDown
 } from 'react-icons/fi';
+import { HiCode, HiCollection } from "react-icons/hi";
+import { MdHome, MdKeyboardArrowRight } from "react-icons/md";
+import { IconType } from 'react-icons';
+import { ReactText } from 'react';
 import AuthService from "../services/auth.service";
 import { useState, useEffect} from "react";
 
@@ -107,7 +112,7 @@ const SidebarContent = ({icon, onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
         {LinkItems.map((link) => (
-        <NavLink as={Link} key={link.name} to={link.to}>      
+           <NavLink as={Link} key={link.name} icon={link.icon} to={link.to}>      
            <Flex
         align="center" p="2" mx="4"
         borderRadius="lg"
@@ -226,7 +231,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem><Link to ='/' onClick={logOut}>Logout</Link></MenuItem>
+              <MenuItem><NavLink to ='/' onClick={logOut}>Logout</NavLink></MenuItem>
             </MenuList>
           </Menu>
         </Flex>
