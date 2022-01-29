@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
-import SidebarWithHeader from "../../shared/SidebarProps";
 import {
   Button,
   CircularProgress,
@@ -18,7 +17,7 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { FaPlus, FaEdit } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { Table, Column, HeaderCell, Cell } from "rsuite-table";
 import "rsuite-table/dist/css/rsuite-table.css";
 import ClientServices from "../../services/data.service";
