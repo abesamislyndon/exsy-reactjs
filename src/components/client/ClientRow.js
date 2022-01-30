@@ -93,7 +93,6 @@ function ClientRow() {
         onClick={onOpen}
         leftIcon={<FaPlus />}
         size="sm"
-        colorScheme="green"
       >
         New Client
       </Button>
@@ -146,12 +145,12 @@ function ClientRow() {
               </Text>
             </ModalBody>
             <ModalFooter>
-              <Button type="submit" colorScheme="blue" mr={3}>
+              <Button type="submit" mr={3}>
                 {values.isLoading ? (
                   <CircularProgress
                     isIndeterminate
                     size="24px"
-                    color="green.300"
+                    color="brand"
                   />
                 ) : (
                   "Submit"
