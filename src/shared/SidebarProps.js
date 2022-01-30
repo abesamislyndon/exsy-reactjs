@@ -115,10 +115,10 @@ const SidebarContent = ({icon, onClose, ...rest }: SidebarProps) => {
         cursor="pointer"
         _hover={{
           bg: '',
-          color: 'green',
+          color: '#f39c12',
         }}
         {...rest}>    
-               <Icon mr="3" fontSize="12" _groupHover={{ color: 'green', }} as={link.icon}/> 
+               <Icon mr="3" fontSize="12" _groupHover={{ color: '#f39c12', }} as={link.icon}/> 
                {link.name}    
                </Flex>   
           </NavLink>

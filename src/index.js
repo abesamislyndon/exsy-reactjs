@@ -5,7 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import axios from 'axios'
-import { ChakraProvider } from '@chakra-ui/react'
+
+
 
 let userJson = localStorage.getItem('user');
 let authTokenJson = JSON.parse(userJson);
@@ -20,9 +21,7 @@ if (userJson) {
 
 ReactDOM.render(
   <BrowserRouter>
-  <ChakraProvider>
   <App/>
-  </ChakraProvider>
 </BrowserRouter>, document.getElementById("root"));
 
 reportWebVitals();

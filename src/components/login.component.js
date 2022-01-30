@@ -143,14 +143,14 @@ const Login = () => {
                 borderRadius={0}
                 type="submit"
                 variant="solid"
-                colorScheme="green"
+                colorScheme="brand"
                 width="full"
               >
                 {values.isLoading ? (
                   <CircularProgress
                     isIndeterminate
                     size="24px"
-                    color="green.300"
+                    color="#f39c12"
                   />
                 ) : (
                   "Sign In"
