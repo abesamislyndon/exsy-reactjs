@@ -30,21 +30,12 @@ function ClientRow() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
     clients: [],
-    currentUser: undefined,
-    clientName: ''
+    clientName: "",
   });
 
   useEffect(() => {
     getClient();
     reset(values.clientName);
-    const user = AuthService.getCurrentUser();
-
-    if (user) {
-      setValues({ ...values, currentUser: user });
-    } else {
-      navigate("/");
-      window.location.reload();
-    }
   }, []);
 
   const getClient = () => {
@@ -70,7 +61,7 @@ function ClientRow() {
     register,
     formState: { errors },
     handleSubmit,
-    reset
+    reset,
   } = useForm({ shouldFocusError: false });
 
   const createClient = async () => {
@@ -82,18 +73,13 @@ function ClientRow() {
     } catch (error) {
       console.log(error);
     }
-   
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Button
-        onClick={onOpen}
-        leftIcon={<FaPlus />}
-        size="sm"
-      >
+      <Button onClick={onOpen} leftIcon={<FaPlus />} size="sm">
         New Client
       </Button>
       <br /> <br />
@@ -147,11 +133,7 @@ function ClientRow() {
             <ModalFooter>
               <Button type="submit" mr={3}>
                 {values.isLoading ? (
-                  <CircularProgress
-                    isIndeterminate
-                    size="24px"
-                    color="brand"
-                  />
+                  <CircularProgress isIndeterminate size="24px" color="brand" />
                 ) : (
                   "Submit"
                 )}

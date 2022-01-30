@@ -1,8 +1,9 @@
-import { extendTheme, withDefaultColorScheme , withDefaultVariant } from "@chakra-ui/react";
-import { getColor } from "@chakra-ui/theme-tools"
-
-
-
+import {
+  extendTheme,
+  withDefaultColorScheme,
+  withDefaultVariant,
+} from "@chakra-ui/react";
+import { getColor } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme(
   {
@@ -12,46 +13,63 @@ const theme = extendTheme(
         600: "#f39c12",
       },
     },
-    components:{
-        Input: {
-            variants: {
-                filled:{
-                    field:{
-                        _focus:{
-                            borderColor:'brand.500',
-                        },
-                        borderColor: '#EDF2F6'
-                    }
-                }    
-            }
-        },
-        Heading: {
-            baseStyle: {
-              fontWeight: "600"
-            },
-            sizes: {
-              // default size is md
-              xl: {
-                fontSize: "60px",
+    components: {
+      Input: {
+        variants: {
+          filled: {
+            field: {
+              _focus: {
+                borderColor: "brand.500",
               },
+              borderColor: "#EDF2F6",
             },
           },
-          FormLabel:{
-            baseStyle: {
-                fontWeight: "300"
+        },
+      },
+      Textarea: {
+        variants: {
+          filled: {
+            field: {
+              _focus: {
+                borderColor: "brand.500",
               },
-              sizes: {
-                // default size is md
-                xl: {
-                  fontSize: "50px",
-                },
-              },
-          }
-    }
+              borderColor: "#EDF2F6",
+            },
+          },
+        },
+      },
+      Heading: {
+        baseStyle: {
+          fontWeight: "600",
+        },
+        sizes: {
+          // default size is md
+          xl: {
+            fontSize: "60px",
+          },
+        },
+      },
+      FormLabel: {
+        baseStyle: {
+          fontWeight: "300",
+        },
+        sizes: {
+          // default size is md
+          xl: {
+            fontSize: "50px",
+          },
+        },
+      },
+    },
   },
   withDefaultColorScheme({
     colorScheme: "brand",
     components: ["Button"],
+  }),
+
+  withDefaultVariant({
+    variant: "filled",
+    components: ["Input", "Select", "Textarea"],
   })
 );
 

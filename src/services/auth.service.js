@@ -18,23 +18,28 @@ const signup = (username, password) => {
     })
 };
 
-const login = (username, password) => {
-  return axios
+const login = async (username, password) => {
+  const response = await axios
     .post(API_URL, {
       username,
       password,
-    })
-    .then((response) => {
-      if (response.data.auth_token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
-      return response.data;
-    })
+    });
+  if (response.data.auth_token) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+  }
+  return response.data;
 };
 
 const logout = () => {
   localStorage.removeItem("user");
 };
+
+const isLogin = () =>{
+    if(localStorage.getItem("user")){
+      return true;
+    }
+    return false
+}
 
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
@@ -45,6 +50,7 @@ const authService = {
   login,
   logout,
   getCurrentUser,
+  isLogin
 };
 
 

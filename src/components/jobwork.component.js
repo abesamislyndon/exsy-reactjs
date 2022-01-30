@@ -45,14 +45,22 @@ function Jobwork() {
               <GridItem>
                 <FormControl>
                   <FormLabel>Client:</FormLabel>
-                  <Input name="name" />
+                  <Select placeholder="Select option">
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </Select>
                 </FormControl>
               </GridItem>
 
               <GridItem>
                 <FormControl>
                   <FormLabel>Division:</FormLabel>
-                  <Input name="name" />
+                  <Select placeholder="Select option">
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </Select>
                 </FormControl>
               </GridItem>
             </SimpleGrid>
@@ -91,14 +99,14 @@ function Jobwork() {
               <GridItem>
                 <FormControl>
                   <FormLabel>Defect Summary:</FormLabel>
-                  <Input name="name" />
+                  <Textarea />
                 </FormControl>
               </GridItem>
 
               <GridItem>
                 <FormControl>
                   <FormLabel>Recommendation / Remedial Action:</FormLabel>
-                  <Input name="name" />
+                  <Textarea />
                 </FormControl>
               </GridItem>
 
