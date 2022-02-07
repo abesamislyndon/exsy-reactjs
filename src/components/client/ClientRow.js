@@ -85,7 +85,7 @@ function ClientRow() {
       <br /> <br />
       <Table height={400} data={values.clients}>
         <Column width={1010} sortable>
-          <HeaderCell>First Name</HeaderCell>
+          <HeaderCell>Client Name</HeaderCell>
           <Cell dataKey="client_name" />
         </Column>
         <Column width={120} fixed="right">

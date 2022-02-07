@@ -45,7 +45,8 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboards', icon: FiHome, to: '/dashboard'},
   { name: 'Jobwork', icon: FiClipboard, to: '/jobwork'},
-  { name: 'Client', icon: FiUsers, to: '/client' },
+  { name: 'Clients', icon: FiUsers, to: '/client' },
+  { name: 'Divisions', icon: FiUsers, to: '/division' },
   { name: 'User Management', icon: FiBarChart, to: '/user'},
   { name: 'Reports', icon: FiBarChart, to: '/reports' },
   { name: 'Settings', icon: FiSettings, to: '/reports' },

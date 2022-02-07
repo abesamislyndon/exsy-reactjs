@@ -38,6 +38,18 @@ const theme = extendTheme(
           },
         },
       },
+      Select: {
+        variants: {
+          filled: {
+            field: {
+              _focus: {
+                borderColor: "brand.500",
+              },
+              borderColor: "#EDF2F6",
+            },
+          },
+        },
+      },
       Heading: {
         baseStyle: {
           fontWeight: "600",
