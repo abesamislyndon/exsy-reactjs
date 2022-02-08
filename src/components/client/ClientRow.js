@@ -69,10 +69,10 @@ function ClientRow() {
       ClientServices.CreateClient(values.clientName);
       onClose();
       reset();
-      getClient();
     } catch (error) {
       console.log(error);
     }
+    getClient();
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();

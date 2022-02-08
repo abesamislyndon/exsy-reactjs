@@ -47,13 +47,6 @@ const Formlist = () => {
     setValues({ ...formValues, error: false, [name]: event.target.value });
   };
 
-  /*
-  let handleChange = (name)=>(i, e) => {
-    let newFormValues = [...formValues];
-    newFormValues[i][e.target.name] = e.target.value;
-    setformValues(newFormValues);
-  }
-  */
 
   const addDefectForm = () => {
     setformValues([...formValues, { complain: "", recommenation: "" }]);

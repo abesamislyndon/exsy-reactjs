@@ -22,10 +22,9 @@ import { FaPlus } from "react-icons/fa";
 import "rsuite-table/dist/css/rsuite-table.css";
 import authHeader from "../../services/auth.header";
 import DataService from "../../services/data.service";
-import DivisionList from "./DivisionList";
 
 
-function DivisionForm() {
+function DivisionForm(props) {
   const [values, setValues] = useState({
     clients: [],
     divisions: [],
@@ -37,7 +36,7 @@ function DivisionForm() {
 
   useEffect(() => { 
      getClient();
-    reset(values.clientName);
+     reset(values.clientName);
   }, []);
 
   const getClient = () => {
@@ -54,7 +53,7 @@ function DivisionForm() {
     register,
     formState: { errors },
     handleSubmit,
-    reset,
+    reset
   } = useForm({ shouldFocusError: false });
 
   const createDivision = async () => {
@@ -62,10 +61,12 @@ function DivisionForm() {
       DataService.CreateDivision(values.clientId, values.divisionName, values.divShort);
       onClose();
       reset();
-
     } catch (error) {
       console.log(error);
     }
+    setTimeout(() => {
+        props.divlists();
+    }, 500);
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -76,7 +77,6 @@ function DivisionForm() {
         New Division
       </Button>
       <br/><br/>
-{console.log(values)}
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
