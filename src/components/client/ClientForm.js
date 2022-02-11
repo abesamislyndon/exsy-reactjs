@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthService from "../../services/auth.service";
 import {
   Button,
   CircularProgress,
@@ -18,40 +16,14 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
-import { Table, Column, HeaderCell, Cell } from "rsuite-table";
 import "rsuite-table/dist/css/rsuite-table.css";
-import ClientServices from "../../services/data.service";
-import { FaTrashAlt } from "react-icons/fa";
-import axios from "axios";
-import authHeader from "../../services/auth.header";
+import DataService from "../../services/data.service";
 
-function ClientRow() {
-  const header = authHeader();
-  const navigate = useNavigate();
+
+function ClientForm(props) {
   const [values, setValues] = useState({
-    clients: [],
     clientName: "",
   });
-
-  useEffect(() => {
-    getClient();
-    reset(values.clientName);
-  }, []);
-
-  const getClient = () => {
-    axios.get(`/client`, { headers: header }).then((response) => {
-      setValues({ ...values, clients: response.data });
-    });
-  };
-
-  const deleteClient = (id) => {
-    let confirmDelete = window.confirm("Delete item forever?");
-    if (confirmDelete) {
-      axios.delete(`/client/${id}`, { headers: header }).then((result) => {
-        getClient();
-      });
-    }
-  };
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -66,13 +38,15 @@ function ClientRow() {
 
   const createClient = async () => {
     try {
-      ClientServices.CreateClient(values.clientName);
+      DataService.CreateClient(values.clientName);
       onClose();
       reset();
     } catch (error) {
       console.log(error);
     }
-    getClient();
+    setTimeout(() => {
+      props.clientlist();
+    }, 500);
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,37 +57,12 @@ function ClientRow() {
         New Client
       </Button>
       <br /> <br />
-      <Table height={400} data={values.clients}>
-        <Column width={1010} sortable>
-          <HeaderCell>Client Name</HeaderCell>
-          <Cell dataKey="client_name" />
-        </Column>
-        <Column width={120} fixed="right">
-          <HeaderCell>Action</HeaderCell>
-          <Cell>
-            {(rowData) => {
-              let id = rowData.id;
-              return (
-                <Button
-                  size="sm"
-                  onClick={(e) => {
-                    deleteClient(id);
-                  }}
-                >
-                  {" "}
-                  {<FaTrashAlt />}
-                </Button>
-              );
-            }}
-          </Cell>
-        </Column>
-      </Table>
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>New Client</ModalHeader>
           <ModalCloseButton />
-          <form onSubmit={handleSubmit(createClient)}>
+          <form onSubmit={handleSubmit(createClient)}  autoComplete="off">
             <ModalBody pb={6}>
               <FormControl isInvalid={errors.clientName?.message}>
                 <Input
@@ -146,4 +95,4 @@ function ClientRow() {
     </>
   );
 }
-export default ClientRow;
+export default ClientForm;

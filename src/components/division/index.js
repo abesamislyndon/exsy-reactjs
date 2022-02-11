@@ -24,7 +24,7 @@ function Division(props) {
   };
 
   const deleteDivision = (id) => {
-    let confirmDelete = window.confirm("Delete item forever?");
+    let confirmDelete = window.confirm("Delete item Division?");
     const Division = DataService;
     if (confirmDelete) {
       Division.deleteDivision(id);

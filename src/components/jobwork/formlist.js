@@ -4,7 +4,6 @@ import {
   HStack,
   VStack,
   Select,
-  Text,
   Heading,
   Textarea,
   Divider,
@@ -17,17 +16,22 @@ import {
   Button,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 
 const Formlist = () => {
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
     startDate: new Date(),
+    client_id: "",
+    division_id: "",
+    block: "",
+    address: "",
+    complaine_desc: "",
+    total: "",
   });
-  const [formValues, setformValues] = useState([
+
+  const [parts, setParts] = useState([
     {
-      complain: "",
-      recommendation: "",
       sorCode: "",
       quantity: "",
       item: "",
@@ -36,38 +40,60 @@ const Formlist = () => {
     },
   ]);
 
+  const [defectlist, setDefectList] = useState([
+    {
+      defects: "",
+      recommendation: "",
+    },
+  ]);
+
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
+    control,
   } = useForm({ shouldFocusError: false });
 
-  const handleChange = (name) => (i, event) => {
-    setValues({ ...formValues, error: false, [name]: event.target.value });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items",
+  });
+
+  /*
+  const handleChange = (name) => (event) => {
+    setValues({ ...values, error: false, [name]: event.target.value });
   };
+  */
 
-
-  const addDefectForm = () => {
-    setformValues([...formValues, { complain: "", recommenation: "" }]);
+  const handleChange = (e, i) => {
+    const { name, value } = e.target;
+    const list = [...defectlist];
+    list[i][name] = value;
+    setDefectList(list);
   };
 
   const removeDefectForm = (i) => {
-    let newFormVAlues = [...formValues];
-    newFormVAlues.splice(i, 1);
-    setformValues(newFormVAlues);
+    const list = [...defectlist];
+    list.splice(i, 1);
+    setDefectList(list);
+    reset(list);
+  };
+
+  const addDefectForm = () => {
+    setDefectList([...defectlist, { defects: "", recommendation: "" }]);
   };
 
   const addPartsReplacedForm = () => {
-    setformValues([
-      ...formValues,
+    setParts([
+      ...parts,
       { sorCode: "", quantity: "", item: "", rates: "", subtotal: "" },
     ]);
   };
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit()}>
+      <form onSubmit={handleSubmit(console.log)} autoComplete="off">
         <Stack spacing={35}>
           <GridItem>
             <FormControl>
@@ -135,51 +161,55 @@ const Formlist = () => {
           <Heading size="xs">DEFECTS DETECTED</Heading>
           <Divider />
 
-          {formValues.map((element, index) => (
+          {fields.map(({ id, defects, recommendation }, index) => (
+            <div key={id}>
+              <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
+                <GridItem>
+                  <FormControl>
+                    <FormLabel>Defects</FormLabel>
+                    <input
+                      type="text"
+                      {...register(`items[${index}].defects`)}
+                      defaultValue={defects}
+                    />
+                  </FormControl>
+                </GridItem>
+
+                <GridItem>
+                  <FormControl>
+                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                    <input
+                      type="text"
+                      {...register(`items[${index}].recommendation`)}
+                      defaultValue={recommendation}
+                    />
+                  </FormControl>
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="remove-btn"
+                  >
+                    <span>Remove</span>
+                  </button>
+                </GridItem>
+              </SimpleGrid>
+            </div>
+          ))}
+
+          <GridItem>
+            <Button onClick={() => append({})}>+</Button>
+          </GridItem>
+
+          <Heading size="xs">PARTS TO REPLACED</Heading>
+          <Divider />
+          {parts.map((element, index) => (
             <SimpleGrid
-              columns={2}
+              columns={5}
               columnGap={3}
               rowGap={6}
               w="full"
               key={index}
             >
-              <GridItem>
-                <FormControl>
-                  <FormLabel>Recommendation / Remedial Action:</FormLabel>
-                  <Textarea
-                    {...register(`complain[${index}]`, "cannot be empty")}
-                  //  onChange={handleChange("complain")}
-                  />
-                </FormControl>
-              </GridItem>
-
-              <GridItem>
-                <FormControl>
-                  <FormLabel>Recommendation / Remedial Action:</FormLabel>
-                  <Textarea
-                    {...register("recomendation", {
-                      required: "cannot be empty",
-                    })}
-                    onChange={handleChange("recomendation")}
-                  />
-                </FormControl>
-                {index ? (
-                  <Button type="button" onClick={() => removeDefectForm(index)}>
-                    Remove
-                  </Button>
-                ) : null}
-              </GridItem>
-            </SimpleGrid>
-          ))}
-
-          <GridItem>
-            <Button onClick={() => addDefectForm()}>+</Button>
-          </GridItem>
-
-          <Heading size="xs">PARTS TO REPLACED</Heading>
-          <Divider />
-          {formValues.map((element, index) => (
-            <SimpleGrid columns={5} columnGap={3} rowGap={6} w="full" key={index}>
               <GridItem>
                 <FormControl>
                   <FormLabel>SOR Code:</FormLabel>
@@ -216,11 +246,13 @@ const Formlist = () => {
               </GridItem>
             </SimpleGrid>
           ))}
-              <GridItem>
-                <Button onClick={()=>addPartsReplacedForm()}>+</Button>
-              </GridItem>
+          <GridItem>
+            <Button onClick={() => addPartsReplacedForm()}>+</Button>
+          </GridItem>
           <VStack align="end">
-            <Button colorScheme="brand">Submit</Button>
+            <Button colorScheme="brand" type="submit">
+              Submit
+            </Button>
           </VStack>
         </Stack>
       </form>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Button,
   CircularProgress,
@@ -82,7 +81,7 @@ function DivisionForm(props) {
         <ModalContent>
           <ModalHeader>New Division</ModalHeader>
           <ModalCloseButton />
-          <form onSubmit={handleSubmit(createDivision)}>
+          <form onSubmit={handleSubmit(createDivision)}  autoComplete="off">
             <ModalBody pb={6}>
               <FormControl isInvalid={errors.clientName?.message}>
               <FormLabel>Client:</FormLabel>
