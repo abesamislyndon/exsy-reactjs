@@ -227,7 +227,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem><Link to ='/' onClick={logOut}>Logout</Link></MenuItem>
+              <Link to ='/' onClick={logOut}><MenuItem>Logout</MenuItem></Link>
             </MenuList>
           </Menu>
         </Flex>
