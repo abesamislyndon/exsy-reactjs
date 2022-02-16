@@ -71,6 +71,26 @@ const divBelong = async(divId) =>{
  }
 };
 
+/*
+   JOBINFO SERVICES
+*/
+
+const API_URL_JOBINFO = "/jobinfo"
+
+const createJobinfo = (division_name, client_name, dateEntry, complain_desc, address, block) =>{
+  const jobinfo = {
+              division_name: division_name, 
+              client_name: client_name, 
+              dateEntry: dateEntry, 
+              natureofcomplain: complain_desc,
+              address: address, 
+              block: block}
+    axios.post(API_URL_JOBINFO,{jobinfo}, {headers: header}).then((res)=>{
+    console.log(res.data);
+  })            
+}
+
+
 const DataService = {
   getAllClient,
   CreateClient,
@@ -78,7 +98,8 @@ const DataService = {
   CreateDivision,
   getAllDivision,
   deleteDivision,
-  divBelong
+  divBelong,
+  createJobinfo
 };
 
 export default DataService;

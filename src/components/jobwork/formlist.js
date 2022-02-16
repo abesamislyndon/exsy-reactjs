@@ -25,14 +25,14 @@ const Formlist = () => {
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
     startDate: new Date(),
-    client_id: "",
-    division_id: "",
+    client_name: "",
+    division_name: "",
     block: "",
     address: "",
     complain_desc: "",
     clients: [],
     divisions: [],
-    clientBelong: []
+    clientBelong: [],
   });
 
   useEffect(() => {
@@ -41,16 +41,16 @@ const Formlist = () => {
 
   const getClient = () => {
     DataService.getAllClient().then((response) => {
-      setValues({...values, clients: response });
+      setValues({ ...values, clients: response });
     });
   };
 
- const getDivBelong = (event) =>{
-      const divId = event.target.value;
-      DataService.divBelong(divId).then((response)=>{
-       setValues({...values, clientBelong: response })
-     });       
- }
+  const getDivBelong  = (name) => (event) => {
+    const divId = event.target.value;
+    DataService.divBelong(divId).then((response) => {
+      setValues({ ...values, clientBelong: response, client_name: event.target.value });
+    });
+  };
 
   const [parts, setParts] = useState([
     {
@@ -128,14 +128,25 @@ const Formlist = () => {
   };
 */
 
-  const insert = (data) => {
-    console.log(JSON.stringify(data));
-    reset();
+  const createJobinfo = async () => {
+    try {
+      DataService.createJobinfo(
+        values.division_name,
+        values.client_name,
+        values.startDate,
+        values.complain_desc,
+        values.address,
+        values.block
+      );
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit(insert)} autoComplete="off">
+      <form onSubmit={handleSubmit(createJobinfo)} autoComplete="off">
         <Stack spacing={35}>
           <GridItem>
             <FormControl>
@@ -160,12 +171,11 @@ const Formlist = () => {
             <GridItem>
               <FormControl>
                 <FormLabel>Client:</FormLabel>
-                <Select placeholder="Select option"
-                {...register("client_id")}
-                onChange={getDivBelong}
+                <Select
+                  placeholder="Select option"
+                  {...register("client_name")}
+                  onChange={getDivBelong("client_name")}
                 >
-                  { 
-                 }
                   {values.clients.map((client, i) => {
                     return (
                       <option key={client.id} value={client.id}>
@@ -173,18 +183,19 @@ const Formlist = () => {
                       </option>
                     );
                   })}
-                  
                 </Select>
               </FormControl>
             </GridItem>
 
             <GridItem>
-              <FormControl isInvalid = {errors.division_id?.message}>
+              <FormControl isInvalid={errors.division_id?.message}>
                 <FormLabel>Division:</FormLabel>
-                <Select placeholder="Select option" 
-                 {...register("division_id")}
+                <Select
+                  placeholder="Select option"
+                  {...register("division_name")}
+                  onChange={handleChange("division_name")}
                 >
-                {values.clientBelong.map((division, i) => {
+                  {values.clientBelong.map((division, i) => {
                     return (
                       <option key={division.id} value={division.id}>
                         {division.div_name}
@@ -200,7 +211,7 @@ const Formlist = () => {
                 className="login-error-msg"
               >
                 {errors.division_id?.message}
-              </Text>  
+              </Text>
             </GridItem>
           </SimpleGrid>
 
@@ -253,6 +264,7 @@ const Formlist = () => {
                   {...register("complain_desc", {
                     required: "cannot be empty",
                   })}
+                  onChange={handleChange("complain_desc")}
                   // onChange={handleChange("complain_desc")}
                 />
               </FormControl>
