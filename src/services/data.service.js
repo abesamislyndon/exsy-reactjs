@@ -62,13 +62,23 @@ const deleteDivision = async(id) =>{
   });
 }
 
+const divBelong = async(divId) =>{
+  try {  
+ const response = await axios.get(`/divbelong/${divId}`, { headers: header});
+    return response.data;
+ } catch (error){
+  console.error(error);
+ }
+};
+
 const DataService = {
   getAllClient,
   CreateClient,
   DeleteClient,
   CreateDivision,
   getAllDivision,
-  deleteDivision
+  deleteDivision,
+  divBelong
 };
 
 export default DataService;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   HStack,
@@ -15,9 +15,11 @@ import {
   FormControl,
   useBreakpointValue,
   Button,
+  useEventListenerMap,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import DataService from "../../services/data.service";
 
 const Formlist = () => {
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
@@ -28,7 +30,27 @@ const Formlist = () => {
     block: "",
     address: "",
     complain_desc: "",
+    clients: [],
+    divisions: [],
+    clientBelong: []
   });
+
+  useEffect(() => {
+    getClient();
+  }, []);
+
+  const getClient = () => {
+    DataService.getAllClient().then((response) => {
+      setValues({...values, clients: response });
+    });
+  };
+
+ const getDivBelong = (event) =>{
+      const divId = event.target.value;
+      DataService.divBelong(divId).then((response)=>{
+       setValues({...values, clientBelong: response })
+     });       
+ }
 
   const [parts, setParts] = useState([
     {
@@ -69,22 +91,21 @@ const Formlist = () => {
     remove: partsRemove,
   } = useFieldArray({ control, name: "partslist" });
 
-
-  
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
-  
 
-
-  const handleChangeDefect = (e, i) => {
-    const { name, value } = e.target;
-    const list = [...defectlist];
-    list[i][name] = value;
-    setDefectList(list);
+  const handleChangeDefect = (name) => (event) => (index) => {
+    setValues({ ...values[index], error: false, [name]: event.target.value });
   };
+  /*
 
-  
+  const handleChangeDefect = (e, index) => {
+    const clonedData = [...defectlist];
+    clonedData[index][e.target.name] = e.target.value;
+    setDefectList(clonedData);
+}
+*/
 
   /*
   const removeDefectForm = (i) => {
@@ -107,17 +128,30 @@ const Formlist = () => {
   };
 */
 
+  const insert = (data) => {
+    console.log(JSON.stringify(data));
+    reset();
+  };
+
   return (
     <div className="container">
-      <form onSubmit={handleSubmit(console.log)} autoComplete="off">
+      <form onSubmit={handleSubmit(insert)} autoComplete="off">
         <Stack spacing={35}>
           <GridItem>
             <FormControl>
               <FormLabel>Date:</FormLabel>
-              <DatePicker
-                className="chakra-input"
-                selected={values.startDate}
-                onChange={(date) => setValues({ ...values, startDate: date })}
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePicker
+                    placeholderText="Select date"
+                    onChange={(date) => field.onChange(date)}
+                    selected={values.startDate}
+                    dateFormat="MM/dd/yy"
+                    minDate={new Date()}
+                  />
+                )}
               />
             </FormControl>
           </GridItem>
@@ -126,23 +160,47 @@ const Formlist = () => {
             <GridItem>
               <FormControl>
                 <FormLabel>Client:</FormLabel>
-                <Select placeholder="Select option">
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
+                <Select placeholder="Select option"
+                {...register("client_id")}
+                onChange={getDivBelong}
+                >
+                  { 
+                 }
+                  {values.clients.map((client, i) => {
+                    return (
+                      <option key={client.id} value={client.id}>
+                        {client.client_name}
+                      </option>
+                    );
+                  })}
+                  
                 </Select>
               </FormControl>
             </GridItem>
 
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid = {errors.division_id?.message}>
                 <FormLabel>Division:</FormLabel>
-                <Select placeholder="Select option">
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
+                <Select placeholder="Select option" 
+                 {...register("division_id")}
+                >
+                {values.clientBelong.map((division, i) => {
+                    return (
+                      <option key={division.id} value={division.id}>
+                        {division.div_name}
+                      </option>
+                    );
+                  })}
                 </Select>
               </FormControl>
+              <Text
+                as="sup"
+                color="tomato"
+                textAlign={3}
+                className="login-error-msg"
+              >
+                {errors.division_id?.message}
+              </Text>  
             </GridItem>
           </SimpleGrid>
 
@@ -216,7 +274,9 @@ const Formlist = () => {
             <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full" key={id}>
               <GridItem>
                 <FormControl
-                  isInvalid= {errors?.['defectslist']?.[index]?.['defects']?.['message']}
+                  isInvalid={
+                    errors?.["defectslist"]?.[index]?.["defects"]?.["message"]
+                  }
                 >
                   <FormLabel>Defects</FormLabel>
                   <Textarea
@@ -224,7 +284,7 @@ const Formlist = () => {
                     {...register(`defectslist[${index}].defects`, {
                       required: "cannot be empty",
                     })}
-                    onChange={(e)=>handleChangeDefect(e,index)}
+                    // onChange={handleChangeDefect("defects")}
                   />
                 </FormControl>
                 <Text
@@ -233,12 +293,16 @@ const Formlist = () => {
                   textAlign={3}
                   className="login-error-msg"
                 >
-                   {errors?.['defectslist']?.[index]?.['defects']?.['message']}
+                  {errors?.["defectslist"]?.[index]?.["defects"]?.["message"]}
                 </Text>
               </GridItem>
               <GridItem>
                 <FormControl
-                  isInvalid= {errors?.['defectslist']?.[index]?.['recommendation']?.['message']}
+                  isInvalid={
+                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                      "message"
+                    ]
+                  }
                 >
                   <FormLabel>Recommendation / Remedial Action:</FormLabel>
                   <Textarea
@@ -246,7 +310,7 @@ const Formlist = () => {
                     {...register(`defectslist[${index}].recommendation`, {
                       required: "cannot be empty",
                     })}
-                    onChange={(e)=>handleChangeDefect(e,index)}
+                    //onChange={handleChangeDefect("recommendation")}
                   />
                 </FormControl>
                 <Text
@@ -255,7 +319,11 @@ const Formlist = () => {
                   textAlign={3}
                   className="login-error-msg"
                 >
-                  {errors?.['defectslist']?.[index]?.['recommendation']?.['message']}
+                  {
+                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                      "message"
+                    ]
+                  }
                 </Text>
                 <button
                   type="button"
@@ -285,7 +353,9 @@ const Formlist = () => {
               >
                 <GridItem>
                   <FormControl
-                    isInvalid= {errors?.['partslist']?.[index]?.['sorCode']?.['message']}
+                    isInvalid={
+                      errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]
+                    }
                   >
                     <FormLabel>SOR Code:</FormLabel>
                     <Input
@@ -302,13 +372,15 @@ const Formlist = () => {
                     textAlign={3}
                     className="login-error-msg"
                   >
-                   {errors?.['partslist']?.[index]?.['sorCode']?.['message']}
+                    {errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]}
                   </Text>
                 </GridItem>
 
                 <GridItem>
                   <FormControl
-                    isInvalid={errors?.['partslist']?.[index]?.['quantity']?.['message']}
+                    isInvalid={
+                      errors?.["partslist"]?.[index]?.["quantity"]?.["message"]
+                    }
                   >
                     <FormLabel>Quantity:</FormLabel>
                     <Input
@@ -325,13 +397,15 @@ const Formlist = () => {
                     textAlign={3}
                     className="login-error-msg"
                   >
-                    {errors?.['partslist']?.[index]?.['quantity']?.['message']}
+                    {errors?.["partslist"]?.[index]?.["quantity"]?.["message"]}
                   </Text>
                 </GridItem>
 
                 <GridItem>
                   <FormControl
-                    isInvalid={errors?.['partslist']?.[index]?.['item']?.['message']}
+                    isInvalid={
+                      errors?.["partslist"]?.[index]?.["item"]?.["message"]
+                    }
                   >
                     <FormLabel>Item</FormLabel>
                     <Input
@@ -348,13 +422,15 @@ const Formlist = () => {
                     textAlign={3}
                     className="login-error-msg"
                   >
-                    {errors?.['partslist']?.[index]?.['item']?.['message']}
+                    {errors?.["partslist"]?.[index]?.["item"]?.["message"]}
                   </Text>
                 </GridItem>
 
                 <GridItem>
                   <FormControl
-                    isInvalid={errors?.['partslist']?.[index]?.['rates']?.['message']}
+                    isInvalid={
+                      errors?.["partslist"]?.[index]?.["rates"]?.["message"]
+                    }
                   >
                     <FormLabel>Rates:</FormLabel>
                     <Input
@@ -371,13 +447,15 @@ const Formlist = () => {
                     textAlign={3}
                     className="login-error-msg"
                   >
-                    {errors?.['partslist']?.[index]?.['rates']?.['message']}
+                    {errors?.["partslist"]?.[index]?.["rates"]?.["message"]}
                   </Text>
                 </GridItem>
 
                 <GridItem>
                   <FormControl
-                    isInvalid={errors?.['partslist']?.[index]?.['subtotal']?.['message']}
+                    isInvalid={
+                      errors?.["partslist"]?.[index]?.["subtotal"]?.["message"]
+                    }
                   >
                     <FormLabel>Subtotal</FormLabel>
                     <Input
@@ -394,7 +472,7 @@ const Formlist = () => {
                     textAlign={3}
                     className="login-error-msg"
                   >
-                   {errors?.['partslist']?.[index]?.['subtotal']?.['message']}
+                    {errors?.["partslist"]?.[index]?.["subtotal"]?.["message"]}
                   </Text>
                   <button
                     type="button"
