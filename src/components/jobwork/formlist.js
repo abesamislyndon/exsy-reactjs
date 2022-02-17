@@ -45,10 +45,14 @@ const Formlist = () => {
     });
   };
 
-  const getDivBelong  = (name) => (event) => {
+  const getDivBelong = (name) => (event) => {
     const divId = event.target.value;
     DataService.divBelong(divId).then((response) => {
-      setValues({ ...values, clientBelong: response, client_name: event.target.value });
+      setValues({
+        ...values,
+        clientBelong: response,
+        client_name: event.target.value,
+      });
     });
   };
 
@@ -74,7 +78,7 @@ const Formlist = () => {
     handleSubmit,
     reset,
     control,
-    getValues
+    getValues,
   } = useForm({
     shouldFocusError: false,
   });
@@ -128,9 +132,9 @@ const Formlist = () => {
   };
 */
 
-
   const createJobinfo = async (data) => {
-      const defectinfo = getValues("defectslist")
+    const defectinfo = getValues("defectslist");
+    const partsinfo = getValues("partslist");
     try {
       DataService.createJobinfo(
         values.division_name,
@@ -139,8 +143,8 @@ const Formlist = () => {
         values.complain_desc,
         values.address,
         values.block,
-        defectinfo
-       
+        defectinfo,
+        partsinfo
       );
       reset();
     } catch (error) {
