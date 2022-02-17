@@ -77,19 +77,23 @@ const divBelong = async(divId) =>{
 
 const API_URL_JOBINFO = "/jobinfo"
 
-const createJobinfo = (division_name, client_name, dateEntry, complain_desc, address, block) =>{
+const createJobinfo = (division_name, client_name, dateEntry, complain_desc, address, block, defectinfo) =>{
   const jobinfo = {
               division_name: division_name, 
               client_name: client_name, 
               dateEntry: dateEntry, 
               natureofcomplain: complain_desc,
               address: address, 
-              block: block}
+              block: block,
+              defect_details_attributes: 
+                  defectinfo.map(item=>{
+                       return({defects: item.defects, recommendation: item.recommendation})
+                  })
+            }
     axios.post(API_URL_JOBINFO,{jobinfo}, {headers: header}).then((res)=>{
     console.log(res.data);
   })            
 }
-
 
 const DataService = {
   getAllClient,

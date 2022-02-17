@@ -64,8 +64,7 @@ const Formlist = () => {
 
   const [defectlist, setDefectList] = useState([
     {
-      defects: "",
-      recommendation: "",
+      defects: [],
     },
   ]);
 
@@ -75,6 +74,7 @@ const Formlist = () => {
     handleSubmit,
     reset,
     control,
+    getValues
   } = useForm({
     shouldFocusError: false,
   });
@@ -128,7 +128,9 @@ const Formlist = () => {
   };
 */
 
-  const createJobinfo = async () => {
+
+  const createJobinfo = async (data) => {
+      const defectinfo = getValues("defectslist")
     try {
       DataService.createJobinfo(
         values.division_name,
@@ -136,7 +138,9 @@ const Formlist = () => {
         values.startDate,
         values.complain_desc,
         values.address,
-        values.block
+        values.block,
+        defectinfo
+       
       );
       reset();
     } catch (error) {
