@@ -24,6 +24,14 @@ const theme = extendTheme(
               borderColor: "#EDF2F6",
             },
           },
+          outline: {
+            field: {
+              _focus: {
+                borderColor: "brand.500",
+              },
+              borderColor: "#EDF2F6",
+            },
+          },
         },
       },
       Textarea: {
@@ -80,7 +88,7 @@ const theme = extendTheme(
   }),
 
   withDefaultVariant({
-    variant: "filled",
+    variant: "outline",
     components: ["Input", "Select", "Textarea"],
   })
 );

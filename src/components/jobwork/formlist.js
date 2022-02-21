@@ -16,12 +16,23 @@ import {
   useBreakpointValue,
   Button,
   useEventListenerMap,
+  useToast,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
+import { FaTrashAlt, FaBarcode, FaShoppingBasket, FaDollarSign } from "react-icons/fa";
 
 const Formlist = () => {
+  const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
     startDate: new Date(),
@@ -66,7 +77,6 @@ const Formlist = () => {
     },
   ]);
 
-
   const {
     register,
     formState: { errors },
@@ -74,7 +84,7 @@ const Formlist = () => {
     reset,
     control,
     getValues,
-    setValue
+    setValue,
   } = useForm({
     shouldFocusError: false,
   });
@@ -114,19 +124,23 @@ const Formlist = () => {
         partsinfo
       );
       reset();
+      toast({
+        title: `Successfully Addes Job Work`,
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
-
   const watchTest = useWatch({
     control,
     name: "partslist",
-    defaultValue: parts
-  }
-  );
-  
+    defaultValue: parts,
+  });
+
   return (
     <div className="container">
       <form onSubmit={handleSubmit(createJobinfo)} autoComplete="off">
@@ -141,7 +155,7 @@ const Formlist = () => {
                   <DatePicker
                     placeholderText="Select date"
                     onChange={(date) => field.onChange(date)}
-                    selected={values.startDate}
+                    selected={field.value}
                     dateFormat="MM/dd/yy"
                     minDate={new Date()}
                   />
@@ -335,175 +349,196 @@ const Formlist = () => {
           </GridItem>
 
           <Heading size="xs">PARTS TO REPLACED</Heading>
-          <Divider />
-          {partsField.map(
-            ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
-
-          
-              const setTotal = (index, quantity, rates) => {
-                const amount =  parseInt(quantity) * parseInt(rates) ;  
-                 setValue(`partslist[${index}].subtotal`,amount);
-                console.log(rates);
-              };
        
+          <Table size="sm" >
+            <Thead>
+              <Tr>
+                <Th> SOR Code</Th>
+                <Th><FaShoppingBasket color="gray.500" />Item</Th>
+                <Th>Quantity</Th>
+                <Th><FaDollarSign color = "gray.500"/>Rates</Th>
+                <Th>Sub Total</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {partsField.map(
+                ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
+                  const setTotal = (index, quantity, rates) => {
+                    const amount = parseInt(quantity) * parseInt(rates);
+                    setValue(`partslist[${index}].subtotal`, amount);
+                  };
 
-              return (
-                <SimpleGrid
-                  columns={5}
-                  columnGap={3}
-                  rowGap={6}
-                  w="full"
-                  key={id}
-                >
-                  <GridItem>
-                    <FormControl
-                      isInvalid={
-                        errors?.[" "]?.[index]?.["sorCode"]?.["message"]
-                      }
-                    >
-                      <FormLabel>SOR Code:</FormLabel>
-                      <Input
-                        type="text"
-                        {...register(`partslist[${index}].sorCode`, {
-                          required: "cannot be empty",
-                        })}
-                        onChange={handleChange("sorCode")}
-                      />
-                    </FormControl>
-                    <Text
-                      as="sup"
-                      color="tomato"
-                      textAlign={3}
-                      className="login-error-msg"
-                    >
-                      {errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]}
-                    </Text>
-                  </GridItem>
+                  return (
+                    <Tr>
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["sorCode"]?.[
+                              "message"
+                            ]
+                          }
+                        >
+                          <Input
+                            type="text"
+                            {...register(`partslist[${index}].sorCode`, {
+                              required: "cannot be empty",
+                            })}
+                            onChange={handleChange("sorCode")}
+                          />
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["sorCode"]?.[
+                              "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
 
-                  <GridItem>
-                    <FormControl
-                      isInvalid={
-                        errors?.["partslist"]?.[index]?.["item"]?.["message"]
-                      }
-                    >
-                      <FormLabel>Item</FormLabel>
-                      <Input
-                        type="text"
-                        {...register(`partslist[${index}].item`, {
-                          required: "cannot be empty",
-                        })}
-                        onChange={handleChange("item")}
-                      />
-                    </FormControl>
-                    <Text
-                      as="sup"
-                      color="tomato"
-                      textAlign={3}
-                      className="login-error-msg"
-                    >
-                      {errors?.["partslist"]?.[index]?.["item"]?.["message"]}
-                    </Text>
-                  </GridItem>
-                  
-                  <GridItem>
-                    <FormControl
-                      isInvalid={
-                        errors?.["partslist"]?.[index]?.["quantity"]?.[
-                          "message"
-                        ]
-                      }
-                    >
-                      <FormLabel>Quantity:</FormLabel>
-                      <Input
-                        {...register(`partslist[${index}].quantity`)}
-                        onChange={(e) => {
-                        const quantity = e.target.value;
-                        setTotal(index, quantity, watchTest[index].rates);
-                        handleChange("quantity");
-                        
-                        }}
-                      />
-                    </FormControl>
-                    <Text
-                      as="sup"
-                      color="tomato"
-                      textAlign={3}
-                      className="login-error-msg"
-                    >
-                      {
-                        errors?.["partslist"]?.[index]?.["quantity"]?.[
-                          "message"
-                        ]
-                      }
-                    </Text>
-                  </GridItem>
-                  <GridItem>
-                    <FormControl
-                      isInvalid={
-                        errors?.["partslist"]?.[index]?.["rates"]?.["message"]
-                      }
-                    >
-                      <FormLabel>Rates:</FormLabel>
-                      <Input
-                        {...register(`partslist[${index}].rates`)}
-                        onChange={(e) => {
-                          const rates = e.target.value;
-                          setTotal(index, watchTest[index].quantity, rates);
-                          handleChange("rates");
-                        }}
-                      />
-                    </FormControl>
-                    <Text
-                      as="sup"
-                      color="tomato"
-                      textAlign={3}
-                      className="login-error-msg"
-                    >
-                      {errors?.["partslist"]?.[index]?.["rates"]?.["message"]}
-                    </Text>
-                  </GridItem>
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["item"]?.[
+                              "message"
+                            ]
+                          }
+                        >
+                          <Input
+                            type="text"
+                            {...register(`partslist[${index}].item`, {
+                              required: "cannot be empty",
+                            })}
+                            onChange={handleChange("item")}
+                          />
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["item"]?.[
+                              "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
 
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["quantity"]?.[
+                              "message"
+                            ]
+                          }
+                        >
+                          <Input
+                            type="text"
+                            {...register(`partslist[${index}].quantity`, {
+                              required: "cannot be empty",
+                            })}
+                            onChange={(e) => {
+                              const quantity = e.target.value;
+                              setTotal(index, quantity, watchTest[index].rates);
+                              handleChange("quantity");
+                            }}
+                          />
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["quantity"]?.[
+                              "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
 
-                
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["rates"]?.[
+                              "message"
+                            ]
+                          }
+                        >
+                          <Input
+                            {...register(`partslist[${index}].rates`, {
+                              required: "cannot be empty",
+                            })}
+                            onChange={(e) => {
+                              const rates = e.target.value;
+                              setTotal(index, watchTest[index].quantity, rates);
+                              handleChange("rates");
+                            }}
+                          />
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["rates"]?.[
+                              "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
 
-                  <GridItem>
-                    <FormControl
-                      isInvalid={
-                        errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                          "message"
-                        ]
-                      }
-                    >
-                      <FormLabel>Subtotal</FormLabel>
-                      <Input
-                        type="text"
-                        {...register(`partslist[${index}].subtotal`)}
-                      />
-                    </FormControl>
-                    <Text
-                      as="sup"
-                      color="tomato"
-                      textAlign={3}
-                      className="login-error-msg"
-                    >
-                      {
-                        errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                          "message"
-                        ]
-                      }
-                    </Text>
-                    <button
-                      type="button"
-                      onClick={() => partsRemove(index)}
-                      className="remove-btn"
-                    >
-                      <span>Remove</span>
-                    </button>
-                  </GridItem>
-                </SimpleGrid>
-              );
-            }
-          )}
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                              "message"
+                            ]
+                          }
+                        >
+                          <Input
+                            type="text"
+                            {...register(`partslist[${index}].subtotal`)}
+                          />
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                              "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
+
+                      <Td>
+                        <button
+                          type="button"
+                          onClick={() => partsRemove(index)}
+                          className="remove-btn"
+                        >
+                           <FaTrashAlt color="gray.300" />
+                        </button>
+                      </Td>
+                    </Tr>
+                  );
+                }
+              )}
+            </Tbody>
+          </Table>
           <GridItem>
             <Button onClick={() => partsAppend({})}>+</Button>
           </GridItem>
