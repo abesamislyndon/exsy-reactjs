@@ -18,7 +18,7 @@ import {
   useEventListenerMap,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 
 const Formlist = () => {
@@ -66,11 +66,6 @@ const Formlist = () => {
     },
   ]);
 
-  const [defectlist, setDefectList] = useState([
-    {
-      defects: [],
-    },
-  ]);
 
   const {
     register,
@@ -79,6 +74,7 @@ const Formlist = () => {
     reset,
     control,
     getValues,
+    setValue
   } = useForm({
     shouldFocusError: false,
   });
@@ -102,35 +98,6 @@ const Formlist = () => {
   const handleChangeDefect = (name) => (event) => (index) => {
     setValues({ ...values[index], error: false, [name]: event.target.value });
   };
-  /*
-
-  const handleChangeDefect = (e, index) => {
-    const clonedData = [...defectlist];
-    clonedData[index][e.target.name] = e.target.value;
-    setDefectList(clonedData);
-}
-*/
-
-  /*
-  const removeDefectForm = (i) => {
-    const list = [...defectlist];
-    list.splice(i, 1);
-    setDefectList(list);
-    reset(list);
-  };
-
-  const addDefectForm = () => {
-    setDefectList([...defectlist, { defects: "", recommendation: "" }]);
-  };
-
-
-  const addPartsReplacedForm = () => {
-    setParts([
-      ...parts,
-      { sorCode: "", quantity: "", item: "", rates: "", subtotal: "" },
-    ]);
-  };
-*/
 
   const createJobinfo = async (data) => {
     const defectinfo = getValues("defectslist");
@@ -152,6 +119,14 @@ const Formlist = () => {
     }
   };
 
+
+  const watchTest = useWatch({
+    control,
+    name: "partslist",
+    defaultValue: parts
+  }
+  );
+  
   return (
     <div className="container">
       <form onSubmit={handleSubmit(createJobinfo)} autoComplete="off">
@@ -273,7 +248,6 @@ const Formlist = () => {
                     required: "cannot be empty",
                   })}
                   onChange={handleChange("complain_desc")}
-                  // onChange={handleChange("complain_desc")}
                 />
               </FormControl>
               <Text
@@ -363,147 +337,172 @@ const Formlist = () => {
           <Heading size="xs">PARTS TO REPLACED</Heading>
           <Divider />
           {partsField.map(
-            ({ id, sorCode, quantity, item, rates, subtotal }, index) => (
-              <SimpleGrid
-                columns={5}
-                columnGap={3}
-                rowGap={6}
-                w="full"
-                key={id}
-              >
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]
-                    }
-                  >
-                    <FormLabel>SOR Code:</FormLabel>
-                    <Input
-                      type="text"
-                      {...register(`partslist[${index}].sorCode`, {
-                        required: "cannot be empty",
-                      })}
-                      onChange={handleChange("sorCode")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]}
-                  </Text>
-                </GridItem>
+            ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
 
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["partslist"]?.[index]?.["quantity"]?.["message"]
-                    }
-                  >
-                    <FormLabel>Quantity:</FormLabel>
-                    <Input
-                      type="text"
-                      {...register(`partslist[${index}].quantity`, {
-                        required: "cannot be empty",
-                      })}
-                      onChange={handleChange("quantity")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["partslist"]?.[index]?.["quantity"]?.["message"]}
-                  </Text>
-                </GridItem>
+          
+              const setTotal = (index, quantity, rates) => {
+                const amount =  parseInt(quantity) * parseInt(rates) ;  
+                 setValue(`partslist[${index}].subtotal`,amount);
+                console.log(rates);
+              };
+       
 
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["partslist"]?.[index]?.["item"]?.["message"]
-                    }
-                  >
-                    <FormLabel>Item</FormLabel>
-                    <Input
-                      type="text"
-                      {...register(`partslist[${index}].item`, {
-                        required: "cannot be empty",
-                      })}
-                      onChange={handleChange("item")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["partslist"]?.[index]?.["item"]?.["message"]}
-                  </Text>
-                </GridItem>
+              return (
+                <SimpleGrid
+                  columns={5}
+                  columnGap={3}
+                  rowGap={6}
+                  w="full"
+                  key={id}
+                >
+                  <GridItem>
+                    <FormControl
+                      isInvalid={
+                        errors?.[" "]?.[index]?.["sorCode"]?.["message"]
+                      }
+                    >
+                      <FormLabel>SOR Code:</FormLabel>
+                      <Input
+                        type="text"
+                        {...register(`partslist[${index}].sorCode`, {
+                          required: "cannot be empty",
+                        })}
+                        onChange={handleChange("sorCode")}
+                      />
+                    </FormControl>
+                    <Text
+                      as="sup"
+                      color="tomato"
+                      textAlign={3}
+                      className="login-error-msg"
+                    >
+                      {errors?.["partslist"]?.[index]?.["sorCode"]?.["message"]}
+                    </Text>
+                  </GridItem>
 
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["partslist"]?.[index]?.["rates"]?.["message"]
-                    }
-                  >
-                    <FormLabel>Rates:</FormLabel>
-                    <Input
-                      type="text"
-                      {...register(`partslist[${index}].rates`, {
-                        required: "cannot be empty",
-                      })}
-                      onChange={handleChange("rates")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["partslist"]?.[index]?.["rates"]?.["message"]}
-                  </Text>
-                </GridItem>
+                  <GridItem>
+                    <FormControl
+                      isInvalid={
+                        errors?.["partslist"]?.[index]?.["item"]?.["message"]
+                      }
+                    >
+                      <FormLabel>Item</FormLabel>
+                      <Input
+                        type="text"
+                        {...register(`partslist[${index}].item`, {
+                          required: "cannot be empty",
+                        })}
+                        onChange={handleChange("item")}
+                      />
+                    </FormControl>
+                    <Text
+                      as="sup"
+                      color="tomato"
+                      textAlign={3}
+                      className="login-error-msg"
+                    >
+                      {errors?.["partslist"]?.[index]?.["item"]?.["message"]}
+                    </Text>
+                  </GridItem>
+                  
+                  <GridItem>
+                    <FormControl
+                      isInvalid={
+                        errors?.["partslist"]?.[index]?.["quantity"]?.[
+                          "message"
+                        ]
+                      }
+                    >
+                      <FormLabel>Quantity:</FormLabel>
+                      <Input
+                        {...register(`partslist[${index}].quantity`)}
+                        onChange={(e) => {
+                        const quantity = e.target.value;
+                        setTotal(index, quantity, watchTest[index].rates);
+                        handleChange("quantity");
+                        
+                        }}
+                      />
+                    </FormControl>
+                    <Text
+                      as="sup"
+                      color="tomato"
+                      textAlign={3}
+                      className="login-error-msg"
+                    >
+                      {
+                        errors?.["partslist"]?.[index]?.["quantity"]?.[
+                          "message"
+                        ]
+                      }
+                    </Text>
+                  </GridItem>
+                  <GridItem>
+                    <FormControl
+                      isInvalid={
+                        errors?.["partslist"]?.[index]?.["rates"]?.["message"]
+                      }
+                    >
+                      <FormLabel>Rates:</FormLabel>
+                      <Input
+                        {...register(`partslist[${index}].rates`)}
+                        onChange={(e) => {
+                          const rates = e.target.value;
+                          setTotal(index, watchTest[index].quantity, rates);
+                          handleChange("rates");
+                        }}
+                      />
+                    </FormControl>
+                    <Text
+                      as="sup"
+                      color="tomato"
+                      textAlign={3}
+                      className="login-error-msg"
+                    >
+                      {errors?.["partslist"]?.[index]?.["rates"]?.["message"]}
+                    </Text>
+                  </GridItem>
 
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["partslist"]?.[index]?.["subtotal"]?.["message"]
-                    }
-                  >
-                    <FormLabel>Subtotal</FormLabel>
-                    <Input
-                      type="text"
-                      {...register(`partslist[${index}].subtotal`, {
-                        required: "cannot be empty",
-                      })}
-                      onChange={handleChange("subtotal")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["partslist"]?.[index]?.["subtotal"]?.["message"]}
-                  </Text>
-                  <button
-                    type="button"
-                    onClick={() => partsRemove(index)}
-                    className="remove-btn"
-                  >
-                    <span>Remove</span>
-                  </button>
-                </GridItem>
-              </SimpleGrid>
-            )
+
+                
+
+                  <GridItem>
+                    <FormControl
+                      isInvalid={
+                        errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                          "message"
+                        ]
+                      }
+                    >
+                      <FormLabel>Subtotal</FormLabel>
+                      <Input
+                        type="text"
+                        {...register(`partslist[${index}].subtotal`)}
+                      />
+                    </FormControl>
+                    <Text
+                      as="sup"
+                      color="tomato"
+                      textAlign={3}
+                      className="login-error-msg"
+                    >
+                      {
+                        errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                          "message"
+                        ]
+                      }
+                    </Text>
+                    <button
+                      type="button"
+                      onClick={() => partsRemove(index)}
+                      className="remove-btn"
+                    >
+                      <span>Remove</span>
+                    </button>
+                  </GridItem>
+                </SimpleGrid>
+              );
+            }
           )}
           <GridItem>
             <Button onClick={() => partsAppend({})}>+</Button>
