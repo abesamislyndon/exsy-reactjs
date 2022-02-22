@@ -29,7 +29,13 @@ import {
 import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
-import { FaTrashAlt, FaBarcode, FaShoppingBasket, FaDollarSign } from "react-icons/fa";
+import {
+  FaTrashAlt,
+  FaBarcode,
+  FaShoppingBasket,
+  FaDollarSign,
+} from "react-icons/fa";
+import { resolveMotionValue } from "framer-motion";
 
 const Formlist = () => {
   const toast = useToast();
@@ -44,6 +50,7 @@ const Formlist = () => {
     clients: [],
     divisions: [],
     clientBelong: [],
+    error: ""
   });
 
   useEffect(() => {
@@ -87,6 +94,11 @@ const Formlist = () => {
     setValue,
   } = useForm({
     shouldFocusError: false,
+    defaultValues: {
+      defectslist: [{ defects: "", recommendation: "" }],
+      partslist: [{ sorCode: "", item: "" , quantity: "", rates: "", subtotal: ""}]
+    }
+
   });
 
   const {
@@ -113,7 +125,7 @@ const Formlist = () => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
     try {
-      DataService.createJobinfo(
+      await   DataService.createJobinfo(
         values.division_name,
         values.client_name,
         values.startDate,
@@ -123,15 +135,16 @@ const Formlist = () => {
         defectinfo,
         partsinfo
       );
-      reset();
-      toast({
-        title: `Successfully Addes Job Work`,
-        position: "top-right",
-        status: "success",
-        isClosable: true,
-      });
+          toast({
+            title: `Successfuly added Job Work`,
+            position: "top-right",
+            status: "success",
+            isClosable: true,
+          });
+          reset();
+   
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
   };
 
@@ -153,11 +166,13 @@ const Formlist = () => {
                 name="startDate"
                 render={({ field }) => (
                   <DatePicker
-                    placeholderText="Select date"
+                  placeholderText="Select date"
                     onChange={(date) => field.onChange(date)}
                     selected={field.value}
                     dateFormat="MM/dd/yy"
                     minDate={new Date()}
+                    defaultValue={field.startDate}
+                    className="chakra-input"
                   />
                 )}
               />
@@ -166,11 +181,11 @@ const Formlist = () => {
 
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
-              <FormControl>
+            <FormControl isInvalid={errors.client_name?.message}>
                 <FormLabel>Client:</FormLabel>
                 <Select
                   placeholder="Select option"
-                  {...register("client_name")}
+                  {...register("client_name", {required: 'cannot be empty'})}
                   onChange={getDivBelong("client_name")}
                 >
                   {values.clients.map((client, i) => {
@@ -182,14 +197,22 @@ const Formlist = () => {
                   })}
                 </Select>
               </FormControl>
+              <Text
+                as="sup"
+                color="tomato"
+                textAlign={3}
+                className="login-error-msg"
+              >
+                {errors.client_name?.message}
+              </Text>
             </GridItem>
 
             <GridItem>
-              <FormControl isInvalid={errors.division_id?.message}>
+              <FormControl isInvalid={errors.division_name?.message}>
                 <FormLabel>Division:</FormLabel>
                 <Select
                   placeholder="Select option"
-                  {...register("division_name")}
+                  {...register("division_name", {required: "cannot be empty"})}
                   onChange={handleChange("division_name")}
                 >
                   {values.clientBelong.map((division, i) => {
@@ -207,7 +230,7 @@ const Formlist = () => {
                 textAlign={3}
                 className="login-error-msg"
               >
-                {errors.division_id?.message}
+                {errors.division_name?.message}
               </Text>
             </GridItem>
           </SimpleGrid>
@@ -251,7 +274,7 @@ const Formlist = () => {
             </SimpleGrid>
           </HStack>
 
-          <Heading size="xs">NATURAL OF COMPLAINT / FINDING</Heading>
+          <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
           <Divider />
           <SimpleGrid columns={1} columnGap={3} rowGap={6} w="full">
             <GridItem>
@@ -275,7 +298,7 @@ const Formlist = () => {
             </GridItem>
           </SimpleGrid>
 
-          <Heading size="xs">DEFECTS DETECTED</Heading>
+          <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
 
           {defectsFields.map(({ id, defects, recommendation }, index) => (
@@ -348,15 +371,21 @@ const Formlist = () => {
             <Button onClick={() => defectsAppend({})}>+</Button>
           </GridItem>
 
-          <Heading size="xs">PARTS TO REPLACED</Heading>
-       
-          <Table size="sm" >
+          <Heading size="sm">PARTS TO REPLACED</Heading>
+
+          <Table size="sm">
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
-                <Th><FaShoppingBasket color="gray.500" />Item</Th>
+                <Th>
+                  <FaShoppingBasket color="gray.500" />
+                  Item
+                </Th>
                 <Th>Quantity</Th>
-                <Th><FaDollarSign color = "gray.500"/>Rates</Th>
+                <Th>
+                  <FaDollarSign color="gray.500" />
+                  Rates
+                </Th>
                 <Th>Sub Total</Th>
               </Tr>
             </Thead>
@@ -369,7 +398,7 @@ const Formlist = () => {
                   };
 
                   return (
-                    <Tr>
+                    <Tr key={id}>
                       <Td>
                         <FormControl
                           isInvalid={
@@ -507,7 +536,7 @@ const Formlist = () => {
                         >
                           <Input
                             type="text"
-                            {...register(`partslist[${index}].subtotal`)}
+                            {...register(`partslist[${index}].subtotal`, {required: "cannot be empty"})}
                           />
                         </FormControl>
                         <Text
@@ -530,7 +559,8 @@ const Formlist = () => {
                           onClick={() => partsRemove(index)}
                           className="remove-btn"
                         >
-                           <FaTrashAlt color="gray.300" />
+                   
+                          <FaTrashAlt color="gray.300" />
                         </button>
                       </Td>
                     </Tr>

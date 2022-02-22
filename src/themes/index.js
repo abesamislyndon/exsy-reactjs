@@ -72,6 +72,7 @@ const theme = extendTheme(
       FormLabel: {
         baseStyle: {
           fontWeight: "300",
+          fontSize: "1rem"
         },
         sizes: {
           // default size is md

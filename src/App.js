@@ -4,6 +4,7 @@ import { Route, Routes} from 'react-router-dom'
 import Login from "./components/login.component";
 import Dashboard from "./components/dashboard.component";
 import Jobwork from "./components/jobwork/jobwork.component";
+import Joblist from "./components/jobwork/joblist";
 import Client from "./components/client";
 import Division from "./components/division";
 import Usermanagement from "./components/user.manangement.component";
@@ -22,6 +23,7 @@ function App(){
                <Route  path='*' element={<ErrorPage404/>}/>
                <Route  exact path="/" element={<Login/>}/>
                <Route  exact path="/jobwork" element={<PrivateRoute Component = {Jobwork}/>} />
+               <Route  exact path="/joblist" element={<PrivateRoute Component = {Joblist}/>} />
                <Route  exact path="/dashboard" element={<PrivateRoute Component = {Dashboard} />}/>
                <Route  exact path="/client" element={ <PrivateRoute Component = {Client} />}/>
                <Route  exact path="/division" element={ <PrivateRoute Component = {Division} />}/>

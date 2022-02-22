@@ -103,6 +103,20 @@ const divBelong = async (divId) => {
 */
 
 const API_URL_JOBINFO = "/jobinfo";
+const getAllJobinfo  = async () => {
+  try{
+    const response =  await axios.get(
+        API_URL_JOBINFO, {
+          headers: header
+        }); 
+        return response.data
+  }catch(error){
+      console.log(error);
+  }
+
+
+}
+
 
 const createJobinfo = (
   division_name,
@@ -141,8 +155,9 @@ const createJobinfo = (
     jobinfo
   }, {
     headers: header
-  }).then((res) => {
-    console.log(res.data);
+  }).then((response) => {
+      console.log(response.data);
+      return response.data;
   });
 };
 
@@ -155,6 +170,7 @@ const DataService = {
   deleteDivision,
   divBelong,
   createJobinfo,
+  getAllJobinfo
 };
 
 export default DataService;
