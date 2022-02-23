@@ -11,8 +11,7 @@ function Joblists() {
  const [values, setValues] = useState({
      joblist: []
  });
-
-
+ 
  useEffect(() => {
     getallJoblist();
   }, []);
@@ -25,13 +24,10 @@ function Joblists() {
     console.log(values.joblist)
   };
 
-
-
-
   return (
-    <>
-      <SidebarWithHeader>
-      <Container maxW="container.xl">
+  <>
+  <SidebarWithHeader>
+    <Container maxW="container.xl">
       <Table height={400} data={values.joblist}>
       <Column width={120} sortable>
           <HeaderCell>Jobwork # </HeaderCell>
@@ -61,17 +57,13 @@ function Joblists() {
           <HeaderCell>Total</HeaderCell>
           <Cell dataKey="div_name" />
         </Column>
-     
         <Column width={120} fixed="right">
           <HeaderCell>Action</HeaderCell>
           <Cell>
             {(rowData) => {
               let id = rowData.id;
               return (
-                <Button
-                  size="sm"
-              
-                >
+                <Button size="sm">
                   {" "}
                   {<FaTrashAlt />}
                 </Button>
