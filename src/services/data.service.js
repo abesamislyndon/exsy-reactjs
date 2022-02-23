@@ -113,8 +113,6 @@ const getAllJobinfo  = async () => {
   }catch(error){
       console.log(error);
   }
-
-
 }
 
 
