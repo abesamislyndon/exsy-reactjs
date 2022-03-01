@@ -1,5 +1,6 @@
-import React, { ReactNode } from "react";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import React, { ReactNode } from "react"; 
+import { NavLink, useNavigate, Link} from "react-router-dom";
+
 import {
   IconButton,
   Avatar,
@@ -36,15 +37,27 @@ import {
 import AuthService from "../services/auth.service";
 import { useState, useEffect } from "react";
 
+import {Navigation} from 'react-minimal-side-navigation';
+import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
+
 interface LinkItemProps {
   name: string;
   to: string;
-  icon: IconType; 
+  icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: "Dashboards", icon: FiHome, to: "/dashboard" },
-  { name: "Jobwork form", icon: FiClipboard, to: "/jobwork", children: "/dasd"},
-  { name: "Jobwork List", icon: FiClipboard, to: "/joblist", children: "/dasd"},
+  {
+    name: "Jobwork form",
+    icon: FiClipboard,
+    to: "/jobwork",
+    children: "/dasd",
+  },
+  {
+    name: "Jobwork List",
+    icon: FiClipboard,
+    to: "/joblist",
+  },
   { name: "Clients", icon: FiUsers, to: "/client" },
   { name: "Divisions", icon: FiUsers, to: "/division" },
   { name: "User Management", icon: FiBarChart, to: "/user" },
@@ -57,7 +70,9 @@ export default function SidebarWithHeader({
 }: {
   children: ReactNode,
 }) {
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -92,6 +107,7 @@ interface SidebarProps extends BoxProps {
 
 const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
   //const integrations = useDisclosure();
+  const navigate = useNavigate();
   return (
     <Box
       transition="3s ease"
@@ -109,32 +125,85 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <NavLink as={Link} key={link.name} to={link.to}>
-          <Flex
-            align="center"
-            p="2"
-            mx="4"
-            borderRadius="lg"
-            role="group"
-            cursor="pointer"
-            _hover={{
-              bg: "",
-              color: "#f39c12",
+ 
+      <Navigation
+            // you can use your own router's api to get pathname
+            activeItemId="/dashboard"
+            onSelect={({itemId}) => {
+              navigate(itemId); 
             }}
-            {...rest}
-          >
-            <Icon
-              mr="3"
-              fontSize="12"
-              _groupHover={{ color: "#f39c12" }}
-              as={link.icon}
-            />
-            {link.name} 
-          </Flex>
-        </NavLink>        
-      ))}
-
+            items={[
+              {
+                title: 'Dashboard',
+                itemId: '/dashboard',
+                // you can use your own custom Icon component as well
+                // icon is optional
+                elemBefore: () => <FiHome />,
+              },
+              {
+                title: 'Projects',
+                itemId: '#',
+                elemBefore: () => <FiClipboard />,
+                subNav: [ 
+                  {
+                    title: 'Job List',
+                    itemId: '/joblist',
+                  },
+                  {
+                    title: 'Job Work Forms',
+                    itemId: '/jobwork',
+                  },
+                ],
+              },
+              {
+                title: 'Client Management',
+                //itemId: '/',
+                elemBefore: () => <FiUsers />,
+                subNav: [
+                  {
+                    title: 'Client',
+                    itemId: '/client',
+                  },
+                  {
+                    title: 'Division',
+                    itemId: '/division',
+                  },
+                ],
+              },
+              {
+                title: 'Reports',
+                //itemId: '/',
+                elemBefore: () => <FiUsers />,
+                subNav: [
+                  {
+                    title: 'Client',
+                    itemId: '/client',
+                  },
+                  {
+                    title: 'Division',
+                    itemId: '/division',
+                  },
+                ],
+              },
+              {
+                title: ' Settings',
+                //itemId: '/',
+                elemBefore: () => <FiUsers />,
+                subNav: [
+                  {
+                    title: 'Client',
+                    itemId: '/client',
+                  },
+                  {
+                    title: 'Division',
+                    itemId: '/division',
+                  },
+                ],
+              },
+            ]}
+            
+          />
+      
     </Box>
   );
 };

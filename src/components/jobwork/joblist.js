@@ -32,38 +32,38 @@ function Joblists() {
   const data = values.joblist;
   const columns = [
     {
-      name: "Date",
+      name: "DATE",
       selector: "dateEntry",
       sortable: true
     },
     {
-      name: "Client",
+      name: "CLIENT",
       selector: "client_name",
       sortable: true
     },
     {
-      name: "Division",
+      name: "DIVISION",
       selector: "division_name",
       sortable: true
     },
     {
-      name: "Address",
+      name: "ADDRESS",
       selector: "address",
       sortable: true
     },
     {
-      name: "Complaine",
+      name: "COMPLAIN",
       selector: "natureofcomplain",
       sortable: true
     },
     {
-      name: "Total",
+      name: "TOTAL",
       selector: "natureofcomplain",
       sortable: true
     }
     ,
     {
-      name: "Actions",
+      name: "ACTIONS",
       selector: "natureofcomplain",
       sortable: true
     }

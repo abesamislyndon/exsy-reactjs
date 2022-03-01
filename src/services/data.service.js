@@ -113,8 +113,6 @@ const getAllJobinfo  = async () => {
   }catch(error){
       console.log(error);
   }
-
-
 }
 
 
@@ -141,7 +139,7 @@ const createJobinfo = (
         recommendation: item.recommendation
       };
     }),
-    partsreplace_attributes: partsinfo.map((item) => {
+    partsreplaces_attributes: partsinfo.map((item) => {
       return {
         sorcode: item.sorCode,
         item: item.item,
