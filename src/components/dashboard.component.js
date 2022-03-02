@@ -1,8 +1,69 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
-import AuthService from "../services/auth.service"; 
+import AuthService from "../services/auth.service";
 import SidebarWithHeader from "../shared/SidebarProps";
-import { Flex, Container} from "@chakra-ui/react";
+import { Flex, Container, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import faker from "faker";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Chart.js Bar Chart",
+    },
+  },
+};
+
+const labels = ["January", "February", "March", "April", "May", "June", "July"];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: "Bishan - Toa Payoh",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      backgroundColor: "rgba(255, 76, 48, 0.5)",
+    },
+    {
+      label: "Kallang",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      backgroundColor: "rgba(249, 180, 45, 0.5)",
+    },
+    {
+      label: "Marina",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      backgroundColor: "rgba(95, 16, 245, 0.5)",
+    },
+    {
+      label: "Ang Mokio",
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
+    },
+  ],
+};
 
 function Dashboard() {
   /*
@@ -18,14 +79,16 @@ function Dashboard() {
     }
   }, []);
   */
+
   return (
-      <SidebarWithHeader>
-      <Flex>
-          <p>
-           In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before the final copy is 
-      </p>
-      </Flex>
-      </SidebarWithHeader> 
-    );
+    <SidebarWithHeader>
+      <Grid templateColumns="repeat(2, 1fr)" gap={1}>
+        <GridItem w="100%" h="10">
+          <Bar options={options} data={data} />
+        </GridItem>
+        <GridItem w="100%" h="10"  />
+      </Grid>
+    </SidebarWithHeader>
+  );
 }
 export default Dashboard;
