@@ -123,6 +123,7 @@ const createJobinfo = (
   complain_desc,
   address,
   block,
+  gtotal,
   defectinfo,
   partsinfo
 ) => {
@@ -133,6 +134,7 @@ const createJobinfo = (
     natureofcomplain: complain_desc,
     address: address,
     block: block,
+    gtotal: gtotal,
     defect_details_attributes: defectinfo.map((item) => {
       return {
         defects: item.defects,
@@ -142,7 +144,7 @@ const createJobinfo = (
     partsreplaces_attributes: partsinfo.map((item) => {
       return {
         sorcode: item.sorCode,
-        item: item.item,
+        item_name: item.item,
         quantity: item.quantity,
         rates: item.rates,
         subtotal: item.subtotal

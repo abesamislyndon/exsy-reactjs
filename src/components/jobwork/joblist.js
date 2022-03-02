@@ -32,8 +32,8 @@ function Joblists() {
   const data = values.joblist;
   const columns = [
     {
-      name: "DATE",
-      selector: "dateEntry",
+      name: 'DATE',
+      selector: 'dateEntry',
       sortable: true
     },
     {
@@ -58,7 +58,7 @@ function Joblists() {
     },
     {
       name: "TOTAL",
-      selector: "natureofcomplain",
+      selector: "gtotal",
       sortable: true
     }
     ,

@@ -10,6 +10,7 @@ import {
   FormLabel,
   SimpleGrid,
   GridItem,
+  Grid,
   Input,
   Text,
   FormControl,
@@ -25,6 +26,11 @@ import {
   Th,
   Td,
   TableCaption,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
@@ -47,6 +53,7 @@ const Formlist = () => {
     block: "",
     address: "",
     complain_desc: "",
+    gtotal: "",
     clients: [],
     divisions: [],
     clientBelong: [],
@@ -96,7 +103,7 @@ const Formlist = () => {
     shouldFocusError: false,
     defaultValues: {
       defectslist: [{ defects: "", recommendation: "" }],
-      partslist: [{ sorCode: "", item: "" , quantity: "", rates: "", subtotal: ""}]
+      partslist: [{ sorCode: "", item: "", quantity: "", rates: "", subtotal: "" }]
     }
 
   });
@@ -125,26 +132,27 @@ const Formlist = () => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
     try {
-      await   DataService.createJobinfo(
+      await DataService.createJobinfo(
         values.division_name,
         values.client_name,
         values.startDate,
         values.complain_desc,
         values.address,
         values.block,
+        values.gtotal,
         defectinfo,
         partsinfo
       );
-          toast({
-            title: `Successfuly added Job Work`,
-            position: "top-right",
-            status: "success",
-            isClosable: true,
-          });
-          reset();
-   
+      toast({
+        title: `Successfuly added Job Work`,
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
+      reset();
+
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   };
 
@@ -153,6 +161,10 @@ const Formlist = () => {
     name: "partslist",
     defaultValue: parts,
   });
+
+
+  const subtotalFields = getValues("partslist");
+  const result = subtotalFields.reduce((total, currentValue) => total = total + currentValue.subtotal, 0);
 
   return (
     <div className="container">
@@ -166,7 +178,7 @@ const Formlist = () => {
                 name="startDate"
                 render={({ field }) => (
                   <DatePicker
-                  placeholderText="Select date"
+                    placeholderText="Select date"
                     onChange={(date) => field.onChange(date)}
                     selected={field.value}
                     dateFormat="MM/dd/yy"
@@ -181,11 +193,11 @@ const Formlist = () => {
 
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
-            <FormControl isInvalid={errors.client_name?.message}>
+              <FormControl isInvalid={errors.client_name?.message}>
                 <FormLabel>Client:</FormLabel>
                 <Select
                   placeholder="Select option"
-                  {...register("client_name", {required: 'cannot be empty'})}
+                  {...register("client_name", { required: 'cannot be empty' })}
                   onChange={getDivBelong("client_name")}
                 >
                   {values.clients.map((client, i) => {
@@ -212,7 +224,7 @@ const Formlist = () => {
                 <FormLabel>Division:</FormLabel>
                 <Select
                   placeholder="Select option"
-                  {...register("division_name", {required: "cannot be empty"})}
+                  {...register("division_name", { required: "cannot be empty" })}
                   onChange={handleChange("division_name")}
                 >
                   {values.clientBelong.map((division, i) => {
@@ -315,7 +327,7 @@ const Formlist = () => {
                     {...register(`defectslist[${index}].defects`, {
                       required: "cannot be empty",
                     })}
-                    // onChange={handleChangeDefect("defects")}
+                  // onChange={handleChangeDefect("defects")}
                   />
                 </FormControl>
                 <Text
@@ -331,7 +343,7 @@ const Formlist = () => {
                 <FormControl
                   isInvalid={
                     errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                    "message"
                     ]
                   }
                 >
@@ -341,7 +353,7 @@ const Formlist = () => {
                     {...register(`defectslist[${index}].recommendation`, {
                       required: "cannot be empty",
                     })}
-                    //onChange={handleChangeDefect("recommendation")}
+                  //onChange={handleChangeDefect("recommendation")}
                   />
                 </FormControl>
                 <Text
@@ -352,7 +364,7 @@ const Formlist = () => {
                 >
                   {
                     errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                    "message"
                     ]
                   }
                 </Text>
@@ -403,7 +415,7 @@ const Formlist = () => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -423,7 +435,7 @@ const Formlist = () => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -433,7 +445,7 @@ const Formlist = () => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -453,7 +465,7 @@ const Formlist = () => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -463,7 +475,7 @@ const Formlist = () => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -487,7 +499,7 @@ const Formlist = () => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -497,20 +509,26 @@ const Formlist = () => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
-                          <Input
-                            {...register(`partslist[${index}].rates`, {
-                              required: "cannot be empty",
-                            })}
-                            onChange={(e) => {
-                              const rates = e.target.value;
-                              setTotal(index, watchTest[index].quantity, rates);
-                              handleChange("rates");
-                            }}
-                          />
+
+                          <NumberInput>
+                            <NumberInputField
+
+                              {...register(`partslist[${index}].rates`, {
+                                required: "cannot be empty",
+                              })}
+                              onChange={(e) => {
+                                const rates = e.target.value;
+                                setTotal(index, watchTest[index].quantity, rates);
+                                handleChange("rates");
+                              }}
+
+                            />
+                          </NumberInput>
+
                         </FormControl>
                         <Text
                           as="sup"
@@ -520,7 +538,7 @@ const Formlist = () => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -530,13 +548,13 @@ const Formlist = () => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
                           <Input
                             type="text"
-                            {...register(`partslist[${index}].subtotal`, {required: "cannot be empty"})}
+                            {...register(`partslist[${index}].subtotal`, { required: "cannot be empty" })}
                           />
                         </FormControl>
                         <Text
@@ -547,7 +565,7 @@ const Formlist = () => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -559,7 +577,7 @@ const Formlist = () => {
                           onClick={() => partsRemove(index)}
                           className="remove-btn"
                         >
-                   
+
                           <FaTrashAlt color="gray.300" />
                         </button>
                       </Td>
@@ -572,6 +590,24 @@ const Formlist = () => {
           <GridItem>
             <Button onClick={() => partsAppend({})}>+</Button>
           </GridItem>
+
+          <Grid templateColumns='repeat(5, 1fr)' gap={1}>
+            <GridItem w='100%' h='10' />
+            <GridItem w='100%' h='10' />
+            <GridItem w='100%' h='10' />
+            <GridItem w='100%' h='10' />
+            <GridItem w='100%' h='10'>
+              <Heading size="sm">TOTAL: {result}</Heading>
+              <Input
+              type="text"
+              value={result}
+                  {...register("gtotal")}
+                  onChange={handleChange("gtotal")}
+  
+              />
+            </GridItem>
+          </Grid>
+
 
           <VStack align="end">
             <Button colorScheme="brand" type="submit">
