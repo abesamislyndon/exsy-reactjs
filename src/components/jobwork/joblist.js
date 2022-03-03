@@ -32,6 +32,11 @@ function Joblists() {
   const data = values.joblist;
   const columns = [
     {
+      name: 'JOB WORK ID',
+      selector: 'id',
+      sortable: true
+    },
+    {
       name: 'DATE',
       selector: 'dateEntry',
       sortable: true

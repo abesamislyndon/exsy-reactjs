@@ -1,33 +1,34 @@
-.chakra-input{
-    -webkit-padding-end: 2rem;
-    padding-inline-end: 2rem;
-    width: 40%;
-    min-width: 0px;
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    position: relative;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    transition-property: var(--chakra-transition-property-common);
-    transition-duration: var(--chakra-transition-duration-normal);
-    background: inherit;
-    padding-bottom: 1px;
-    line-height: var(--chakra-lineHeights-normal);
-    font-size: var(--chakra-fontSizes-md);
-    -webkit-padding-start: var(--chakra-space-4);
-    padding-inline-start: var(--chakra-space-4);
-    height: var(--chakra-sizes-10);
-    border-radius: var(--chakra-radii-md);
-    border: 1px solid;
-    border-color: inherit;
+.active {
+    color: #f37712;
 }
 
-.active{
-    color:#f37712;
+label {
+    color: #666;
 }
 
-label{
-    color:#666;
+
+//SIDEBAR OVERRIDE
+
+.side-navigation-panel-select-inner-option-text {
+    font-size: 0.783em !important;
+    margin-left: -10px !important;
+}
+
+.css-1eg4881 {
+    width: 245px !important;
+    display: block;
+    background-color: #EEEFEF !important;
+}
+
+.side-navigation-panel .side-navigation-panel-select .side-navigation-panel-select-wrap .side-navigation-panel-select-option .side-navigation-panel-select-option-wrap .side-navigation-panel-select-option-text {
+    font-weight: 500;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-size: 0.89em;
+}
+
+// NAVIGATION BAR
+
+.css-1uu1wcb {
+    background-color: #fff !important;
 }

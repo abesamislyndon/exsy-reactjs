@@ -120,8 +120,8 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+        <Text fontSize="1l"  fontWeight="bold">
+          Job Work System v1.0
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -141,7 +141,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 elemBefore: () => <FiHome />,
               },
               {
-                title: 'Projects',
+                title: 'Jobwork',
                 itemId: '#',
                 elemBefore: () => <FiClipboard />,
                 subNav: [ 
@@ -157,7 +157,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
               },
               {
                 title: 'Client Management',
-                //itemId: '/',
+                itemId: '/client',
                 elemBefore: () => <FiUsers />,
                 subNav: [
                   {
@@ -172,7 +172,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
               },
               {
                 title: 'Reports',
-                //itemId: '/',
+                itemId: '/report',
                 elemBefore: () => <FiUsers />,
                 subNav: [
                   {
@@ -291,7 +291,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">Lyndon Abesamis</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>

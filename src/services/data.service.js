@@ -3,6 +3,7 @@ import authHeader from "./auth.header";
 import {
   useState
 } from "react";
+import Moment from 'moment';
 
 const header = authHeader();
 
@@ -130,7 +131,7 @@ const createJobinfo = (
   const jobinfo = {
     division_name: division_name,
     client_name: client_name,
-    dateEntry: dateEntry,
+    dateEntry: Moment(dateEntry).format('DD-MM-YYYY'),
     natureofcomplain: complain_desc,
     address: address,
     block: block,
@@ -144,7 +145,7 @@ const createJobinfo = (
     partsreplaces_attributes: partsinfo.map((item) => {
       return {
         sorcode: item.sorCode,
-        item_name: item.item,
+        item: item.item,
         quantity: item.quantity,
         rates: item.rates,
         subtotal: item.subtotal

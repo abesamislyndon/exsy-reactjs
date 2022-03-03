@@ -3,7 +3,6 @@ import {
   withDefaultColorScheme,
   withDefaultVariant,
 } from "@chakra-ui/react";
-import { getColor } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme(
   {
@@ -22,6 +21,7 @@ const theme = extendTheme(
                 borderColor: "brand.500",
               },
               borderColor: "#EDF2F6",
+              background: "#fff",
             },
           },
           outline: {
@@ -41,8 +41,12 @@ const theme = extendTheme(
               _focus: {
                 borderColor: "brand.500",
               },
+              background: "#fff",
               borderColor: "#EDF2F6",
+              
             },
+            borderColor: "#dfe6e9",
+            background: "#fff",
           },
         },
       },
@@ -54,6 +58,7 @@ const theme = extendTheme(
                 borderColor: "brand.500",
               },
               borderColor: "#EDF2F6",
+              background: "#fff",
             },
           },
         },
@@ -90,7 +95,7 @@ const theme = extendTheme(
 
   withDefaultVariant({
     variant: "outline",
-    components: ["Input", "Select", "Textarea"],
+    components: ["Input", "Select", "Textarea", "NumberInput"],
   })
 );
 
