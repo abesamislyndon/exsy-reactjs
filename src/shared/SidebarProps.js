@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react"; 
-import { NavLink, useNavigate, Link} from "react-router-dom";
+import React, { ReactNode } from "react";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 
 import {
   IconButton,
@@ -33,12 +33,13 @@ import {
   FiMenu,
   FiBell,
   FiChevronDown,
+  FiFileText,
 } from "react-icons/fi";
 import AuthService from "../services/auth.service";
 import { useState, useEffect } from "react";
 
-import {Navigation} from 'react-minimal-side-navigation';
-import 'react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css';
+import { Navigation } from "react-minimal-side-navigation";
+import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
 interface LinkItemProps {
   name: string;
@@ -61,7 +62,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Clients", icon: FiUsers, to: "/client" },
   { name: "Divisions", icon: FiUsers, to: "/division" },
   { name: "User Management", icon: FiBarChart, to: "/user" },
-  { name: "Reports", icon: FiBarChart, to: "/reports" },
+  { name: "Reports", icon: FiFileText, to: "/reports" },
   { name: "Settings", icon: FiSettings, to: "/reports" },
 ];
 
@@ -70,9 +71,8 @@ export default function SidebarWithHeader({
 }: {
   children: ReactNode,
 }) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -120,90 +120,92 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="1l"  fontWeight="bold">
+        <Text fontSize="1l" fontWeight="bold">
           Job Work System v1.0
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
- 
+
       <Navigation
-            // you can use your own router's api to get pathname
-            activeItemId="/dashboard"
-            onSelect={({itemId}) => {
-              navigate(itemId); 
-            }}
-            items={[
+        // you can use your own router's api to get pathname
+        activeItemId="/dashboard"
+        onSelect={({ itemId }) => {
+          navigate(itemId);
+        }}
+        items={[
+          {
+            title: "Dashboard",
+            itemId: "/dashboard",
+            // you can use your own custom Icon component as well
+            // icon is optional
+            elemBefore: () => <FiHome />,
+          },
+          {
+            title: "Jobwork",
+            itemId: "#",
+            elemBefore: () => <FiClipboard />,
+            subNav: [
               {
-                title: 'Dashboard',
-                itemId: '/dashboard',
-                // you can use your own custom Icon component as well
-                // icon is optional
-                elemBefore: () => <FiHome />,
+                title: "Job List",
+                itemId: "/joblist",
               },
               {
-                title: 'Jobwork',
-                itemId: '#',
-                elemBefore: () => <FiClipboard />,
-                subNav: [ 
-                  {
-                    title: 'Job List',
-                    itemId: '/joblist',
-                  },
-                  {
-                    title: 'Job Work Forms',
-                    itemId: '/jobwork',
-                  },
-                ],
+                title: "Job Work Forms",
+                itemId: "/jobwork",
+              },
+            ],
+          },    {
+            title: "Item Management",
+            itemId: "",
+            elemBefore: () => <FiClipboard />,
+            subNav: [
+              {
+                title: "Item List",
+                itemId: "/joblist",
               },
               {
-                title: 'Client Management',
-                itemId: '/client',
-                elemBefore: () => <FiUsers />,
-                subNav: [
-                  {
-                    title: 'Client',
-                    itemId: '/client',
-                  },
-                  {
-                    title: 'Division',
-                    itemId: '/division',
-                  },
-                ],
+                title: "New Item",
+                itemId: "/jobwork",
+              },
+            ],
+          },
+          {
+            title: "Client Management",
+            itemId: "/client",
+            elemBefore: () => <FiUsers />,
+            subNav: [
+              {
+                title: "Client",
+                itemId: "/client",
               },
               {
-                title: 'Reports',
-                itemId: '/report',
-                elemBefore: () => <FiUsers />,
-                subNav: [
-                  {
-                    title: 'Client',
-                    itemId: '/client',
-                  },
-                  {
-                    title: 'Division',
-                    itemId: '/division',
-                  },
-                ],
+                title: "Division",
+                itemId: "/division",
+              },
+            ],
+          },
+          {
+            title: "Reports",
+            itemId: "/report",
+            elemBefore: () => <FiFileText />,
+          },
+          {
+            title: " Settings",
+            //itemId: '/',
+            elemBefore: () => <FiSettings />,
+            subNav: [
+              {
+                title: "User Management",
+                itemId: "/client",
               },
               {
-                title: ' Settings',
-                //itemId: '/',
-                elemBefore: () => <FiUsers />,
-                subNav: [
-                  {
-                    title: 'Client',
-                    itemId: '/client',
-                  },
-                  {
-                    title: 'Division',
-                    itemId: '/division',
-                  },
-                ],
+                title: "API Management",
+                itemId: "/division",
               },
-            ]}
-            
-          />
-      
+            ],
+          },
+        ]}
+      />
     </Box>
   );
 };

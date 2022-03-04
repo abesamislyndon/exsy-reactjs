@@ -1,9 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth.header";
-import {
-  useState
-} from "react";
-import Moment from 'moment';
+import { useState } from "react";
+import Moment from "moment";
 
 const header = authHeader();
 
@@ -15,7 +13,7 @@ const API_URL_CLIENT = "/client";
 const getAllClient = async () => {
   try {
     const response = await axios.get(API_URL_CLIENT, {
-      headers: header
+      headers: header,
     });
     return response.data;
   } catch (error) {
@@ -25,14 +23,18 @@ const getAllClient = async () => {
 
 const CreateClient = (clientName, pass) => {
   const client = {
-    client_name: clientName
+    client_name: clientName,
   };
   axios
-    .post(API_URL_CLIENT, {
-      client
-    }, {
-      headers: header
-    })
+    .post(
+      API_URL_CLIENT,
+      {
+        client,
+      },
+      {
+        headers: header,
+      }
+    )
     .then((res) => {
       console.log(res.data);
     })
@@ -43,7 +45,7 @@ const CreateClient = (clientName, pass) => {
 
 const DeleteClient = (id) => {
   axios.delete(API_URL_CLIENT + `/${id}`, {
-    headers: header
+    headers: header,
   });
 };
 
@@ -59,11 +61,15 @@ const CreateDivision = (clientId, divisionName, divShort) => {
     div_short: divShort,
   };
   axios
-    .post(API_URL_DIVISION, {
-      division
-    }, {
-      headers: header
-    })
+    .post(
+      API_URL_DIVISION,
+      {
+        division,
+      },
+      {
+        headers: header,
+      }
+    )
     .then((res) => {
       console.log(res.data);
     });
@@ -72,7 +78,7 @@ const CreateDivision = (clientId, divisionName, divShort) => {
 const getAllDivision = async () => {
   try {
     const response = await axios.get(API_URL_DIVISION, {
-      headers: header
+      headers: header,
     });
     return response.data;
   } catch (error) {
@@ -81,11 +87,13 @@ const getAllDivision = async () => {
 };
 
 const deleteDivision = async (id) => {
-  axios.delete(`/division/${id}`, {
-    headers: header
-  }).then((result) => {
-    return result;
-  });
+  axios
+    .delete(`/division/${id}`, {
+      headers: header,
+    })
+    .then((result) => {
+      return result;
+    });
 };
 
 const divBelong = async (divId) => {
@@ -104,18 +112,16 @@ const divBelong = async (divId) => {
 */
 
 const API_URL_JOBINFO = "/jobinfo";
-const getAllJobinfo  = async () => {
-  try{
-    const response =  await axios.get(
-        API_URL_JOBINFO, {
-          headers: header
-        }); 
-        return response.data
-  }catch(error){
-      console.log(error);
+const getAllJobinfo = async () => {
+  try {
+    const response = await axios.get(API_URL_JOBINFO, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
-}
-
+};
 
 const createJobinfo = (
   division_name,
@@ -131,7 +137,7 @@ const createJobinfo = (
   const jobinfo = {
     division_name: division_name,
     client_name: client_name,
-    dateEntry: Moment(dateEntry).format('DD-MM-YYYY'),
+    dateEntry: Moment(dateEntry).format("DD-MM-YYYY"),
     natureofcomplain: complain_desc,
     address: address,
     block: block,
@@ -139,7 +145,7 @@ const createJobinfo = (
     defect_details_attributes: defectinfo.map((item) => {
       return {
         defects: item.defects,
-        recommendation: item.recommendation
+        recommendation: item.recommendation,
       };
     }),
     partsreplaces_attributes: partsinfo.map((item) => {
@@ -148,18 +154,36 @@ const createJobinfo = (
         item: item.item,
         quantity: item.quantity,
         rates: item.rates,
-        subtotal: item.subtotal
+        subtotal: item.subtotal,
       };
     }),
   };
-  axios.post(API_URL_JOBINFO, {
-    jobinfo
-  }, {
-    headers: header
-  }).then((response) => {
+  axios
+    .post(
+      API_URL_JOBINFO,
+      {
+        jobinfo,
+      },
+      {
+        headers: header,
+      }
+    )
+    .then((response) => {
       console.log(response.data);
       return response.data;
-  });
+    });
+};
+
+const API_URL_TOTAL_AMOUNT = "/totalamount";
+const dashboard_total_Amount = async () => {
+  try {
+    const response = await axios.get(API_URL_TOTAL_AMOUNT, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const DataService = {
@@ -171,7 +195,8 @@ const DataService = {
   deleteDivision,
   divBelong,
   createJobinfo,
-  getAllJobinfo
+  getAllJobinfo,
+  dashboard_total_Amount,
 };
 
 export default DataService;
