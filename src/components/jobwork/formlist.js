@@ -92,6 +92,8 @@ const Formlist = () => {
     },
   ]);
 
+const [gtotal, setGtotal] = useState("");
+
   const {
     register,
     formState: { errors },
@@ -124,8 +126,9 @@ const Formlist = () => {
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
+    console.log(result)
   };
-
+  
   const handleChangeDefect = (name) => (event) => (index) => {
     setValues({ ...values[index], error: false, [name]: event.target.value });
   };
@@ -133,7 +136,7 @@ const Formlist = () => {
   const createJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
-   
+    values.gtotal = result;
     try {
       await DataService.createJobinfo(
         values.division_name,
@@ -145,7 +148,7 @@ const Formlist = () => {
         values.gtotal,
         defectinfo,
         partsinfo
-      ); 
+      );
       toast({
         title: `Successfuly added Job Work`,
         position: "top-right",
@@ -174,11 +177,13 @@ const Formlist = () => {
     0
   );
 
+  useEffect(() => {
+    setValues({...values, gtotal: result});
+}, [])
+
   return (
-  
     <div className="container">
       <form onSubmit={handleSubmit(createJobinfo)} autoComplete="off">
-     
         <Stack spacing={35}>
           <GridItem>
             <FormControl>
@@ -397,17 +402,15 @@ const Formlist = () => {
 
           <Heading size="sm">PARTS TO REPLACED</Heading>
 
-          <Table size="sm">
+          <Table size="sm" className="table-custom">
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
                 <Th>
-                  <FaShoppingBasket color="gray.500" />
                   Item
                 </Th>
                 <Th>Quantity</Th>
                 <Th>
-                  <FaDollarSign color="gray.500" />
                   Rates
                 </Th>
                 <Th>Sub Total</Th>
@@ -527,7 +530,7 @@ const Formlist = () => {
                         >
                           <NumberInput>
                             <NumberInputField
-                            type="text"
+                              type="text"
                               {...register(`partslist[${index}].rates`, {
                                 required: "cannot be empty",
                               })}
@@ -613,11 +616,9 @@ const Formlist = () => {
             <GridItem w="100%" h="10">
               <Heading size="sm">TOTAL: {result}</Heading>
               <Input
-              
                 value = {result}
                 {...register("gtotal")}
-                onChange={handleChange("gtotal")  }
-     
+                 onChange={ handleChange("gtotal")}
               />
             </GridItem>
           </Grid>
