@@ -1,5 +1,5 @@
 import SidebarWithHeader from "../../shared/SidebarProps";
-import Formlist from "./formlist";
+import Form from "./form";
 
 import {
   Container,
@@ -11,7 +11,7 @@ function Jobwork() {
   return (
     <SidebarWithHeader>
       <Container maxW="container.xl">
-        <Formlist/>
+        <Form/>
       </Container>
     </SidebarWithHeader>
   );

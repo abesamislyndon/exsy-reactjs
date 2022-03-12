@@ -146,12 +146,12 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
             elemBefore: () => <FiClipboard />,
             subNav: [
               {
-                title: "Outstanding Job Work",
+                title: "Outstanding",
                 itemId: "/joblist",
               },
               {
-                title: "Job Work Forms",
-                itemId: "/jobwork",
+                title: "Form",
+                itemId: "/form",
               },
             ],
           },    {

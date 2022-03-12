@@ -1,7 +1,8 @@
 import axios from "axios";
 import authHeader from "./auth.header";
-import { useState } from "react";
 import Moment from "moment";
+import React, { useEffect, useState } from "react";
+import { DirectUpload } from "activestorage";
 
 const header = authHeader();
 
@@ -132,7 +133,8 @@ const createJobinfo = (
   block,
   gtotal,
   defectinfo,
-  partsinfo
+  partsinfo,
+  images
 ) => {
   const jobinfo = {
     division_name: division_name,
@@ -142,10 +144,17 @@ const createJobinfo = (
     address: address,
     block: block,
     gtotal: gtotal,
-    defect_details_attributes: defectinfo.map((item) => {
+    defect_details_attributes: defectinfo.map((defect_info) => {
+      //  defectinfo.map((defect_info)=>{
+      //    let reader = new FileReader();
+      //    reader.readAsDataURL(defect_info.photo[0]);
+      //   let imgfile = defect_info.photo[0];
+      //    uploadImg(imgfile);
+      // })
+
       return {
-        defects: item.defects,
-        recommendation: item.recommendation,
+        defects: defect_info.defects,
+        recommendation: defect_info.recommendation,
       };
     }),
     partsreplaces_attributes: partsinfo.map((item) => {
@@ -158,6 +167,7 @@ const createJobinfo = (
       };
     }),
   };
+
   axios
     .post(
       API_URL_JOBINFO,
@@ -171,7 +181,29 @@ const createJobinfo = (
     .then((response) => {
       console.log(response.data);
       return response.data;
+    })
+    .then((response) => {
+      uploadFile(images);
     });
+
+  const uploadImg = (images) => {
+    console.log(images);
+  };
+
+  const uploadFile = (images) => {
+    const upload = new DirectUpload(
+      images,
+      "http://localhost:3001/rails/active_storage/direct_uploads"
+    );
+    upload.create((error, blob) => {
+      console.log("dondon");
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("no error yehey");
+      }
+    });
+  };
 };
 
 const API_URL_TOTAL_AMOUNT = "/totalamount";

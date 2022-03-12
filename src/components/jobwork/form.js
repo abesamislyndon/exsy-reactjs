@@ -16,35 +16,25 @@ import {
   FormControl,
   useBreakpointValue,
   Button,
-  useEventListenerMap,
   useToast,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   NumberInput,
   NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
+import Fileupload from "./fileupload";
+import {DirectUpload} from "activestorage";
 
-import {
-  FaTrashAlt,
-  FaBarcode,
-  FaShoppingBasket,
-  FaDollarSign,
-} from "react-icons/fa";
-import { resolveMotionValue } from "framer-motion";
+import { FaTrashAlt } from "react-icons/fa";
 
-const Formlist = () => {
+const Form = (props) => {
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
@@ -92,7 +82,7 @@ const Formlist = () => {
     },
   ]);
 
-const [gtotal, setGtotal] = useState("");
+  const [gtotal, setGtotal] = useState("");
 
   const {
     register,
@@ -105,7 +95,8 @@ const [gtotal, setGtotal] = useState("");
   } = useForm({
     shouldFocusError: false,
     defaultValues: {
-      defectslist: [{ defects: "", recommendation: "" }],
+      //defectslist: [{ defects: "", recommendation: "" , photo:[]}],
+      defectslist: [{ defects: "", recommendation: "", photo: [] }],
       partslist: [
         { sorCode: "", item: "", quantity: "", rates: "", subtotal: "" },
       ],
@@ -126,17 +117,20 @@ const [gtotal, setGtotal] = useState("");
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
-    console.log(result)
+    console.log(result);
   };
-  
-  const handleChangeDefect = (name) => (event) => (index) => {
-    setValues({ ...values[index], error: false, [name]: event.target.value });
-  };
+
+  const [images, setImages] = useState(null);
+  const onImageChange = (event) => {
+  setImages(event.target.files[0]); 
+  console.log(images)
+};
 
   const createJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
     values.gtotal = result;
+    
     try {
       await DataService.createJobinfo(
         values.division_name,
@@ -147,7 +141,8 @@ const [gtotal, setGtotal] = useState("");
         values.block,
         values.gtotal,
         defectinfo,
-        partsinfo
+        partsinfo,
+        images
       );
       toast({
         title: `Successfuly added Job Work`,
@@ -163,7 +158,9 @@ const [gtotal, setGtotal] = useState("");
         console.log(error.response.headers);
       }
     }
+
   };
+
 
   const watchTest = useWatch({
     control,
@@ -178,12 +175,16 @@ const [gtotal, setGtotal] = useState("");
   );
 
   useEffect(() => {
-    setValues({...values, gtotal: result});
-}, [])
+    setValues({ ...values, gtotal: result });
+  }, []);
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit(createJobinfo)} autoComplete="off">
+      <form
+        onSubmit={handleSubmit(createJobinfo)}
+        autoComplete="off"
+        encType="multipart/form-data"
+      >
         <Stack spacing={35}>
           <GridItem>
             <FormControl>
@@ -330,71 +331,90 @@ const [gtotal, setGtotal] = useState("");
           <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
 
-          {defectsFields.map(({ id, defects, recommendation }, index) => (
-            <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full" key={id}>
-              <GridItem>
-                <FormControl
-                  isInvalid={
-                    errors?.["defectslist"]?.[index]?.["defects"]?.["message"]
-                  }
-                >
-                  <FormLabel>Defects</FormLabel>
-                  <Textarea
-                    type="text"
-                    {...register(`defectslist[${index}].defects`, {
-                      required: "cannot be empty",
-                    })}
-                    // onChange={handleChangeDefect("defects")}
+          {defectsFields.map(
+            ({ id, defects, recommendation, photo }, index) => (
+              <SimpleGrid
+                columns={3}
+                columnGap={3}
+                rowGap={6}
+                w="full"
+                key={id}
+              >
+                <GridItem>
+                  <FormControl
+                    isInvalid={
+                      errors?.["defectslist"]?.[index]?.["defects"]?.["message"]
+                    }
+                  >
+                    <FormLabel>Defects</FormLabel>
+                    <Textarea
+                      type="text"
+                      {...register(`defectslist[${index}].defects`, {
+                        required: "cannot be empty",
+                      })}
+                      // onChange={handleChangeDefect("defects")}
+                    />
+                  </FormControl>
+                  <Text
+                    as="sup"
+                    color="tomato"
+                    textAlign={3}
+                    className="login-error-msg"
+                  >
+                    {errors?.["defectslist"]?.[index]?.["defects"]?.["message"]}
+                  </Text>
+                </GridItem>
+                <GridItem>
+                  <FormControl
+                    isInvalid={
+                      errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                        "message"
+                      ]
+                    }
+                  >
+                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                    <Textarea
+                      type="text"
+                      {...register(`defectslist[${index}].recommendation`, {
+                        required: "cannot be empty",
+                      })}
+                      //onChange={handleChangeDefect("recommendation")}
+                    />
+                  </FormControl>
+                  <Text
+                    as="sup"
+                    color="tomato"
+                    textAlign={3}
+                    className="login-error-msg"
+                  >
+                    {
+                      errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                        "message"
+                      ]
+                    }
+                  </Text>
+                  <button
+                    type="button"
+                    onClick={() => defectsRemove(index)}
+                    className="remove-btn"
+                  >
+                    <span>Remove</span>
+                  </button>
+                </GridItem>
+                <GridItem>
+                  <Input
+                    type="file"
+                    accept="image/png, image/jpeg" 
+                    {...register(`defectslist[${index}].photo`)}
+                     //onChange={(e) => setImages(e.target.files[0])}
+                     onChange={(e) => onImageChange(e)}
+                    // data-direct-upload-url="http://localhost:3001/rails/active_storage/direct_uploads"
+                   // multiple={true}
                   />
-                </FormControl>
-                <Text
-                  as="sup"
-                  color="tomato"
-                  textAlign={3}
-                  className="login-error-msg"
-                >
-                  {errors?.["defectslist"]?.[index]?.["defects"]?.["message"]}
-                </Text>
-              </GridItem>
-              <GridItem>
-                <FormControl
-                  isInvalid={
-                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
-                    ]
-                  }
-                >
-                  <FormLabel>Recommendation / Remedial Action:</FormLabel>
-                  <Textarea
-                    type="text"
-                    {...register(`defectslist[${index}].recommendation`, {
-                      required: "cannot be empty",
-                    })}
-                    //onChange={handleChangeDefect("recommendation")}
-                  />
-                </FormControl>
-                <Text
-                  as="sup"
-                  color="tomato"
-                  textAlign={3}
-                  className="login-error-msg"
-                >
-                  {
-                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
-                    ]
-                  }
-                </Text>
-                <button
-                  type="button"
-                  onClick={() => defectsRemove(index)}
-                  className="remove-btn"
-                >
-                  <span>Remove</span>
-                </button>
-              </GridItem>
-            </SimpleGrid>
-          ))}
+                </GridItem>
+              </SimpleGrid>
+            )
+          )}
 
           <GridItem>
             <Button onClick={() => defectsAppend({})}>+</Button>
@@ -406,13 +426,9 @@ const [gtotal, setGtotal] = useState("");
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
-                <Th>
-                  Item
-                </Th>
+                <Th>Item</Th>
                 <Th>Quantity</Th>
-                <Th>
-                  Rates
-                </Th>
+                <Th>Rates</Th>
                 <Th>Sub Total</Th>
               </Tr>
             </Thead>
@@ -420,7 +436,7 @@ const [gtotal, setGtotal] = useState("");
               {partsField.map(
                 ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
                   const setTotal = (index, quantity, rates) => {
-                    const amount = parseInt(quantity) * parseInt(rates);
+                    const amount = parseInt(quantity) * parseFloat(rates);
                     setValue(`partslist[${index}].subtotal`, amount);
                   };
 
@@ -616,9 +632,10 @@ const [gtotal, setGtotal] = useState("");
             <GridItem w="100%" h="10">
               <Heading size="sm">TOTAL: {result}</Heading>
               <Input
-                value = {result}
+                type="hidden"
+                value={result}
                 {...register("gtotal")}
-                 onChange={ handleChange("gtotal")}
+                onChange={handleChange("gtotal")}
               />
             </GridItem>
           </Grid>
@@ -634,4 +651,4 @@ const [gtotal, setGtotal] = useState("");
   );
 };
 
-export default Formlist;
+export default Form;
