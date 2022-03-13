@@ -30,7 +30,7 @@ import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 import Fileupload from "./fileupload";
-import {DirectUpload} from "activestorage";
+import { DirectUpload } from "activestorage";
 
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -96,7 +96,7 @@ const Form = (props) => {
     shouldFocusError: false,
     defaultValues: {
       //defectslist: [{ defects: "", recommendation: "" , photo:[]}],
-      defectslist: [{ defects: "", recommendation: "", photo: [] }],
+      defectslist: [{ defects: "", recommendation: "", photos: [] }],
       partslist: [
         { sorCode: "", item: "", quantity: "", rates: "", subtotal: "" },
       ],
@@ -122,15 +122,15 @@ const Form = (props) => {
 
   const [images, setImages] = useState(null);
   const onImageChange = (event) => {
-  setImages(event.target.files[0]); 
-  console.log(images)
-};
+    setImages(event.target.files[0]);
+    console.log(images)
+  };
 
   const createJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
     values.gtotal = result;
-    
+
     try {
       await DataService.createJobinfo(
         values.division_name,
@@ -352,7 +352,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                      // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -368,7 +368,7 @@ const Form = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   >
@@ -378,7 +378,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                      //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -389,7 +389,7 @@ const Form = (props) => {
                   >
                     {
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   </Text>
@@ -404,12 +404,12 @@ const Form = (props) => {
                 <GridItem>
                   <Input
                     type="file"
-                    accept="image/png, image/jpeg" 
+                    accept="image/png, image/jpeg"
                     {...register(`defectslist[${index}].photo`)}
-                     //onChange={(e) => setImages(e.target.files[0])}
-                     onChange={(e) => onImageChange(e)}
-                    // data-direct-upload-url="http://localhost:3001/rails/active_storage/direct_uploads"
-                   // multiple={true}
+                    //onChange={(e) => setImages(e.target.files[0])}
+                    onChange={(e) => onImageChange(e)}
+                  // data-direct-upload-url="http://localhost:3001/rails/active_storage/direct_uploads"
+                  //multiple={true}
                   />
                 </GridItem>
               </SimpleGrid>
@@ -446,7 +446,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -466,7 +466,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -476,7 +476,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -496,7 +496,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -506,7 +506,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -530,7 +530,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -540,7 +540,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -570,7 +570,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -580,7 +580,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -599,7 +599,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>

@@ -193,10 +193,10 @@ const createJobinfo = (
   const uploadFile = (images) => {
     const upload = new DirectUpload(
       images,
-      "http://localhost:3001/rails/active_storage/direct_uploads"
+      "http://localhost:3001/api/v1/direct_uploads"
     );
     upload.create((error, blob) => {
-      console.log("dondon");
+      console.log(blob);
       if (error) {
         console.log(error);
       } else {
