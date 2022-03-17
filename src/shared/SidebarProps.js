@@ -41,30 +41,7 @@ import { useState, useEffect } from "react";
 import { Navigation } from "react-minimal-side-navigation";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
 
-interface LinkItemProps {
-  name: string;
-  to: string;
-  icon: IconType;
-}
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboards", icon: FiHome, to: "/dashboard" },
-  {
-    name: "Jobwork form",
-    icon: FiClipboard,
-    to: "/jobwork",
-    children: "/dasd",
-  },
-  {
-    name: "Jobwork List",
-    icon: FiClipboard,
-    to: "/joblist",
-  },
-  { name: "Clients", icon: FiUsers, to: "/client" },
-  { name: "Divisions", icon: FiUsers, to: "/division" },
-  { name: "User Management", icon: FiBarChart, to: "/user" },
-  { name: "Reports", icon: FiFileText, to: "/reports" },
-  { name: "Settings", icon: FiSettings, to: "/reports" },
-];
+
 
 export default function SidebarWithHeader({
   children,

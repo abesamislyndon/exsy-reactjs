@@ -13,8 +13,12 @@ import "./assets/css/login.scss";
 import theme from "./themes/index";
 import { ChakraProvider } from "@chakra-ui/react";
 import PrivateRoute from "./components/privateRoute";
+import Jobinfo from "./components/jobwork/jobinfo";
+
 
 function App() {
+
+ 
   return (
     <ChakraProvider theme={theme}>
       <Routes>
@@ -29,6 +33,11 @@ function App() {
           exact
           path="/joblist"
           element={<PrivateRoute Component={Joblist} />}
+        />
+        <Route
+          exact
+          path="/jobinfo/:id/"
+          element={<PrivateRoute Component={Jobinfo}/>}
         />
         <Route
           exact

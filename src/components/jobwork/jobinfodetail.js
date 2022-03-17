@@ -29,14 +29,16 @@ import {
 import DatePicker from "react-datepicker";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
-import Fileupload from "./fileupload";
-import { DirectUpload } from "activestorage";
+import { useParams } from "react-router-dom";
 
 import { FaTrashAlt } from "react-icons/fa";
+import { array } from "yup";
 
-const Form = (props) => {
+const Jobinfodetail = (props) => {
+  const { id } = useParams();
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
+
   const [values, setValues] = useState({
     startDate: new Date(),
     client_name: "",
@@ -49,11 +51,26 @@ const Form = (props) => {
     divisions: [],
     clientBelong: [],
     error: "",
+    jobid: id
   });
+
+  useEffect(() => {
+    getJobinfo(id);
+  }, []);
 
   useEffect(() => {
     getClient();
   }, []);
+
+  const [jobdetail, setJobinfo] = useState({
+    jobdetail: [],
+  });
+
+  const getJobinfo = (id) => {
+    DataService.jobinfo_detail(id).then((response) => {
+      setJobinfo(response);
+    });
+  };
 
   const getClient = () => {
     DataService.getAllClient().then((response) => {
@@ -81,8 +98,26 @@ const Form = (props) => {
       subtotal: "",
     },
   ]);
-
   const [gtotal, setGtotal] = useState("");
+
+  const sample = jobdetail.defect_details?.map((item) => {
+    return {
+      defects: item.defects,
+      recommendation: item.recommendation,
+      photo: [],
+    };
+  });
+
+  const sample2 = jobdetail.partsreplaces?.map((item1) => {
+    return {
+      sorcode: item1.sorcode,
+      quantity: item1.quantity,
+      item: item1.item,
+      rates: item1.rates,
+      subtotal: item1.subtotal,
+    };
+  });
+
 
   const {
     register,
@@ -95,12 +130,9 @@ const Form = (props) => {
   } = useForm({
     shouldFocusError: false,
     defaultValues: {
-      //defectslist: [{ defects: "", recommendation: "" , photo:[]}],
-      defectslist: [{ defects: "", recommendation: "", photo: [] }],
-      partslist: [
-        { sorCode: "", item: "", quantity: "", rates: "", subtotal: "" },
-      ],
-    },
+       defectslist: jobdetail.defect_details,
+       partslist: sample2
+    }
   });
 
   const {
@@ -117,30 +149,31 @@ const Form = (props) => {
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
-    console.log(result);
+    // console.log(result);
   };
 
   const [images, setImages] = useState(null);
   const onImageChange = (event) => {
     setImages(event.target.files[0]);
-  /*  
-   const images = [];
-   for (let i = 0; i < event.target.files.length; i++) {
-     images.push(event.target.files[i]);
-   }
-   setImages(images);
-   */
-   
-   console.log(images)
+    /*  
+     const images = [];
+     for (let i = 0; i < event.target.files.length; i++) {
+       images.push(event.target.files[i]);
+     }
+     setImages(images);
+     */
+
+    console.log(images);
   };
 
-  const createJobinfo = async (event, data) => {
+  const updateJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
     values.gtotal = result;
+    
 
     try {
-      await DataService.createJobinfo(
+      await DataService.updateJobinfo(
         values.division_name,
         values.client_name,
         values.startDate,
@@ -150,15 +183,16 @@ const Form = (props) => {
         values.gtotal,
         defectinfo,
         partsinfo,
-        images
+        images,
+        values.jobid
       );
       toast({
-        title: `Successfuly added Job Work`,
+        title: `Successfuly Updated Job Work`,
         position: "top-right",
         status: "success",
         isClosable: true,
       });
-      reset();
+      getJobinfo(values.jobid);
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);
@@ -166,9 +200,7 @@ const Form = (props) => {
         console.log(error.response.headers);
       }
     }
-
   };
-
 
   const watchTest = useWatch({
     control,
@@ -177,7 +209,7 @@ const Form = (props) => {
   });
 
   const subtotalFields = getValues("partslist");
-  const result = subtotalFields.reduce(
+  const result = subtotalFields?.reduce(
     (total, currentValue) => (total = total + currentValue.subtotal),
     0
   );
@@ -189,7 +221,7 @@ const Form = (props) => {
   return (
     <div className="container">
       <form
-        onSubmit={handleSubmit(createJobinfo)}
+        onSubmit={handleSubmit(updateJobinfo)}
         autoComplete="off"
         encType="multipart/form-data"
       >
@@ -207,7 +239,7 @@ const Form = (props) => {
                     selected={field.value}
                     dateFormat="MM/dd/yy"
                     minDate={new Date()}
-                    defaultValue={field.startDate}
+                  value={jobdetail.dateEntry}
                     className="chakra-input"
                   />
                 )}
@@ -221,9 +253,12 @@ const Form = (props) => {
                 <FormLabel>Client:</FormLabel>
                 <Select
                   placeholder="Select option"
-                  {...register("client_name", { required: "cannot be empty" })}
+                  {...register("client_name")}
                   onChange={getDivBelong("client_name")}
                 >
+                  <option selected value={jobdetail.client_name}>
+                    {jobdetail.client_name}
+                  </option>
                   {values.clients.map((client, i) => {
                     return (
                       <option key={client.id} value={client.id}>
@@ -253,6 +288,9 @@ const Form = (props) => {
                   })}
                   onChange={handleChange("division_name")}
                 >
+                  <option selected value={jobdetail.division_name}>
+                    {jobdetail.division_name}
+                  </option>
                   {values.clientBelong.map((division, i) => {
                     return (
                       <option key={division.id} value={division.id}>
@@ -278,6 +316,7 @@ const Form = (props) => {
               <FormControl isInvalid={errors.block?.message}>
                 <FormLabel>Block:</FormLabel>
                 <Input
+                  defaultValue={jobdetail.block}
                   {...register("block", { required: "cannot be empty" })}
                   onChange={handleChange("block")}
                 />
@@ -296,6 +335,7 @@ const Form = (props) => {
                 <FormControl isInvalid={errors.address?.message}>
                   <FormLabel>Address:</FormLabel>
                   <Input
+                    defaultValue={jobdetail.address}
                     {...register("address", { required: "cannot be empty" })}
                     onChange={handleChange("address")}
                   />
@@ -319,6 +359,7 @@ const Form = (props) => {
               <FormControl isInvalid={errors.complain_desc?.message}>
                 <FormLabel>Description of complaine</FormLabel>
                 <Textarea
+                  defaultValue={jobdetail.natureofcomplain}
                   {...register("complain_desc", {
                     required: "cannot be empty",
                   })}
@@ -338,90 +379,81 @@ const Form = (props) => {
 
           <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
-
-          {defectsFields.map(
-            ({ id, defects, recommendation, photo }, index) => (
-              <SimpleGrid
-                columns={3}
-                columnGap={3}
-                rowGap={6}
-                w="full"
-                key={id}
-              >
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["defectslist"]?.[index]?.["defects"]?.["message"]
-                    }
-                  >
-                    <FormLabel>Defects</FormLabel>
-                    <Textarea
-                      type="text"
-                      {...register(`defectslist[${index}].defects`, {
-                        required: "cannot be empty",
-                      })}
+          {defectsFields.map(({ id }, index) => (
+            <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full" key={id}>
+              <GridItem>
+                <FormControl
+                  isInvalid={
+                    errors?.["defectslist"]?.[index]?.["defects"]?.["message"]
+                  }
+                >
+                  <FormLabel>Defects</FormLabel>
+                  <Textarea
+                    type="text"
+                    {...register(`defectslist[${index}].defects`, {
+                      required: "cannot be empty",
+                    })}
                     // onChange={handleChangeDefect("defects")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {errors?.["defectslist"]?.[index]?.["defects"]?.["message"]}
-                  </Text>
-                </GridItem>
-                <GridItem>
-                  <FormControl
-                    isInvalid={
-                      errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
-                      ]
-                    }
-                  >
-                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
-                    <Textarea
-                      type="text"
-                      {...register(`defectslist[${index}].recommendation`, {
-                        required: "cannot be empty",
-                      })}
-                    //onChange={handleChangeDefect("recommendation")}
-                    />
-                  </FormControl>
-                  <Text
-                    as="sup"
-                    color="tomato"
-                    textAlign={3}
-                    className="login-error-msg"
-                  >
-                    {
-                      errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
-                      ]
-                    }
-                  </Text>
-                  <button
-                    type="button"
-                    onClick={() => defectsRemove(index)}
-                    className="remove-btn"
-                  >
-                    <span>Remove</span>
-                  </button>
-                </GridItem>
-                <GridItem>
-                  <Input
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    {...register(`defectslist[${index}].photo`)}
-                    onChange={(e) => setImages(e.target.files[0])}
-                    //onChange={(e) => onImageChange(e)}
-                  //  multiple={false}
                   />
-                </GridItem>
-              </SimpleGrid>
-            )
-          )}
+                </FormControl>
+                <Text
+                  as="sup"
+                  color="tomato"
+                  textAlign={3}
+                  className="login-error-msg"
+                >
+                  {errors?.["defectslist"]?.[index]?.["defects"]?.["message"]}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <FormControl
+                  isInvalid={
+                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                      "message"
+                    ]
+                  }
+                >
+                  <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                  <Textarea
+                    type="text"
+                    {...register(`defectslist[${index}].recommendation`, {
+                      required: "cannot be empty",
+                    })}
+                    //onChange={handleChangeDefect("recommendation")}
+                  />
+                </FormControl>
+                <Text
+                  as="sup"
+                  color="tomato"
+                  textAlign={3}
+                  className="login-error-msg"
+                >
+                  {
+                    errors?.["defectslist"]?.[index]?.["recommendation"]?.[
+                      "message"
+                    ]
+                  }
+                </Text>
+                <button
+                  type="button"
+                  onClick={() => defectsRemove(index)}
+                  className="remove-btn"
+                >
+                  <span>Remove</span>
+                </button>
+              </GridItem>
+              <GridItem>
+                <Input
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  {...register(`defectslist[${index}].photo`)}
+                  onChange={(e) => setImages(e.target.files[0])}
+                  //onChange={(e) => onImageChange(e)}
+                  //  multiple={false}
+                />
+              </GridItem>
+            </SimpleGrid>
+          ))}
 
           <GridItem>
             <Button onClick={() => defectsAppend({})}>+</Button>
@@ -453,7 +485,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -473,7 +505,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -483,7 +515,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -503,7 +535,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -513,7 +545,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -537,7 +569,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -547,7 +579,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -577,7 +609,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -587,7 +619,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -606,7 +638,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -658,4 +690,4 @@ const Form = (props) => {
   );
 };
 
-export default Form;
+export default Jobinfodetail;

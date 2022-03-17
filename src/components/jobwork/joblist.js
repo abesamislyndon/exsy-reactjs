@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button, useDisclosure, Container } from "@chakra-ui/react";
+import { Link } from 'react-router-dom';
 import { Table, Column, HeaderCell, Cell } from "rsuite-table";
 import "rsuite-table/dist/css/rsuite-table.css";
 import { FaTrashAlt, FaEdit } from "react-icons/fa";
@@ -27,55 +28,61 @@ function Joblists() {
   };
 
   const data = values.joblist;
-  const columns = [
+  const columns = useMemo(()=>
+    
+  [
     {
-      name: "JOB WORK ID",
-      selector: "id",
+      name: "JW ID",
+      selector: row => row.id,
       sortable: true,
-      width:"8.5rem"
+      width:"8rem"
     },
     {
       name: "DATE",
-      selector: "dateEntry",
+      selector: row => row.dateEntry, 
       sortable: true,
     },
     {
       name: "CLIENT",
-      selector: "client_name",
+      selector: row => row.client_name,
       sortable: true,
     },
     {
       name: "DIVISION",
-      selector: "division_name",
+      selector: row => row.division_name,
       sortable: true,
     },
     {
       name: "ADDRESS",
-      selector: "address",
+      selector: row => row.address,
       sortable: true,
     },
     {
       name: "COMPLAIN",
-      selector: "natureofcomplain",
+      selector: row => row.natureofcomplain, 
       sortable: true,
     },
     {
       name: "TOTAL",
-      selector: "gtotal",
+      selector: row => row.gtotal, 
       sortable: true,
     },
     {
-				
-      cell: () => 
+      cell: (data) => 
+      <Link to={`/jobinfo/${data.id}`}>
       <Button leftIcon={<FaEdit />} size='xs'>
-       view
+        view
     </Button>
+    </Link>
       ,
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     }
-  ];
+  ], []
+  );
+  
+
 
   const tableData = {
     columns,

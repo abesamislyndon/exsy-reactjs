@@ -1,8 +1,13 @@
 import axios from "axios";
 import authHeader from "./auth.header";
 import Moment from "moment";
-import React, { useEffect, useState } from "react";
-import { DirectUpload } from "activestorage";
+import React, {
+  useEffect,
+  useState
+} from "react";
+import {
+  DirectUpload
+} from "activestorage";
 
 const header = authHeader();
 
@@ -28,11 +33,9 @@ const CreateClient = (clientName, pass) => {
   };
   axios
     .post(
-      API_URL_CLIENT,
-      {
+      API_URL_CLIENT, {
         client,
-      },
-      {
+      }, {
         headers: header,
       }
     )
@@ -63,11 +66,9 @@ const CreateDivision = (clientId, divisionName, divShort) => {
   };
   axios
     .post(
-      API_URL_DIVISION,
-      {
+      API_URL_DIVISION, {
         division,
-      },
-      {
+      }, {
         headers: header,
       }
     )
@@ -170,30 +171,20 @@ const createJobinfo = (
 
   axios
     .post(
-      API_URL_JOBINFO,
-      {
+      API_URL_JOBINFO, {
         jobinfo,
-      },
-      {
+      }, {
         headers: header,
       }
-    )
-    .then((response) => {
-      console.log(response.data);
-      return response.data;
-    })
-    .then((response) => {
+    ).then((response) => {
       uploadFile(images);
     });
-
-  const uploadImg = (images) => {
-    console.log(images);
-  };
 
   const uploadFile = (images) => {
     const upload = new DirectUpload(
       images,
       "http://localhost:3001/api/v1/direct_uploads"
+    //  "http://localhost:3001/rails/active_storage/direct_uploads"
     );
     upload.create((error, blob) => {
       console.log(blob);
@@ -204,6 +195,90 @@ const createJobinfo = (
       }
     });
   };
+};
+
+
+
+const updateJobinfo = (
+  division_name,
+  client_name,
+  dateEntry,
+  complain_desc,
+  address,
+  block,
+  gtotal,
+  defectinfo,
+  partsinfo,
+  images,
+  jobid
+) => {
+  const jobinfo = {
+    division_name: division_name,
+    client_name: client_name,
+    dateEntry: Moment(dateEntry).format("DD-MM-YYYY"),
+    natureofcomplain: complain_desc,
+    address: address,
+    block: block,
+    gtotal: gtotal,
+    defect_details_attributes: defectinfo.map((defect_info) => {
+      //  defectinfo.map((defect_info)=>{
+      //    let reader = new FileReader();
+      //    reader.readAsDataURL(defect_info.photo[0]);
+      //   let imgfile = defect_info.photo[0];
+      //    uploadImg(imgfile);
+      // })
+
+      return {
+        defects: defect_info.defects,
+        recommendation: defect_info.recommendation,
+      };
+    }),
+    partsreplaces_attributes: partsinfo.map((item) => {
+      return {
+        sorcode: item.sorCode,
+        item: item.item,
+        quantity: item.quantity,
+        rates: item.rates,
+        subtotal: item.subtotal,
+      };
+    }),
+  };
+
+  axios
+    .put(
+      `http://localhost:3001/api/v1/jobinfo/${jobid}`, {
+        jobinfo,
+      }, {
+        headers: header,
+      }
+    );
+
+  const uploadFile = (images) => {
+    const upload = new DirectUpload(
+      images,
+      "http://localhost:3001/api/v1/direct_uploads"
+    //  "http://localhost:3001/rails/active_storage/direct_uploads"
+    );
+    upload.create((error, blob) => {
+      console.log(blob);
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("no error yehey");
+      }
+    });
+  };
+};
+
+const jobinfo_detail = async (id) => {
+  try {
+    const response = await axios.get(`jobinfo/${id}`, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const API_URL_TOTAL_AMOUNT = "/totalamount";
@@ -227,8 +302,10 @@ const DataService = {
   deleteDivision,
   divBelong,
   createJobinfo,
+  updateJobinfo,
   getAllJobinfo,
   dashboard_total_Amount,
+  jobinfo_detail
 };
 
 export default DataService;
