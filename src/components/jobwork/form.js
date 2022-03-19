@@ -207,7 +207,6 @@ const Form = (props) => {
                     selected={field.value}
                     dateFormat="MM/dd/yy"
                     minDate={new Date()}
-                    defaultValue={field.startDate}
                     className="chakra-input"
                   />
                 )}
@@ -224,9 +223,9 @@ const Form = (props) => {
                   {...register("client_name", { required: "cannot be empty" })}
                   onChange={getDivBelong("client_name")}
                 >
-                  {values.clients.map((client, i) => {
+                  {values?.clients.map((client, i) => {
                     return (
-                      <option key={client.id} value={client.id}>
+                      <option key={client?.id} value={client?.id}>
                         {client.client_name}
                       </option>
                     );

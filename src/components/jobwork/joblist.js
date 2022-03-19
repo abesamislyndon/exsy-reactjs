@@ -82,8 +82,6 @@ function Joblists() {
   ], []
   );
   
-
-
   const tableData = {
     columns,
     data,

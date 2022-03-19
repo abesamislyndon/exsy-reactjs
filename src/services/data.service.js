@@ -203,7 +203,7 @@ const updateJobinfo = (
   division_name,
   client_name,
   dateEntry,
-  complain_desc,
+  natureofcomplain,
   address,
   block,
   gtotal,
@@ -216,7 +216,7 @@ const updateJobinfo = (
     division_name: division_name,
     client_name: client_name,
     dateEntry: Moment(dateEntry).format("DD-MM-YYYY"),
-    natureofcomplain: complain_desc,
+    natureofcomplain: natureofcomplain,
     address: address,
     block: block,
     gtotal: gtotal,
@@ -235,7 +235,7 @@ const updateJobinfo = (
     }),
     partsreplaces_attributes: partsinfo.map((item) => {
       return {
-        sorcode: item.sorCode,
+        sorcode: item.sorcode,
         item: item.item,
         quantity: item.quantity,
         rates: item.rates,
@@ -243,6 +243,8 @@ const updateJobinfo = (
       };
     }),
   };
+
+  {console.log(dateEntry)}
 
   axios
     .put(

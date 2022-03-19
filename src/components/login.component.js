@@ -22,7 +22,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { useForm , Controller} from "react-hook-form";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
