@@ -129,10 +129,11 @@ const createJobinfo = (
   division_name,
   client_name,
   dateEntry,
-  complain_desc,
+  natureofcomplain,
   address,
   block,
   gtotal,
+  status,
   defectinfo,
   partsinfo,
   images
@@ -141,10 +142,11 @@ const createJobinfo = (
     division_name: division_name,
     client_name: client_name,
     dateEntry: Moment(dateEntry).format("DD-MM-YYYY"),
-    natureofcomplain: complain_desc,
+    natureofcomplain: natureofcomplain,
     address: address,
     block: block,
     gtotal: gtotal,
+    status: status,
     defect_details_attributes: defectinfo.map((defect_info) => {
       //  defectinfo.map((defect_info)=>{
       //    let reader = new FileReader();
@@ -180,7 +182,7 @@ const createJobinfo = (
       uploadFile(images);
     });
 
-  const uploadFile = (images) => {
+  const uploadFile = (images, jobinfo) => {
     const upload = new DirectUpload(
       images,
       "http://localhost:3001/api/v1/direct_uploads"
@@ -188,11 +190,18 @@ const createJobinfo = (
     );
     upload.create((error, blob) => {
       console.log(blob);
-      if (error) {
+     /* if (error) {
         console.log(error);
       } else {
-        console.log("no error yehey");
+          fetch(`http://localhost:3001/api/v1/jobinfo/${blob.id}`,{
+            method: 'PUT',
+            headers: header,
+            body: JSON.stringify({photo: blob.signed_id})
+          })
+          .then(response => response.json())
+          .then(result => console.log(result))
       }
+      */
     });
   };
 };
@@ -207,6 +216,7 @@ const updateJobinfo = (
   address,
   block,
   gtotal,
+  status,
   defectinfo,
   partsinfo,
   images,
@@ -220,6 +230,7 @@ const updateJobinfo = (
     address: address,
     block: block,
     gtotal: gtotal,
+    status: status,
     defect_details_attributes: defectinfo.map((defect_info) => {
       //  defectinfo.map((defect_info)=>{
       //    let reader = new FileReader();
@@ -227,14 +238,15 @@ const updateJobinfo = (
       //   let imgfile = defect_info.photo[0];
       //    uploadImg(imgfile);
       // })
-
       return {
+        id: defect_info.id,
         defects: defect_info.defects,
         recommendation: defect_info.recommendation,
       };
     }),
     partsreplaces_attributes: partsinfo.map((item) => {
       return {
+        id: item.id,
         sorcode: item.sorcode,
         item: item.item,
         quantity: item.quantity,
@@ -243,9 +255,6 @@ const updateJobinfo = (
       };
     }),
   };
-
-  {console.log(dateEntry)}
-
   axios
     .put(
       `http://localhost:3001/api/v1/jobinfo/${jobid}`, {

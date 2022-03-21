@@ -13,7 +13,7 @@ import {
   Grid,
   Input,
   Text,
-  FormControl, 
+  FormControl,
   useBreakpointValue,
   Button,
   useToast,
@@ -25,6 +25,7 @@ import {
   Td,
   NumberInput,
   NumberInputField,
+  Switch,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { ErrorMessage } from "@hookform/error-message";
@@ -33,27 +34,24 @@ import DataService from "../../services/data.service";
 import { useParams } from "react-router-dom";
 
 import { FaTrashAlt } from "react-icons/fa";
-import { array, ValidationError } from "yup";
+
 
 const Jobinfodetail = ({ defaultValues }) => {
   const { id } = useParams();
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
 
-
-
   const [jobdetail, setJobdetail] = useState([]);
 
   useEffect(() => {
-    DataService.jobinfo_detail(id)
-      .then(response => {
-        setJobdetail(response)
-      })
-  }, [])
+    DataService.jobinfo_detail(id).then((response) => {
+      setJobdetail(response);
+    });
+  }, []);
 
   useEffect(() => {
     reset(jobdetail);
-  }, [jobdetail])
+  }, [jobdetail]);
 
   useEffect(() => {
     getClient();
@@ -73,7 +71,6 @@ const Jobinfodetail = ({ defaultValues }) => {
     error: "",
     jobid: id,
   });
-
 
   const getClient = () => {
     DataService.getAllClient().then((response) => {
@@ -102,26 +99,6 @@ const Jobinfodetail = ({ defaultValues }) => {
     },
   ]);
   const [gtotal, setGtotal] = useState("");
-  /*
-    const sample = jobdetail.defect_details?.map((item) => {
-      return {
-        defects: item.defects,
-        recommendation: item.recommendation,
-        photo: [],
-      };
-    });
-  
-    const sample2 = jobdetail.partsreplaces?.map((item1) => {
-      return {
-        sorcode: item1.sorcode,
-        quantity: item1.quantity,
-        item: item1.item,
-        rates: item1.rates,
-        subtotal: item1.subtotal,
-      };
-    });
-   */
-
 
   const {
     register,
@@ -131,15 +108,8 @@ const Jobinfodetail = ({ defaultValues }) => {
     getValues,
     setValue,
     reset,
-    initialState
-
-  } = useForm({
-    defaultValues: {
-      block: jobdetail.block
-    }
-  });
-
-
+    initialState,
+  } = useForm();
 
   const {
     fields: defectsFields,
@@ -179,13 +149,14 @@ const Jobinfodetail = ({ defaultValues }) => {
 
     try {
       await DataService.updateJobinfo(
-        values.division_name,
-        values.client_name,
-        values.startDate,
-        values.natureofcomplain,
-        values.address,
-        values.block,
-        values.gtotal,
+        getValues("division_name"),
+        getValues("client_name"),
+        getValues("startDate"),
+        getValues("natureofcomplain"),
+        getValues("address"),
+        getValues("block"),
+        getValues("gtotal"),
+        getValues("status"),
         defectinfo,
         partsinfo,
         images,
@@ -197,10 +168,9 @@ const Jobinfodetail = ({ defaultValues }) => {
         status: "success",
         isClosable: true,
       });
-
     } catch (error) {
       if (error.response) {
-        // console.log(error.response.data);
+        console.log(error.response.data);
         //        console.log(error.response.status);
         //      console.log(error.response.headers);
       }
@@ -214,14 +184,23 @@ const Jobinfodetail = ({ defaultValues }) => {
   });
 
   const subtotalFields = getValues("partsreplaces");
+ /* const result = subtotalFields?.reduce(
+    (total, currentValue) => (total = total + currentValue.subtotal),
+    0
+  );
+  */
   const result = subtotalFields?.reduce(
     (total, currentValue) => (total = total + currentValue.subtotal),
     0
   );
 
-  useEffect(() => {
-    setValues({ ...values, gtotal: result });
-  }, []);
+//  useEffect(() => {
+//    setValues({ ...values, gtotal: result });
+ // }, []);
+
+const [status, setStatus] = useState(false);
+
+
 
   return (
     <div className="container">
@@ -230,26 +209,41 @@ const Jobinfodetail = ({ defaultValues }) => {
         autoComplete="on"
         encType="multipart/form-data"
       >
-        <Stack spacing={35}>
-          <GridItem>
-            <FormControl>
-              <FormLabel>Date:</FormLabel>
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field }) => (
-                  <DatePicker
-                    placeholderText={jobdetail.dateEntry}
-                    onChange={(date) => field.onChange(date)}
-                    selected={field.value}
-                    dateFormat="MM/dd/yy"
-                    minDate={new Date()}
-                    className="chakra-input"
-                  />
-                )}
-              />
-            </FormControl>
-          </GridItem>
+        <Stack spacing={5}>
+          <SimpleGrid columns={3} columnGap={3} rowGap={12} w="full">
+            <GridItem>
+              <FormControl>
+                <FormLabel>Date:</FormLabel>
+                <Controller
+                  control={control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <DatePicker
+                      placeholderText={jobdetail.dateEntry}
+                      onChange={(date) => field.onChange(date)}
+                      selected={field.value}
+                      dateFormat="MM/dd/yy"
+                      minDate={new Date()}
+                      className="chakra-input"
+                    />
+                  )}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem></GridItem>
+            <GridItem>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="email-alerts" mb="0" >
+                  Work Status {status.toString()}
+                </FormLabel>
+                <Switch id="email-alerts" colorScheme="green" 
+                 size='lg' {...register("status")} onChange={(e)=>setStatus(e.target.value)}
+               
+                      />
+                        {console.log(status)}
+              </FormControl>
+            </GridItem>
+          </SimpleGrid>
 
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
@@ -336,8 +330,8 @@ const Jobinfodetail = ({ defaultValues }) => {
                     console.log("messages", messages);
                     return messages
                       ? Object.entries(messages).map(([type, message]) => (
-                        <p key={type}>{message}</p>
-                      ))
+                          <p key={type}>{message}</p>
+                        ))
                       : null;
                   }}
                 />
@@ -395,7 +389,9 @@ const Jobinfodetail = ({ defaultValues }) => {
               <GridItem>
                 <FormControl
                   isInvalid={
-                    errors?.["defect_details"]?.[index]?.["defects"]?.["message"]
+                    errors?.["defect_details"]?.[index]?.["defects"]?.[
+                      "message"
+                    ]
                   }
                 >
                   <FormLabel>Defects</FormLabel>
@@ -404,7 +400,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                     {...register(`defect_details[${index}].defects`, {
                       required: "cannot be empty",
                     })}
-                  // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                   />
                 </FormControl>
                 <Text
@@ -413,14 +409,18 @@ const Jobinfodetail = ({ defaultValues }) => {
                   textAlign={3}
                   className="login-error-msg"
                 >
-                  {errors?.["defect_details"]?.[index]?.["defects"]?.["message"]}
+                  {
+                    errors?.["defect_details"]?.[index]?.["defects"]?.[
+                      "message"
+                    ]
+                  }
                 </Text>
               </GridItem>
               <GridItem>
                 <FormControl
                   isInvalid={
                     errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 >
@@ -430,7 +430,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                     {...register(`defect_details[${index}].recommendation`, {
                       required: "cannot be empty",
                     })}
-                  //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                   />
                 </FormControl>
                 <Text
@@ -441,7 +441,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                 >
                   {
                     errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 </Text>
@@ -459,8 +459,8 @@ const Jobinfodetail = ({ defaultValues }) => {
                   accept="image/png, image/jpeg"
                   {...register(`defect_details[${index}].photo`)}
                   onChange={(e) => setImages(e.target.files[0])}
-                //onChange={(e) => onImageChange(e)}
-                //  multiple={false}
+                  //onChange={(e) => onImageChange(e)}
+                  //  multiple={false}
                 />
               </GridItem>
             </SimpleGrid>
@@ -496,7 +496,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -516,7 +516,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -526,7 +526,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -546,7 +546,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -556,7 +556,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -580,7 +580,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -590,7 +590,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -620,7 +620,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -630,7 +630,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -649,7 +649,7 @@ const Jobinfodetail = ({ defaultValues }) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>

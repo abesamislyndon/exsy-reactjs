@@ -33,6 +33,7 @@ import Fileupload from "./fileupload";
 import { DirectUpload } from "activestorage";
 
 import { FaTrashAlt } from "react-icons/fa";
+import NumberFormat from "react-number-format";
 
 const Form = (props) => {
   const toast = useToast();
@@ -45,6 +46,7 @@ const Form = (props) => {
     address: "",
     complain_desc: "",
     gtotal: "",
+    status: 0,
     clients: [],
     divisions: [],
     clientBelong: [],
@@ -123,15 +125,15 @@ const Form = (props) => {
   const [images, setImages] = useState(null);
   const onImageChange = (event) => {
     setImages(event.target.files[0]);
-  /*  
+    /*  
    const images = [];
    for (let i = 0; i < event.target.files.length; i++) {
      images.push(event.target.files[i]);
    }
    setImages(images);
    */
-   
-   console.log(images)
+
+    console.log(images);
   };
 
   const createJobinfo = async (event, data) => {
@@ -148,6 +150,7 @@ const Form = (props) => {
         values.address,
         values.block,
         values.gtotal,
+        values.status,
         defectinfo,
         partsinfo,
         images
@@ -166,9 +169,7 @@ const Form = (props) => {
         console.log(error.response.headers);
       }
     }
-
   };
-
 
   const watchTest = useWatch({
     control,
@@ -359,7 +360,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                    // onChange={handleChangeDefect("defects")}
+                      // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -375,7 +376,7 @@ const Form = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                        "message"
                       ]
                     }
                   >
@@ -385,7 +386,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                    //onChange={handleChangeDefect("recommendation")}
+                      //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -396,7 +397,7 @@ const Form = (props) => {
                   >
                     {
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                        "message"
                       ]
                     }
                   </Text>
@@ -415,7 +416,7 @@ const Form = (props) => {
                     {...register(`defectslist[${index}].photo`)}
                     onChange={(e) => setImages(e.target.files[0])}
                     //onChange={(e) => onImageChange(e)}
-                  //  multiple={false}
+                    //  multiple={false}
                   />
                 </GridItem>
               </SimpleGrid>
@@ -452,7 +453,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -472,7 +473,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -482,7 +483,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -502,7 +503,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -512,7 +513,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -536,7 +537,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -546,7 +547,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -576,7 +577,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -586,7 +587,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -605,7 +606,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -636,12 +637,26 @@ const Form = (props) => {
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10">
-              <Heading size="sm">TOTAL: {result}</Heading>
+              <Heading size="md">
+                TOTAL:{" "}
+                <NumberFormat
+                  value={result}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                />
+              </Heading>
               <Input
                 type="hidden"
                 value={result}
                 {...register("gtotal")}
                 onChange={handleChange("gtotal")}
+              />
+              <Input
+                type="hidden"
+                defaultValue={values.status}
+                {...register("status")}
+                onChange={handleChange("status")}
               />
             </GridItem>
           </Grid>
