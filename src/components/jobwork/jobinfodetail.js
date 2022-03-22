@@ -32,15 +32,13 @@ import { ErrorMessage } from "@hookform/error-message";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 import { useParams } from "react-router-dom";
-
 import { FaTrashAlt } from "react-icons/fa";
+import NumberFormat from "react-number-format";
 
-
-const Jobinfodetail = ({ defaultValues }) => {
+const Jobinfodetail = () => {
   const { id } = useParams();
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
-
   const [jobdetail, setJobdetail] = useState([]);
 
   useEffect(() => {
@@ -61,7 +59,7 @@ const Jobinfodetail = ({ defaultValues }) => {
     startDate: new Date(),
     client_name: "",
     division_name: "",
-    block: jobdetail.block,
+    block: "",
     address: "",
     natureofcomplain: "",
     gtotal: "",
@@ -98,7 +96,6 @@ const Jobinfodetail = ({ defaultValues }) => {
       subtotal: "",
     },
   ]);
-  const [gtotal, setGtotal] = useState("");
 
   const {
     register,
@@ -155,7 +152,8 @@ const Jobinfodetail = ({ defaultValues }) => {
         getValues("natureofcomplain"),
         getValues("address"),
         getValues("block"),
-        getValues("gtotal"),
+        //getValues("gtotal"),
+        values.gtotal,
         getValues("status"),
         defectinfo,
         partsinfo,
@@ -177,6 +175,8 @@ const Jobinfodetail = ({ defaultValues }) => {
     }
   };
 
+  //{console.log( getValues("gtotal"))}
+
   const watchTest = useWatch({
     control,
     name: "partsreplaces",
@@ -184,24 +184,20 @@ const Jobinfodetail = ({ defaultValues }) => {
   });
 
   const subtotalFields = getValues("partsreplaces");
- /* const result = subtotalFields?.reduce(
-    (total, currentValue) => (total = total + currentValue.subtotal),
-    0
-  );
-  */
   const result = subtotalFields?.reduce(
-    (total, currentValue) => (total = total + currentValue.subtotal),
+    (total, currentValue) =>
+      (total = total + parseFloat(currentValue.subtotal)),
     0
   );
+  //const [gtotal, setGtotal] = useState(jobdetail.total);
+  //console.log(subtotalFields);
 
-//  useEffect(() => {
-//    setValues({ ...values, gtotal: result });
- // }, []);
+  useEffect(() => {
+    setValues({ ...values, gtotal: result });
+  }, []);
 
-const [status, setStatus] = useState(false);
-
-
-
+  const [status, setStatus] = useState(false);
+  const count = 0;
   return (
     <div className="container">
       <form
@@ -210,7 +206,7 @@ const [status, setStatus] = useState(false);
         encType="multipart/form-data"
       >
         <Stack spacing={5}>
-          <SimpleGrid columns={3} columnGap={3} rowGap={12} w="full">
+          <SimpleGrid columns={3} columnGap={3} rowGap={2} w="full">
             <GridItem>
               <FormControl>
                 <FormLabel>Date:</FormLabel>
@@ -231,16 +227,18 @@ const [status, setStatus] = useState(false);
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
-            <GridItem>
+            <GridItem colStart={4}>
               <FormControl display="flex" alignItems="center">
-                <FormLabel htmlFor="email-alerts" mb="0" >
-                  Work Status {status.toString()}
+                <FormLabel htmlFor="email-alerts" mb="0">
+                  Work Status
                 </FormLabel>
-                <Switch id="email-alerts" colorScheme="green" 
-                 size='lg' {...register("status")} onChange={(e)=>setStatus(e.target.value)}
-               
-                      />
-                        {console.log(status)}
+                <Switch
+                  id="email-alerts"
+                  colorScheme="green"
+                  size="lg"
+                  {...register("status")}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
               </FormControl>
             </GridItem>
           </SimpleGrid>
@@ -424,7 +422,7 @@ const [status, setStatus] = useState(false);
                     ]
                   }
                 >
-                  <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                  <FormLabel>Remedial Action:</FormLabel>
                   <Textarea
                     type="text"
                     {...register(`defect_details[${index}].recommendation`, {
@@ -483,179 +481,175 @@ const [status, setStatus] = useState(false);
               </Tr>
             </Thead>
             <Tbody>
-              {partsField.map(
-                ({ id, sorcode, quantity, item, rates, subtotal }, index) => {
-                  const setTotal = (index, quantity, rates) => {
-                    const amount = parseInt(quantity) * parseFloat(rates);
-                    setValue(`partsreplaces[${index}].subtotal`, amount);
-                  };
+              {partsField.map(({ id }, index) => {
+                const setTotal = (index, quantity, rates) => {
+                  const amount = parseInt(quantity) * parseFloat(rates);
+                  setValue(`partsreplaces[${index}].subtotal`, amount);
+                };
 
-                  return (
-                    <Tr key={id}>
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                              "message"
-                            ]
-                          }
-                        >
-                          <Input
-                            type="text"
-                            {...register(`partsreplaces[${index}].sorcode`, {
-                              required: "cannot be empty",
-                            })}
-                            onChange={handleChange("sorcode")}
-                          />
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                              "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
+                return (
+                  <Tr key={id}>
+                    <Td>
+                      <FormControl
+                        isInvalid={
+                          errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
+                            "message"
+                          ]
+                        }
+                      >
+                        <Input
+                          type="text"
+                          {...register(`partsreplaces[${index}].sorcode`, {
+                            required: "cannot be empty",
+                          })}
+                          onChange={handleChange("sorcode")}
+                        />
+                      </FormControl>
+                      <Text
+                        as="sup"
+                        color="tomato"
+                        textAlign={3}
+                        className="login-error-msg"
+                      >
+                        {
+                          errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
+                            "message"
+                          ]
+                        }
+                      </Text>
+                    </Td>
 
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                              "message"
-                            ]
-                          }
-                        >
-                          <Input
-                            type="text"
-                            {...register(`partsreplaces[${index}].item`, {
-                              required: "cannot be empty",
-                            })}
-                            onChange={handleChange("item")}
-                          />
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                              "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
+                    <Td>
+                      <FormControl
+                        isInvalid={
+                          errors?.["partsreplaces"]?.[index]?.["item"]?.[
+                            "message"
+                          ]
+                        }
+                      >
+                        <Input
+                          type="text"
+                          {...register(`partsreplaces[${index}].item`, {
+                            required: "cannot be empty",
+                          })}
+                          onChange={handleChange("item")}
+                        />
+                      </FormControl>
+                      <Text
+                        as="sup"
+                        color="tomato"
+                        textAlign={3}
+                        className="login-error-msg"
+                      >
+                        {
+                          errors?.["partsreplaces"]?.[index]?.["item"]?.[
+                            "message"
+                          ]
+                        }
+                      </Text>
+                    </Td>
 
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                              "message"
-                            ]
-                          }
-                        >
-                          <Input
+                    <Td>
+                      <FormControl
+                        isInvalid={
+                          errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
+                            "message"
+                          ]
+                        }
+                      >
+                        <Input
+                          type="text"
+                          {...register(`partsreplaces[${index}].quantity`, {
+                            required: "cannot be empty",
+                          })}
+                          onChange={(e) => {
+                            const quantity = e.target.value;
+                            setTotal(index, quantity, watchTest[index].rates);
+                            handleChange("quantity");
+                          }}
+                        />
+                      </FormControl>
+                      <Text
+                        as="sup"
+                        color="tomato"
+                        textAlign={3}
+                        className="login-error-msg"
+                      >
+                        {
+                          errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
+                            "message"
+                          ]
+                        }
+                      </Text>
+                    </Td>
+
+                    <Td>
+                      <FormControl
+                        isInvalid={
+                          errors?.["partsreplaces"]?.[index]?.["rates"]?.[
+                            "message"
+                          ]
+                        }
+                      >
+                        <NumberInput>
+                          <NumberInputField
                             type="text"
-                            {...register(`partsreplaces[${index}].quantity`, {
+                            {...register(`partsreplaces[${index}].rates`, {
                               required: "cannot be empty",
                             })}
                             onChange={(e) => {
-                              const quantity = e.target.value;
-                              setTotal(index, quantity, watchTest[index].rates);
-                              handleChange("quantity");
+                              const rates = e.target.value;
+                              setTotal(index, watchTest[index].quantity, rates);
+                              handleChange("rates");
                             }}
                           />
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                              "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
+                        </NumberInput>
+                      </FormControl>
+                      <Text
+                        as="sup"
+                        color="tomato"
+                        textAlign={3}
+                        className="login-error-msg"
+                      >
+                        {
+                          errors?.["partsreplaces"]?.[index]?.["rates"]?.[
+                            "message"
+                          ]
+                        }
+                      </Text>
+                    </Td>
 
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                              "message"
-                            ]
-                          }
-                        >
-                          <NumberInput>
-                            <NumberInputField
-                              type="text"
-                              {...register(`partsreplaces[${index}].rates`, {
-                                required: "cannot be empty",
-                              })}
-                              onChange={(e) => {
-                                const rates = e.target.value;
-                                setTotal(
-                                  index,
-                                  watchTest[index].quantity,
-                                  rates
-                                );
-                                handleChange("rates");
-                              }}
-                            />
-                          </NumberInput>
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                              "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
+                    <Td>
+                      <FormControl
+                        isInvalid={
+                          errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
+                            "message"
+                          ]
+                        }
+                      >
+                        <Input
+                          type="text"
+                          {...register(`partsreplaces[${index}].subtotal`, {
+                            required: "cannot be empty",
+                          })}
+                        />
+                      </FormControl>
+                      <Text
+                        as="sup"
+                        color="tomato"
+                        textAlign={3}
+                        className="login-error-msg"
+                      >
+                        {
+                          errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
+                            "message"
+                          ]
+                        }
+                      </Text>
+                    </Td>
 
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                              "message"
-                            ]
-                          }
-                        >
-                          <Input
-                            type="text"
-                            {...register(`partsreplaces[${index}].subtotal`, {
-                              required: "cannot be empty",
-                            })}
-                          />
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                              "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
-
-                      <Td>
+                    <Td>
+                      {index !== 0 ? (
                         <button
                           type="button"
                           onClick={() => partsRemove(index)}
@@ -663,27 +657,37 @@ const [status, setStatus] = useState(false);
                         >
                           <FaTrashAlt color="gray.300" />
                         </button>
-                      </Td>
-                    </Tr>
-                  );
-                }
-              )}
+                      ) : (
+                        ""
+                      )}
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
           <GridItem>
             <Button onClick={() => partsAppend({})}>+</Button>
           </GridItem>
 
-          <Grid templateColumns="repeat(5, 1fr)" gap={1}>
+          <Grid templateColumns="repeat(5, 1fr)" gap={6}>
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10">
-              <Heading size="sm">TOTAL: {result}</Heading>
+              <Heading size="md">
+                TOTAL:
+                <NumberFormat
+                  value={result}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                />
+              </Heading>
               <Input
+                value={parseFloat(result)}
                 type="hidden"
-                value={result}
                 {...register("gtotal")}
                 onChange={handleChange("gtotal")}
               />
@@ -691,7 +695,7 @@ const [status, setStatus] = useState(false);
           </Grid>
 
           <VStack align="end">
-            <Button colorScheme="brand" type="submit">
+            <Button colorScheme="brand" type="submit" size="lg">
               Submit
             </Button>
           </VStack>

@@ -31,7 +31,6 @@ import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 import Fileupload from "./fileupload";
 import { DirectUpload } from "activestorage";
-
 import { FaTrashAlt } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 
@@ -444,7 +443,7 @@ const Form = (props) => {
                 ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
                   const setTotal = (index, quantity, rates) => {
                     const amount = parseInt(quantity) * parseFloat(rates);
-                    setValue(`partslist[${index}].subtotal`, amount);
+                    setValue(`partslist[${index}].subtotal`, parseFloat(amount));
                   };
 
                   return (
@@ -553,6 +552,7 @@ const Form = (props) => {
                         >
                           <NumberInput>
                             <NumberInputField
+                            precision={2} 
                               type="text"
                               {...register(`partslist[${index}].rates`, {
                                 required: "cannot be empty",
@@ -642,6 +642,8 @@ const Form = (props) => {
                 <NumberFormat
                   value={result}
                   displayType={"text"}
+                  thousandsGroupStyle="thousand"
+                  decimalsScale= "2"
                   thousandSeparator={true}
                   prefix={"$"}
                 />

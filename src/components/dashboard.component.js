@@ -32,6 +32,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import faker from "faker";
 import DataService from "../services/data.service";
+import NumberFormat from "react-number-format";
 
 ChartJS.register(
   CategoryScale,
@@ -56,7 +57,7 @@ export const options = {
 };
 
 export const options_amount_total_each = {
-  indexAxis: 'y',
+  indexAxis: "y",
   elements: {
     bar: {
       borderWidth: 0,
@@ -65,11 +66,11 @@ export const options_amount_total_each = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'right',
+      position: "right",
     },
     title: {
       display: true,
-      text: 'Total Amount Town Council',
+      text: "Total Amount Town Council",
     },
   },
 };
@@ -117,82 +118,98 @@ export const data = {
   ],
 };
 
-
-const labels2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels2 = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+];
 
 export const data2 = {
   labels,
   datasets: [
     {
-      label: 'Aljunied-Hougang ',
+      label: "Aljunied-Hougang ",
       data: labels2.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(196, 229, 56,1.0)',
+      backgroundColor: "rgba(196, 229, 56,1.0)",
     },
     {
-      label: 'Ang Mokio',
+      label: "Ang Mokio",
       data: labels2.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(163, 203, 56,1.0)',
+      backgroundColor: "rgba(163, 203, 56,1.0)",
     },
     {
-      label: 'Bishan-Toa Payoh',
+      label: "Bishan-Toa Payoh",
       data: labels2.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(0, 148, 50,1.0)',
+      backgroundColor: "rgba(0, 148, 50,1.0)",
     },
     {
-      label: 'Jurong Clementi',
+      label: "Jurong Clementi",
       data: labels2.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
     },
     {
-      label: 'Marine Parade',
+      label: "Marine Parade",
       data: labels2.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(247, 159, 31,1.0)',
+      backgroundColor: "rgba(247, 159, 31,1.0)",
     },
   ],
 };
 
 function Dashboard() {
   const [values, setValues] = useState({
-    total_amount: [],
-    total_outstanding: []
+    total: []
   });
 
   useEffect(() => {
     getTotalAmount();
   }, []);
 
-
-
   const getTotalAmount = () => {
     DataService.dashboard_total_Amount().then((response) => {
-      setValues({total_amount:response});
-      DataService.dashboard_total_outstanding().then((response) => {
-        setValues({total_amount:response});
-      });
+      setValues({...values, total: response});
     });
   };
 
-
-
+  const total_amount = values.total.map((total)=>total.total_amount).toString()
   return (
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
-        <Box boxShadow='sm' p='6' rounded='md' bg='white'  height="auto" m={2}>
+        <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
           <Bar options={options} data={data} bg="red" />
         </Box>
-        <Box boxShadow='sm' p='6' rounded='md' bg='white'  height="auto" m={2}>
+        <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
           <Bar options={options_amount_total_each} data={data2} bg="red" />
         </Box>
-        <Box boxShadow='sm' p='6' rounded='md' bg='white' height="140px" m={2} padding="5">
+        <Box
+          boxShadow="sm"
+          p="6"
+          rounded="md"
+          bg="white"
+          height="140px"
+          m={2}
+          padding="5"
+        >
           <StatGroup justifyContent="space-between">
             <Stat>
               <StatLabel>Total Amount Jobwork</StatLabel>
-              <StatNumber>${values.total_amount.map((total)=>total.total_amount)}</StatNumber>
+              <StatNumber>
+                { total_amount != "" ? (
+                   <NumberFormat value={total_amount} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                ): "$0.00"}
+                 
+              </StatNumber>
+         
             </Stat>
 
             <Stat>
               <StatLabel>Overall Outstanding Jobwork</StatLabel>
-              <StatNumber>{values.total_amount.map((total)=>total.total_outstanding)}</StatNumber>
+              <StatNumber>
+              {values.total.map((total)=>total.total_outstanding)}
+              </StatNumber>
             </Stat>
           </StatGroup>
         </Box>
