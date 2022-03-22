@@ -1,7 +1,13 @@
 .table-custom{
 
+    th{
+        background-color: #4A5667;
+        color:#fff;
+        padding:15px;
+    }
 th, tr, td{
-    border: 1px solid #CAD7E2 !important;
+    border: 1px solid #EDF2F6 !important;
+    
 }
 input{
     border: 0px;

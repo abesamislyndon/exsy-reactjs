@@ -124,7 +124,11 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
             subNav: [
               {
                 title: "Outstanding",
-                itemId: "/joblist",
+                itemId: "/outstanding",
+              },
+              {
+                title: "Completed",
+                itemId: "/completed",
               },
               {
                 title: "Form",

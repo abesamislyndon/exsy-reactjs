@@ -58,6 +58,7 @@ const Jobinfodetail = () => {
   const [values, setValues] = useState({
     startDate: new Date(),
     client_name: "",
+    client_id: "",
     division_name: "",
     block: "",
     address: "",
@@ -257,7 +258,7 @@ const Jobinfodetail = () => {
                   </option>
                   {values.clients.map((client, i) => {
                     return (
-                      <option key={client.id} value={client.id}>
+                      <option key={i} value={client.id}>
                         {client.client_name}
                       </option>
                     );

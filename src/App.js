@@ -3,7 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./components/login.component";
 import Dashboard from "./components/dashboard.component";
 import Jobwork from "./components/jobwork/jobwork.component";
-import Joblist from "./components/jobwork/joblist";
+import Outstanding from "./components/jobwork/outstanding";
+import Completed from "./components/jobwork/completed";
 import Client from "./components/client";
 import Division from "./components/division";
 import Usermanagement from "./components/user.manangement.component";
@@ -31,8 +32,13 @@ function App() {
         />
         <Route
           exact
-          path="/joblist"
-          element={<PrivateRoute Component={Joblist} />}
+          path="/outstanding"
+          element={<PrivateRoute Component={Outstanding} />}
+        />
+        <Route
+          exact
+          path="/completed"
+          element={<PrivateRoute Component={Completed} />}
         />
         <Route
           exact

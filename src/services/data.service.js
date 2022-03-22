@@ -304,6 +304,19 @@ const dashboard_total_Amount = async () => {
   }
 };
 
+const API_URL_JOB_COMPLETED = "/completed";
+const Completed_jobwork = async () => {
+  try {
+    const response = await axios.get(API_URL_JOB_COMPLETED, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 const DataService = {
   getAllClient,
   CreateClient,
@@ -316,7 +329,8 @@ const DataService = {
   updateJobinfo,
   getAllJobinfo,
   dashboard_total_Amount,
-  jobinfo_detail
+  jobinfo_detail,
+  Completed_jobwork
 };
 
 export default DataService;
