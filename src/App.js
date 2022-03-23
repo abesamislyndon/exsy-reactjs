@@ -12,14 +12,21 @@ import Reports from "./components/reports.component";
 import ErrorPage404 from "./components/error-404";
 import "./assets/css/login.scss";
 import theme from "./themes/index";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Show } from "@chakra-ui/react";
 import PrivateRoute from "./components/privateRoute";
 import Jobinfo from "./components/jobwork/jobinfo";
+import authService from './services/auth.service';
+import Users from "./components/users/users";
+import UserShowDetail from "./components/users/show";
 
 
 function App() {
 
- 
+ const userinfo = () =>{
+    authService.getCurrentUser();
+ }
+
+ console.log(userinfo)
   return (
     <ChakraProvider theme={theme}>
       <Routes>
@@ -63,7 +70,12 @@ function App() {
         <Route
           exact
           path="/users"
-          element={<PrivateRoute Component={Usermanagement} />}
+          element={<PrivateRoute Component={Users} />}
+        />
+           <Route
+          exact
+          path="/user/:id/"
+          element={<PrivateRoute Component={UserShowDetail}/>}
         />
         <Route
           exact

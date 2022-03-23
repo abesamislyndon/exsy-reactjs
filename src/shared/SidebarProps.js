@@ -177,7 +177,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
             subNav: [
               {
                 title: "User Management",
-                itemId: "/client",
+                itemId: "/users",
               },
               {
                 title: "API Management",

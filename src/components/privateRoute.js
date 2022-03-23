@@ -8,6 +8,7 @@ const PrivateRoute = ({Component}) => {
     //const Navigate = useNavigate();
     const auth  = authService.isLogin();
 
+    console.log(auth)
     return auth  ? <Component  /> : <Navigate to="/" />
 }
 

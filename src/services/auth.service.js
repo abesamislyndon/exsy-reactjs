@@ -13,7 +13,7 @@ const signup = (username, password) => {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
-    }).catch(function(error) {
+    }).catch(function (error) {
       console.log(error);
     })
 };
@@ -34,11 +34,11 @@ const logout = () => {
   localStorage.removeItem("user");
 };
 
-const isLogin = () =>{
-    if(localStorage.getItem("user")){
-      return true;
-    }
-    return false
+const isLogin = () => {
+  if (localStorage.getItem("user")) {
+    return true;
+  }
+  return false
 }
 
 const getCurrentUser = () => {
