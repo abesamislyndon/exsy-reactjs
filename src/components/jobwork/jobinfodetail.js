@@ -42,10 +42,14 @@ const Jobinfodetail = () => {
   const [jobdetail, setJobdetail] = useState([]);
 
   useEffect(() => {
+    getJobDetail();
+  }, []);
+
+  const getJobDetail = () => {
     DataService.jobinfo_detail(id).then((response) => {
       setJobdetail(response);
     });
-  }, []);
+  };
 
   useEffect(() => {
     reset(jobdetail);
@@ -64,6 +68,7 @@ const Jobinfodetail = () => {
     address: "",
     natureofcomplain: "",
     gtotal: "",
+    status: "",
     clients: [],
     divisions: [],
     clientBelong: [],
@@ -139,11 +144,10 @@ const Jobinfodetail = () => {
 
     // console.log(images);
   };
-
   const updateJobinfo = async (event, data) => {
-    const defectinfo = getValues("defect_details");
-    const partsinfo = getValues("partsreplaces");
-    values.gtotal = result;
+     const defectinfo = getValues("defect_details");
+     const partsinfo  = getValues("partsreplaces");
+       values.gtotal  = result;
 
     try {
       await DataService.updateJobinfo(
@@ -170,13 +174,20 @@ const Jobinfodetail = () => {
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);
-        //        console.log(error.response.status);
-        //      console.log(error.response.headers);
       }
     }
   };
 
-  //{console.log( getValues("gtotal"))}
+  const removePartslist = (id) => {
+    let confirmDelete = window.confirm(`${values.item}`);
+    if (confirmDelete) {
+      DataService.removePartslist(id);
+      setTimeout(() => {
+        getJobDetail();
+        handleSubmit(updateJobinfo);
+      }, 500);
+    }
+  };
 
   const watchTest = useWatch({
     control,
@@ -190,15 +201,11 @@ const Jobinfodetail = () => {
       (total = total + parseFloat(currentValue.subtotal)),
     0
   );
-  //const [gtotal, setGtotal] = useState(jobdetail.total);
-  //console.log(subtotalFields);
 
   useEffect(() => {
     setValues({ ...values, gtotal: result });
   }, []);
 
-  const [status, setStatus] = useState(false);
-  const count = 0;
   return (
     <div className="container">
       <form
@@ -236,10 +243,14 @@ const Jobinfodetail = () => {
                 <Switch
                   id="email-alerts"
                   colorScheme="green"
+                  defaultChecked={values.status}
                   size="lg"
                   {...register("status")}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={(e) =>
+                    setValues({ ...values, status: e.target.value })
+                  }
                 />
+                {console.log(values.status)}
               </FormControl>
             </GridItem>
           </SimpleGrid>
@@ -482,14 +493,16 @@ const Jobinfodetail = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {partsField.map(({ id }, index) => {
+              {partsField.map((field, index) => {
                 const setTotal = (index, quantity, rates) => {
                   const amount = parseInt(quantity) * parseFloat(rates);
                   setValue(`partsreplaces[${index}].subtotal`, amount);
+           
+                  
                 };
 
                 return (
-                  <Tr key={id}>
+                  <Tr key={field.id}>
                     <Td>
                       <FormControl
                         isInvalid={
@@ -650,17 +663,12 @@ const Jobinfodetail = () => {
                     </Td>
 
                     <Td>
-                      {index !== 0 ? (
-                        <button
-                          type="button"
-                          onClick={() => partsRemove(index)}
-                          className="remove-btn"
-                        >
-                          <FaTrashAlt color="gray.300" />
-                        </button>
-                      ) : (
-                        ""
-                      )}
+                      <button
+                        onClick={()=>removePartslist(field.uid)}
+                        className="remove-btn"
+                      >
+                        remove
+                      </button>
                     </Td>
                   </Tr>
                 );

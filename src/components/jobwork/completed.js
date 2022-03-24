@@ -103,6 +103,8 @@ function Completed() {
               defaultSortAsc={false}
               pagination
               highlightOnHovers
+              fixedHeader
+              fixedHeaderScrollHeight="900px"
             />
           </DataTableExtensions>
         </Container>

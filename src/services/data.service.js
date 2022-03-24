@@ -317,6 +317,19 @@ const Completed_jobwork = async () => {
 };
 
 
+const removePartslist = (id) =>{
+  axios.delete(`partsreplace/${id}`, {
+    headers: header,
+  });
+};
+
+
+const deleteJobinfo = (id) =>{
+  axios.delete(`jobinfo/${id}`, {
+    headers: header,
+  });
+};
+
 const DataService = {
   getAllClient,
   CreateClient,
@@ -330,7 +343,9 @@ const DataService = {
   getAllJobinfo,
   dashboard_total_Amount,
   jobinfo_detail,
-  Completed_jobwork
+  Completed_jobwork,
+  removePartslist,
+  deleteJobinfo
 };
 
 export default DataService;
