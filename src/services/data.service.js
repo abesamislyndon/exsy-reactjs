@@ -323,6 +323,12 @@ const removePartslist = (id) =>{
   });
 };
 
+const removeDefect = (id) =>{
+  axios.delete(`defect_details/${id}`, {
+    headers: header,
+  });
+};
+
 
 const deleteJobinfo = (id) =>{
   axios.delete(`jobinfo/${id}`, {
@@ -345,7 +351,8 @@ const DataService = {
   jobinfo_detail,
   Completed_jobwork,
   removePartslist,
-  deleteJobinfo
+  deleteJobinfo,
+  removeDefect
 };
 
 export default DataService;

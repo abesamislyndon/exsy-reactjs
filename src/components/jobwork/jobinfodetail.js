@@ -145,9 +145,9 @@ const Jobinfodetail = () => {
     // console.log(images);
   };
   const updateJobinfo = async (event, data) => {
-     const defectinfo = getValues("defect_details");
-     const partsinfo  = getValues("partsreplaces");
-       values.gtotal  = result;
+    const defectinfo = getValues("defect_details");
+    const partsinfo = getValues("partsreplaces");
+    values.gtotal = result;
 
     try {
       await DataService.updateJobinfo(
@@ -184,7 +184,18 @@ const Jobinfodetail = () => {
       DataService.removePartslist(id);
       setTimeout(() => {
         getJobDetail();
-        handleSubmit(updateJobinfo);
+        updateJobinfo();
+      }, 500);
+    }
+  };
+
+  const removeDefect = (id) => {
+    let confirmDelete = window.confirm(`${values.item}`);
+    if (confirmDelete) {
+      DataService.removeDefect(id);
+      setTimeout(() => {
+        getJobDetail();
+        updateJobinfo();
       }, 500);
     }
   };
@@ -394,8 +405,8 @@ const Jobinfodetail = () => {
 
           <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
-          {defectsFields.map(({ id }, index) => (
-            <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full" key={id}>
+          {defectsFields.map((field, index) => (
+            <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full" key={field.id}>
               <GridItem>
                 <FormControl
                   isInvalid={
@@ -457,7 +468,7 @@ const Jobinfodetail = () => {
                 </Text>
                 <button
                   type="button"
-                  onClick={() => defectsRemove(index)}
+                  onClick={() => removeDefect(field.uid)}
                   className="remove-btn"
                 >
                   <span>Remove</span>
@@ -497,8 +508,6 @@ const Jobinfodetail = () => {
                 const setTotal = (index, quantity, rates) => {
                   const amount = parseInt(quantity) * parseFloat(rates);
                   setValue(`partsreplaces[${index}].subtotal`, amount);
-           
-                  
                 };
 
                 return (
@@ -664,7 +673,7 @@ const Jobinfodetail = () => {
 
                     <Td>
                       <button
-                        onClick={()=>removePartslist(field.uid)}
+                        onClick={() => removePartslist(field.uid)}
                         className="remove-btn"
                       >
                         remove
