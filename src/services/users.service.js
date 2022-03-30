@@ -14,6 +14,8 @@ const header = authHeader();
 */
 
 const API_URL_USER = "/users";
+
+
 const getAllUsers = async () => {
   try {
     const response = await axios.get(API_URL_USER, {
@@ -23,6 +25,41 @@ const getAllUsers = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+
+const createUser = async (
+  username,
+    email,
+    password,
+    password_confirmation,
+    role
+) => {
+  const user = {
+    username: username,
+    email: email,
+    password: password,
+    password_confirmation: password_confirmation,
+    role: role
+
+  };
+
+ 
+  axios
+    .post(
+      API_URL_USER, {
+        user,
+      }, {
+        headers: header,
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
 };
 
 
@@ -63,7 +100,8 @@ const userDetail = async (id) => {
 const DataService = {
     getAllUsers,
     userDetail,
-    updateUser
+    updateUser,
+    createUser
 }
 
 export default DataService;

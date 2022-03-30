@@ -24,8 +24,10 @@ import {
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useForm , Controller} from "react-hook-form";
 
+
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
+
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -165,7 +167,7 @@ const Login = () => {
           alt={"Login Image"}
           objectFit={"cover"}
           src={
-            "https://images.pexels.com/photos/2325876/pexels-photo-2325876.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500&auto=format&fit=crop&w=900&q=80"
+            "https://images.unsplash.com/photo-1507562534834-42ebd36b00ea?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=900&q=80"
           }
         />
       </Flex>

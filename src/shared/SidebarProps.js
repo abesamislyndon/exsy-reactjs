@@ -82,9 +82,13 @@ interface SidebarProps extends BoxProps {
   onClose: () => void;
 }
 
+
+
 const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
   //const integrations = useDisclosure();
+
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Box
       transition="3s ease"
@@ -102,91 +106,117 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
+      {
+        user.user.role == "superadmin" ? (
+          <Navigation
+            // you can use your own router's api to get pathname
+            activeItemId="/dashboard"
+            onSelect={({ itemId }) => {
+              navigate(itemId);
+            }}
+            items={[
+              {
+                title: "Dashboard",
+                itemId: "/dashboard",
+                // you can use your own custom Icon component as well
+                // icon is optional
+                elemBefore: () => <FiHome />,
+              },
+              {
 
-      <Navigation
-        // you can use your own router's api to get pathname
-        activeItemId="/dashboard"
-        onSelect={({ itemId }) => {
-          navigate(itemId);
-        }}
-        items={[
-          {
-            title: "Dashboard",
-            itemId: "/dashboard",
-            // you can use your own custom Icon component as well
-            // icon is optional
-            elemBefore: () => <FiHome />,
-          },
-          {
-            title: "Jobwork",
-            itemId: "#",
-            elemBefore: () => <FiClipboard />,
-            subNav: [
-              {
-                title: "Outstanding",
-                itemId: "/outstanding",
+                title: "Jobwork",
+                itemId: "#",
+                elemBefore: () => <FiClipboard />,
+                subNav: [
+                  {
+                    title: "Outstanding",
+                    itemId: "/outstanding",
+                  },
+                  {
+                    title: "Completed",
+                    itemId: "/completed",
+                  },
+                  {
+                    title: "Form",
+                    itemId: "/form",
+                  },
+                ],
+              }, {
+                title: "Item Management",
+                itemId: "",
+                elemBefore: () => <FiClipboard />,
+                subNav: [
+                  {
+                    title: "Item List",
+                    itemId: "/joblist",
+                  },
+                  {
+                    title: "New Item",
+                    itemId: "/jobwork",
+                  },
+                ],
               },
               {
-                title: "Completed",
-                itemId: "/completed",
-              },
-              {
-                title: "Form",
-                itemId: "/form",
-              },
-            ],
-          },    {
-            title: "Item Management",
-            itemId: "",
-            elemBefore: () => <FiClipboard />,
-            subNav: [
-              {
-                title: "Item List",
-                itemId: "/joblist",
-              },
-              {
-                title: "New Item",
-                itemId: "/jobwork",
-              },
-            ],
-          },
-          {
-            title: "Client Management",
-            itemId: "/client",
-            elemBefore: () => <FiUsers />,
-            subNav: [
-              {
-                title: "Client",
+                title: "Client Management",
                 itemId: "/client",
+                elemBefore: () => <FiUsers />,
+                subNav: [
+                  {
+                    title: "Client",
+                    itemId: "/client",
+                  },
+                  {
+                    title: "Division",
+                    itemId: "/division",
+                  },
+                ],
               },
               {
-                title: "Division",
-                itemId: "/division",
-              },
-            ],
-          },
-          {
-            title: "Reports",
-            itemId: "/report",
-            elemBefore: () => <FiFileText />,
-          },
-          {
-            title: " Settings",
-            //itemId: '/',
-            elemBefore: () => <FiSettings />,
-            subNav: [
-              {
-                title: "User Management",
-                itemId: "/users",
+                title: "Reports",
+                itemId: "/report",
+                elemBefore: () => <FiFileText />,
               },
               {
-                title: "API Management",
-                itemId: "/division",
+                title: " Settings",
+                //itemId: '/',
+                elemBefore: () => <FiSettings />,
+                subNav: [
+                  {
+                    title: "User Management",
+                    itemId: "/users",
+                  },
+                  {
+                    title: "API Management",
+                    itemId: "/division",
+                  },
+                ],
               },
-            ],
-          },
-        ]}
-      />
+            ]}
+          />
+        ) : (
+          < Navigation
+            // you can use your own router's api to get pathname
+            activeItemId="/dashboard"
+            onSelect={
+              ({
+                itemId
+              }) => {
+                navigate(itemId);
+              }
+            }
+            items={
+              [{
+                title: "Dashboard",
+                itemId: "/dashboard",
+                // you can use your own custom Icon component as well
+                // icon is optional
+                elemBefore: () => < FiHome />,
+              }]
+            }
+          />
+        )
+      }
+
     </Box>
   );
 };
@@ -203,6 +233,7 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -274,7 +305,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Lyndon Abesamis</Text>
+                  <Text fontSize="sm">{user.user.username}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>

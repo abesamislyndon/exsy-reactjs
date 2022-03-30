@@ -35,27 +35,17 @@ function Userlist() {
       },
       {
         name: "Email",
-        selector: (row) => row.email,
-        sortable: true,
-      },
-      {
-        name: "Role",
-        selector: (row) => row.role,
-        sortable: true,
-      },
-      {
-        name: "Username",
         selector: (row) => row.username,
         sortable: true,
       },
       {
-        name: "Created",
-        selector: (row) => row.created_at,
+        name: "Role",
+        selector: (row) => row.email,
         sortable: true,
       },
       {
-        name: "Last Update",
-        selector: (row) => row.updated_at,
+        name: "Username",
+        selector: (row) => row.role,
         sortable: true,
       },
       {

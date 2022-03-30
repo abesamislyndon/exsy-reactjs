@@ -225,7 +225,7 @@ const Form = (props) => {
                 >
                   {values?.clients.map((client, i) => {
                     return (
-                      <option key={client?.id} value={client?.id}>
+                      <option key={client?.id} value={client?.client_name}>
                         {client.client_name}
                       </option>
                     );
@@ -254,7 +254,7 @@ const Form = (props) => {
                 >
                   {values.clientBelong.map((division, i) => {
                     return (
-                      <option key={division.id} value={division.id}>
+                      <option key={division.id} value={division.division_name}>
                         {division.div_name}
                       </option>
                     );
@@ -413,8 +413,8 @@ const Form = (props) => {
                     type="file"
                     accept="image/png, image/jpeg"
                     {...register(`defectslist[${index}].photo`)}
-                    onChange={(e) => setImages(e.target.files[0])}
-                    //onChange={(e) => onImageChange(e)}
+                    //onChange={(e) => setImages(e.target.files[0])}
+                    onChange={(e) => onImageChange(e)}
                     //  multiple={false}
                   />
                 </GridItem>

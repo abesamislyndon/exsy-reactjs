@@ -18,6 +18,8 @@ import Jobinfo from "./components/jobwork/jobinfo";
 import authService from './services/auth.service';
 import Users from "./components/users/users";
 import UserShowDetail from "./components/users/show";
+import Newuser from "./components/users/newuser";
+
 
 
 function App() {
@@ -26,7 +28,6 @@ function App() {
     authService.getCurrentUser();
  }
 
- console.log(userinfo)
   return (
     <ChakraProvider theme={theme}>
       <Routes>
@@ -72,6 +73,11 @@ function App() {
           path="/users"
           element={<PrivateRoute Component={Users} />}
         />
+         <Route
+          exact
+          path="/newuser"
+          element={<PrivateRoute Component={Newuser} />}
+        />
            <Route
           exact
           path="/user/:id/"
@@ -82,6 +88,8 @@ function App() {
           path="/reports"
           element={<PrivateRoute Component={Reports} />}
         />
+
+       
       </Routes>
     </ChakraProvider>
   );

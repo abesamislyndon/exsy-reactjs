@@ -34,6 +34,7 @@ import DataService from "../../services/data.service";
 import { useParams } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 import NumberFormat from "react-number-format";
+import Division from "./division.component";
 
 const Jobinfodetail = () => {
   const { id } = useParams();
@@ -55,9 +56,9 @@ const Jobinfodetail = () => {
     reset(jobdetail);
   }, [jobdetail]);
 
-  useEffect(() => {
-    getClient();
-  }, []);
+
+
+  
 
   const [values, setValues] = useState({
     startDate: new Date(),
@@ -76,11 +77,18 @@ const Jobinfodetail = () => {
     jobid: id,
   });
 
+  useEffect(() => {
+    getClient();
+  }, []);
+
+
+
   const getClient = () => {
     DataService.getAllClient().then((response) => {
       setValues({ ...values, clients: response });
     });
   };
+
 
   const getDivBelong = (name) => (event) => {
     const divId = event.target.value;
@@ -92,6 +100,8 @@ const Jobinfodetail = () => {
       });
     });
   };
+
+
 
   const [parts, setParts] = useState([
     {
@@ -275,17 +285,17 @@ const Jobinfodetail = () => {
                   {...register("client_name")}
                   onChange={getDivBelong("client_name")}
                 >
-                  <option selected value={jobdetail.client_name}>
-                    {jobdetail.client_name}
-                  </option>
-                  {values.clients.map((client, i) => {
-                    return (
-                      <option key={i} value={client.id}>
-                        {client.client_name}
-                      </option>
-                    );
-                  })}
+                  {values.clients?.map((client, i) => {
+                          return(
+                              <option value= {client.client_name} selected={jobdetail.client_name == client.client_name} >
+                                 { client.client_name}
+                              </option>
+                          )
+                        
+                    })
+                  }
                 </Select>
+          
               </FormControl>
               <Text
                 as="sup"
@@ -298,35 +308,31 @@ const Jobinfodetail = () => {
             </GridItem>
 
             <GridItem>
-              <FormControl isInvalid={errors.division_name?.message}>
-                <FormLabel>Division:</FormLabel>
-                <Select
-                  placeholder="Select option"
-                  {...register("division_name", {
-                    required: "cannot be empty",
-                  })}
-                  onChange={handleChange("division_name")}
-                >
-                  <option selected value={jobdetail.division_name}>
-                    {jobdetail.division_name}
-                  </option>
-                  {values.clientBelong.map((division, i) => {
-                    return (
-                      <option key={division.id} value={division.id}>
-                        {division.div_name}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              <Text
-                as="sup"
-                color="tomato"
-                textAlign={3}
-                className="login-error-msg"
+            <FormControl isInvalid={errors.division_name?.message}>
+        <FormLabel>Division:</FormLabel>
+        <Select
+          placeholder="Select option"
+          {...register("division_name", {
+            required: "cannot be empty",
+          })}
+          onChange={handleChange("division_name")}
+        >
+          {values.clientBelong?.map((division, i) => {
+            return (
+              <option
+                value={division.division_name}
+                selected={jobdetail.division_name == division.div_name}
               >
-                {errors.division_name?.message}
-              </Text>
+                {division.div_name}
+              </option>
+            );
+          })}
+        </Select>
+        {console.log(values)}
+      </FormControl>
+      <Text as="sup" color="tomato" textAlign={3} className="login-error-msg">
+        {errors.division_name?.message}
+      </Text>
             </GridItem>
           </SimpleGrid>
 
@@ -480,6 +486,7 @@ const Jobinfodetail = () => {
                   accept="image/png, image/jpeg"
                   {...register(`defect_details[${index}].photo`)}
                   onChange={(e) => setImages(e.target.files[0])}
+                  data-direct-upload-url="/rails/active_storage/direct_uploads"
                   //onChange={(e) => onImageChange(e)}
                   //  multiple={false}
                 />
