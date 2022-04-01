@@ -148,7 +148,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 subNav: [
                   {
                     title: "Item List",
-                    itemId: "/joblist",
+                    itemId: "/items",
                   },
                   {
                     title: "New Item",
@@ -173,7 +173,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
               },
               {
                 title: "Reports",
-                itemId: "/report",
+                itemId: "/pdf",
                 elemBefore: () => <FiFileText />,
               },
               {
@@ -307,7 +307,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 >
                   <Text fontSize="sm">{user.user.username}</Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                  {user.user.role}
                   </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>

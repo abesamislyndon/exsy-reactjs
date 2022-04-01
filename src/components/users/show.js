@@ -1,3 +1,4 @@
+import React from 'react';
 import SidebarWithHeader from "../../shared/SidebarProps";
 
 

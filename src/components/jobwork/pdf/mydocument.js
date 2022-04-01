@@ -1,5 +1,6 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { de } from 'faker/lib/locales';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 // Create Document Component
-const pdf = () => (
+const MyDocument = () => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
@@ -28,6 +29,4 @@ const pdf = () => (
   </Document>
 );
 
-
-export default pdf
-
+export default MyDocument

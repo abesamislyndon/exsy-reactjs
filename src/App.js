@@ -19,14 +19,18 @@ import authService from './services/auth.service';
 import Users from "./components/users/users";
 import UserShowDetail from "./components/users/show";
 import Newuser from "./components/users/newuser";
+import Report from "./components/report";
+import Items from "./components/item";
+import { pdf } from "@react-pdf/renderer";
+import MyDocument from "./components/jobwork/pdf/mydocument";
 
 
 
 function App() {
 
- const userinfo = () =>{
+  const userinfo = () => {
     authService.getCurrentUser();
- }
+  }
 
   return (
     <ChakraProvider theme={theme}>
@@ -51,7 +55,7 @@ function App() {
         <Route
           exact
           path="/jobinfo/:id/"
-          element={<PrivateRoute Component={Jobinfo}/>}
+          element={<PrivateRoute Component={Jobinfo} />}
         />
         <Route
           exact
@@ -73,23 +77,36 @@ function App() {
           path="/users"
           element={<PrivateRoute Component={Users} />}
         />
-         <Route
+        <Route
           exact
           path="/newuser"
           element={<PrivateRoute Component={Newuser} />}
         />
-           <Route
+        <Route
           exact
           path="/user/:id/"
-          element={<PrivateRoute Component={UserShowDetail}/>}
+          element={<PrivateRoute Component={UserShowDetail} />}
         />
         <Route
           exact
           path="/reports"
-          element={<PrivateRoute Component={Reports} />}
+          element={<PrivateRoute Component={Report} />}
         />
 
-       
+        <Route
+          exact
+          path="/items"
+          element={<PrivateRoute Component={Items} />}
+        />
+
+<Route
+          exact
+          path="/pdf"
+          element={<PrivateRoute Component={MyDocument} />}
+        />
+
+
+
       </Routes>
     </ChakraProvider>
   );
