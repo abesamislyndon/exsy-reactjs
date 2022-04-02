@@ -21,8 +21,7 @@ import UserShowDetail from "./components/users/show";
 import Newuser from "./components/users/newuser";
 import Report from "./components/report";
 import Items from "./components/item";
-import { pdf } from "@react-pdf/renderer";
-import MyDocument from "./components/jobwork/pdf/mydocument";
+import mypdf from "./components/jobwork/pdf/jobworkpdf";
 
 
 
@@ -101,8 +100,8 @@ function App() {
 
 <Route
           exact
-          path="/pdf"
-          element={<PrivateRoute Component={MyDocument} />}
+          path="/pdf/:id/"
+          element={<PrivateRoute Component={mypdf} />}
         />
 
 

@@ -31,17 +31,18 @@ import DatePicker from "react-datepicker";
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 import NumberFormat from "react-number-format";
+import JobworkPdf from "./pdf/jobworkpdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
-
-
-const Jobinfodetail = () => {
+const Jobinfodetail = (props) => {
   const { id } = useParams();
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [jobdetail, setJobdetail] = useState([]);
+  const [pdfdetail, setPDF] = useState([]);
 
   useEffect(() => {
     getJobDetail();
@@ -50,16 +51,13 @@ const Jobinfodetail = () => {
   const getJobDetail = () => {
     DataService.jobinfo_detail(id).then((response) => {
       setJobdetail(response);
+      setPDF(response)
     });
   };
 
   useEffect(() => {
     reset(jobdetail);
   }, [jobdetail]);
-
-
-
-
 
   const [values, setValues] = useState({
     startDate: new Date(),
@@ -82,14 +80,11 @@ const Jobinfodetail = () => {
     getClient();
   }, []);
 
-
-
   const getClient = () => {
     DataService.getAllClient().then((response) => {
       setValues({ ...values, clients: response });
     });
   };
-
 
   const getDivBelong = (name) => (event) => {
     const divId = event.target.value;
@@ -101,8 +96,6 @@ const Jobinfodetail = () => {
       });
     });
   };
-
-
 
   const [parts, setParts] = useState([
     {
@@ -228,6 +221,8 @@ const Jobinfodetail = () => {
     setValues({ ...values, gtotal: result });
   }, []);
 
+  const samplecheck =  pdfdetail.id;
+
   return (
     <div className="container">
       <form
@@ -259,6 +254,23 @@ const Jobinfodetail = () => {
             <GridItem></GridItem>
             <GridItem colStart={4}>
               <FormControl display="flex" alignItems="center">
+               <Link to={`/pdf/${id}`} >viewpdf</Link>
+              <PDFDownloadLink
+                  document={<JobworkPdf sample = {samplecheck} />}
+                  fileName="movielist.pdf"
+                  style={{
+                    textDecoration: "none",
+                    padding: "10px",
+                    color: "#4a4a4a",
+                    backgroundColor: "#f2f2f2",
+                    border: "1px solid #4a4a4a"
+                  }}
+                >
+                PDF
+                </PDFDownloadLink>
+              
+              </FormControl>
+              <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="email-alerts" mb="0">
                   Work Status
                 </FormLabel>
@@ -272,7 +284,7 @@ const Jobinfodetail = () => {
                     setValues({ ...values, status: e.target.value })
                   }
                 />
-                {console.log(values.status)}
+           
               </FormControl>
             </GridItem>
           </SimpleGrid>
@@ -288,15 +300,15 @@ const Jobinfodetail = () => {
                 >
                   {values.clients?.map((client, i) => {
                     return (
-                      <option value={client.client_name} selected={jobdetail.client_name == client.client_name} >
+                      <option
+                        value={client.client_name}
+                        selected={jobdetail.client_name == client.client_name}
+                      >
                         {client.client_name}
                       </option>
-                    )
-
-                  })
-                  }
+                    );
+                  })}
                 </Select>
-
               </FormControl>
               <Text
                 as="sup"
@@ -331,7 +343,12 @@ const Jobinfodetail = () => {
                 </Select>
                 {console.log(values)}
               </FormControl>
-              <Text as="sup" color="tomato" textAlign={3} className="login-error-msg">
+              <Text
+                as="sup"
+                color="tomato"
+                textAlign={3}
+                className="login-error-msg"
+              >
                 {errors.division_name?.message}
               </Text>
             </GridItem>
@@ -358,8 +375,8 @@ const Jobinfodetail = () => {
                     console.log("messages", messages);
                     return messages
                       ? Object.entries(messages).map(([type, message]) => (
-                        <p key={type}>{message}</p>
-                      ))
+                          <p key={type}>{message}</p>
+                        ))
                       : null;
                   }}
                 />
@@ -413,12 +430,18 @@ const Jobinfodetail = () => {
           <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
           {defectsFields.map((field, index) => (
-            <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full" key={field.id}>
+            <SimpleGrid
+              columns={3}
+              columnGap={3}
+              rowGap={6}
+              w="full"
+              key={field.id}
+            >
               <GridItem>
                 <FormControl
                   isInvalid={
                     errors?.["defect_details"]?.[index]?.["defects"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 >
@@ -428,7 +451,7 @@ const Jobinfodetail = () => {
                     {...register(`defect_details[${index}].defects`, {
                       required: "cannot be empty",
                     })}
-                  // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                   />
                 </FormControl>
                 <Text
@@ -439,7 +462,7 @@ const Jobinfodetail = () => {
                 >
                   {
                     errors?.["defect_details"]?.[index]?.["defects"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 </Text>
@@ -448,7 +471,7 @@ const Jobinfodetail = () => {
                 <FormControl
                   isInvalid={
                     errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 >
@@ -458,7 +481,7 @@ const Jobinfodetail = () => {
                     {...register(`defect_details[${index}].recommendation`, {
                       required: "cannot be empty",
                     })}
-                  //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                   />
                 </FormControl>
                 <Text
@@ -469,7 +492,7 @@ const Jobinfodetail = () => {
                 >
                   {
                     errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                    "message"
+                      "message"
                     ]
                   }
                 </Text>
@@ -488,8 +511,8 @@ const Jobinfodetail = () => {
                   {...register(`defect_details[${index}].photo`)}
                   onChange={(e) => setImages(e.target.files[0])}
                   data-direct-upload-url="/rails/active_storage/direct_uploads"
-                //onChange={(e) => onImageChange(e)}
-                //  multiple={false}
+                  //onChange={(e) => onImageChange(e)}
+                  //  multiple={false}
                 />
               </GridItem>
             </SimpleGrid>
@@ -524,7 +547,7 @@ const Jobinfodetail = () => {
                       <FormControl
                         isInvalid={
                           errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       >
@@ -544,7 +567,7 @@ const Jobinfodetail = () => {
                       >
                         {
                           errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       </Text>
@@ -554,7 +577,7 @@ const Jobinfodetail = () => {
                       <FormControl
                         isInvalid={
                           errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       >
@@ -574,7 +597,7 @@ const Jobinfodetail = () => {
                       >
                         {
                           errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       </Text>
@@ -584,7 +607,7 @@ const Jobinfodetail = () => {
                       <FormControl
                         isInvalid={
                           errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       >
@@ -608,7 +631,7 @@ const Jobinfodetail = () => {
                       >
                         {
                           errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       </Text>
@@ -618,7 +641,7 @@ const Jobinfodetail = () => {
                       <FormControl
                         isInvalid={
                           errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       >
@@ -644,7 +667,7 @@ const Jobinfodetail = () => {
                       >
                         {
                           errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       </Text>
@@ -654,7 +677,7 @@ const Jobinfodetail = () => {
                       <FormControl
                         isInvalid={
                           errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       >
@@ -673,7 +696,7 @@ const Jobinfodetail = () => {
                       >
                         {
                           errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                          "message"
+                            "message"
                           ]
                         }
                       </Text>
