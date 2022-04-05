@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react"
+import "../../assets/css/jobdetail.scss";
 import {
   Stack,
   HStack,
@@ -26,16 +27,16 @@ import {
   NumberInput,
   NumberInputField,
   Switch,
+  Img,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { ErrorMessage } from "@hookform/error-message";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 import { useParams, Link } from "react-router-dom";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaRegFilePdf } from "react-icons/fa";
 import NumberFormat from "react-number-format";
-import JobworkPdf from "./pdf/jobworkpdf";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+
 
 const Jobinfodetail = (props) => {
   const { id } = useParams();
@@ -74,6 +75,7 @@ const Jobinfodetail = (props) => {
     clientBelong: [],
     error: "",
     jobid: id,
+    photo_url: ""
   });
 
   useEffect(() => {
@@ -222,9 +224,11 @@ const Jobinfodetail = (props) => {
   }, []);
 
   const samplecheck =  pdfdetail.id;
+  {console.log(jobdetail)}
 
   return (
-    <div className="container">
+    <>
+       <div className="container">
       <form
         onSubmit={handleSubmit(updateJobinfo)}
         autoComplete="on"
@@ -251,25 +255,12 @@ const Jobinfodetail = (props) => {
                 />
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
+            <GridItem>
+             </GridItem>
             <GridItem colStart={4}>
-              <FormControl display="flex" alignItems="center">
-               <Link to={`/pdf/${id}`} >viewpdf</Link>
-              <PDFDownloadLink
-                  document={<JobworkPdf sample = {samplecheck} />}
-                  fileName="movielist.pdf"
-                  style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
-                    backgroundColor: "#f2f2f2",
-                    border: "1px solid #4a4a4a"
-                  }}
-                >
-                PDF
-                </PDFDownloadLink>
-              
-              </FormControl>
+              <VStack align="end">
+               <Link to={`/pdf/${id}`} target="_blank" className="pdfIcon"><FaRegFilePdf/></Link>   
+               </VStack>       
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="email-alerts" mb="0">
                   Work Status
@@ -405,7 +396,7 @@ const Jobinfodetail = (props) => {
 
           <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
           <Divider />
-          <SimpleGrid columns={1} columnGap={3} rowGap={6} w="full">
+          <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
               <FormControl isInvalid={errors.natureofcomplain?.message}>
                 <FormLabel>Description of complaine</FormLabel>
@@ -424,6 +415,9 @@ const Jobinfodetail = (props) => {
               >
                 {errors.natureofcomplain?.message}
               </Text>
+            </GridItem>
+            <GridItem>
+             <Img src = {`http://localhost:3001${jobdetail.photo_url}` } />
             </GridItem>
           </SimpleGrid>
 
@@ -751,6 +745,7 @@ const Jobinfodetail = (props) => {
         </Stack>
       </form>
     </div>
+    </>
   );
 };
 

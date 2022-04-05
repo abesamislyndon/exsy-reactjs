@@ -290,6 +290,14 @@ const Form = (props) => {
                 {errors.block?.message}
               </Text>
             </GridItem>
+            <Input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    {...register('photo')}
+                    //onChange={(e) => setImages(e.target.files[0])}
+                    onChange={(e) => onImageChange(e)}
+                    //  multiple={false}
+                  />
             <SimpleGrid columns={1} columnGap={3} rowGap={6} w="full">
               <GridItem>
                 <FormControl isInvalid={errors.address?.message}>

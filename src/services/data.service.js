@@ -34,10 +34,10 @@ const CreateClient = (clientName, pass) => {
   axios
     .post(
       API_URL_CLIENT, {
-        client,
-      }, {
-        headers: header,
-      }
+      client,
+    }, {
+      headers: header,
+    }
     )
     .then((res) => {
       console.log(res.data);
@@ -67,10 +67,10 @@ const CreateDivision = (clientId, divisionName, divShort) => {
   axios
     .post(
       API_URL_DIVISION, {
-        division,
-      }, {
-        headers: header,
-      }
+      division,
+    }, {
+      headers: header,
+    }
     )
     .then((res) => {
       console.log(res.data);
@@ -136,7 +136,8 @@ const createJobinfo = (
   status,
   defectinfo,
   partsinfo,
-  images
+  images,
+  photo
 ) => {
   const jobinfo = {
     division_name: division_name,
@@ -154,6 +155,7 @@ const createJobinfo = (
       //   let imgfile = defect_info.photo[0];
       //    uploadImg(imgfile);
       // })
+
 
       return {
         defects: defect_info.defects,
@@ -174,34 +176,35 @@ const createJobinfo = (
   axios
     .post(
       API_URL_JOBINFO, {
-        jobinfo,
-      }, {
-        headers: header,
-      }
+      jobinfo,
+    }, {
+      headers: header,
+    }
     ).then((response) => {
-      uploadFile(images);
+      uploadFile(images, response);
     });
 
-  const uploadFile = (images, jobinfo) => {
+  const uploadFile = (images, response) => {
     const upload = new DirectUpload(
       images,
-     // "http://localhost:3001/api/v1/direct_uploads"
-     "http://localhost:3001/api/v1/rails/active_storage/direct_uploads"
+      // "http://localhost:3001/api/v1/direct_uploads"
+      "http://localhost:3001/api/v1/rails/active_storage/direct_uploads"
     );
     upload.create((error, blob) => {
       console.log(blob);
-     /* if (error) {
-        console.log(error);
-      } else {
-          fetch(`http://localhost:3001/api/v1/jobinfo/${blob.id}`,{
-            method: 'PUT',
-            headers: header,
-            body: JSON.stringify({photo: blob.signed_id})
-          })
-          .then(response => response.json())
-          .then(result => console.log(result))
-      }
-      */
+       if (error) {
+         console.log(error);
+       } else {
+          /* fetch(`http://localhost:3001/api/v1/jobinfo/${response.data.id}`,{
+             method: 'PUT',
+             headers: header,
+             body: JSON.stringify({photo: blob.signed_id})
+           })
+           .then(response => response.json())
+           .then(result => console.log(result))
+           */
+          
+       }
     });
   };
 };
@@ -258,17 +261,17 @@ const updateJobinfo = (
   axios
     .put(
       `http://localhost:3001/api/v1/jobinfo/${jobid}`, {
-        jobinfo,
-      }, {
-        headers: header,
-      }
+      jobinfo,
+    }, {
+      headers: header,
+    }
     );
 
   const uploadFile = (images) => {
     const upload = new DirectUpload(
       images,
       "http://localhost:3001/api/v1/direct_uploads"
-    //  "http://localhost:3001/rails/active_storage/direct_uploads"
+      //  "http://localhost:3001/rails/active_storage/direct_uploads"
     );
     upload.create((error, blob) => {
       console.log(blob);
@@ -317,20 +320,20 @@ const Completed_jobwork = async () => {
 };
 
 
-const removePartslist = (id) =>{
+const removePartslist = (id) => {
   axios.delete(`partsreplace/${id}`, {
     headers: header,
   });
 };
 
-const removeDefect = (id) =>{
+const removeDefect = (id) => {
   axios.delete(`defect_details/${id}`, {
     headers: header,
   });
 };
 
 
-const deleteJobinfo = (id) =>{
+const deleteJobinfo = (id) => {
   axios.delete(`jobinfo/${id}`, {
     headers: header,
   });

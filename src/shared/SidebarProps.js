@@ -141,7 +141,8 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                     itemId: "/form",
                   },
                 ],
-              }, {
+              },
+          /*   {
                 title: "Item Management",
                 itemId: "",
                 elemBefore: () => <FiClipboard />,
@@ -156,6 +157,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                   },
                 ],
               },
+            */
               {
                 title: "Client Management",
                 itemId: "/client",
@@ -173,7 +175,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
               },
               {
                 title: "Reports",
-                itemId: "/pdf",
+                itemId: "/reports",
                 elemBefore: () => <FiFileText />,
               },
               {
