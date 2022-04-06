@@ -195,8 +195,10 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
               },
             ]}
           />
-        ) : (
-          < Navigation
+        )
+        
+        :  user.user.role == "towncouncilAdmin" ?  (
+         <Navigation
             // you can use your own router's api to get pathname
             activeItemId="/dashboard"
             onSelect={
@@ -213,10 +215,67 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 // you can use your own custom Icon component as well
                 // icon is optional
                 elemBefore: () => < FiHome />,
-              }]
+              },
+              {
+
+                title: "Jobwork",
+                itemId: "#",
+                elemBefore: () => <FiClipboard />,
+                subNav: [
+                  {
+                    title: "Outstanding",
+                    itemId: "/outstanding",
+                  },
+                  {
+                    title: "Completed",
+                    itemId: "/completed",
+                  },
+                  {
+                    title: "Form",
+                    itemId: "/form",
+                  },
+                ],
+              },
+              
+            ]
             }
           />
-        )
+        ) 
+        :   (
+          <Navigation
+             // you can use your own router's api to get pathname
+             activeItemId="/dashboard"
+             onSelect={
+               ({
+                 itemId
+               }) => {
+                 navigate(itemId);
+               }
+             }
+             items={
+               [{
+                 title: "Dashboard",
+                 itemId: "/dashboard",
+                 // you can use your own custom Icon component as well
+                 // icon is optional
+                 elemBefore: () => < FiHome />,
+               },
+               {
+
+                title: "Jobwork",
+                itemId: "#",
+                elemBefore: () => <FiClipboard />,
+                subNav: [
+                  {
+                    title: "Form",
+                    itemId: "/form",
+                  },
+                ],
+              },
+              ]
+             }
+           />
+         ) 
       }
 
     </Box>

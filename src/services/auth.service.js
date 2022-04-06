@@ -2,7 +2,9 @@ import axios from "axios";
 
 const API_URL = "/auth_user";
 
+
 const signup = (username, password) => {
+
   return axios
     .post(API_URL + "/signup", {
       username,
@@ -10,7 +12,7 @@ const signup = (username, password) => {
     })
     .then((response) => {
       if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("user", JSON.stringify(response.data));      
       }
       return response.data;
     }).catch(function (error) {
@@ -26,12 +28,22 @@ const login = async (username, password) => {
     });
   if (response.data.auth_token) {
     localStorage.setItem("user", JSON.stringify(response.data));
+    
+    localStorage.setItem("info", JSON.stringify(
+      {
+        id: response.data.user.id,
+        name: response.data.user.username,
+        permissions: ['analyze'],
+        roles: [`${response.data.user.role}`],
+      }
+    ));
   }
   return response.data;
 };
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("info");
 };
 
 const isLogin = () => {

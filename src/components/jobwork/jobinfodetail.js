@@ -425,7 +425,7 @@ const Jobinfodetail = (props) => {
           <Divider />
           {defectsFields.map((field, index) => (
             <SimpleGrid
-              columns={3}
+              columns={4}
               columnGap={3}
               rowGap={6}
               w="full"
@@ -508,6 +508,9 @@ const Jobinfodetail = (props) => {
                   //onChange={(e) => onImageChange(e)}
                   //  multiple={false}
                 />
+              </GridItem>
+              <GridItem>
+              <Img src = {`http://localhost:3001${jobdetail.defect_details.map(img=>img.photo_url)}` } />
               </GridItem>
             </SimpleGrid>
           ))}

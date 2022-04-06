@@ -149,6 +149,10 @@ function Newuser(props) {
                 <option value ="personnel">Personnel</option>
                 <option value ="admin">Admin</option>
                 <option value ="superadmin">Super Admin</option>
+                <option value ="towncouncilAdmin">Town Council Admin</option>
+                <option value ="towncouncilPersonnel">Town Council Personnel</option>
+                <option value ="contractorAdmin">Contractor Admin</option>
+                <option value ="contractorPersonnel">Contractor Personnel</option>
                 </Select>
               </FormControl>
               <Text

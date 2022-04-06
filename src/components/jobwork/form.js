@@ -35,6 +35,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 
 const Form = (props) => {
+  const user = JSON.parse(localStorage.getItem('user'));
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
@@ -76,10 +77,10 @@ const Form = (props) => {
   const [parts, setParts] = useState([
     {
       sorCode: "",
-      quantity: "",
+      quantity: 0,
       item: "",
-      rates: "",
-      subtotal: "",
+      rates: 0.00,
+      subtotal: 0.00,
     },
   ]);
 
@@ -96,10 +97,9 @@ const Form = (props) => {
   } = useForm({
     shouldFocusError: false,
     defaultValues: {
-      //defectslist: [{ defects: "", recommendation: "" , photo:[]}],
-      defectslist: [{ defects: "", recommendation: "", photo: [] }],
+      defectslist: [{ defects: "", recommendation: "", photo: "" }],
       partslist: [
-        { sorCode: "", item: "", quantity: "", rates: "", subtotal: "" },
+        { sorCode: "", item: "", quantity: "", rates: 0.00, subtotal: 0.00 },
       ],
     },
   });
@@ -290,14 +290,6 @@ const Form = (props) => {
                 {errors.block?.message}
               </Text>
             </GridItem>
-            <Input
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    {...register('photo')}
-                    //onChange={(e) => setImages(e.target.files[0])}
-                    onChange={(e) => onImageChange(e)}
-                    //  multiple={false}
-                  />
             <SimpleGrid columns={1} columnGap={3} rowGap={6} w="full">
               <GridItem>
                 <FormControl isInvalid={errors.address?.message}>
@@ -321,7 +313,7 @@ const Form = (props) => {
 
           <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
           <Divider />
-          <SimpleGrid columns={1} columnGap={3} rowGap={6} w="full">
+          <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
               <FormControl isInvalid={errors.complain_desc?.message}>
                 <FormLabel>Description of complaine</FormLabel>
@@ -340,6 +332,16 @@ const Form = (props) => {
               >
                 {errors.complain_desc?.message}
               </Text>
+            </GridItem>
+            <GridItem>
+            <Input
+              type="file"
+              accept="image/png, image/jpeg"
+              {...register('photo')}
+              //onChange={(e) => setImages(e.target.files[0])}
+              onChange={(e) => onImageChange(e)}
+            //  multiple={false}
+            />
             </GridItem>
           </SimpleGrid>
 
@@ -367,7 +369,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                      // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -383,7 +385,7 @@ const Form = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   >
@@ -393,7 +395,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                      //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -404,7 +406,7 @@ const Form = (props) => {
                   >
                     {
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   </Text>
@@ -423,7 +425,7 @@ const Form = (props) => {
                     {...register(`defectslist[${index}].photo`)}
                     //onChange={(e) => setImages(e.target.files[0])}
                     onChange={(e) => onImageChange(e)}
-                    //  multiple={false}
+                  //  multiple={false}
                   />
                 </GridItem>
               </SimpleGrid>
@@ -435,15 +437,17 @@ const Form = (props) => {
           </GridItem>
 
           <Heading size="sm">PARTS TO REPLACED</Heading>
-
           <Table size="sm" className="table-custom">
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
                 <Th>Item</Th>
                 <Th>Quantity</Th>
+               { user.user.role === "towncouncilAdmin" || "superadmin" ? (<>
                 <Th>Rates</Th>
                 <Th>Sub Total</Th>
+               </>) : ""} 
+               
               </Tr>
             </Thead>
             <Tbody>
@@ -460,7 +464,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -480,7 +484,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -490,7 +494,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -510,7 +514,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -520,7 +524,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -544,23 +548,23 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
                       </Td>
-
+                     { user.user.role === "towncouncilAdmin" ? (<>
                       <Td>
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
                           <NumberInput>
                             <NumberInputField
-                            precision={2} 
+                              precision={2}
                               type="text"
                               {...register(`partslist[${index}].rates`, {
                                 required: "cannot be empty",
@@ -576,6 +580,7 @@ const Form = (props) => {
                               }}
                             />
                           </NumberInput>
+
                         </FormControl>
                         <Text
                           as="sup"
@@ -585,7 +590,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -595,7 +600,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -614,12 +619,38 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
                       </Td>
-
+                      </>) : (<>
+                        <NumberInput>
+                            <NumberInputField
+                              precision={2}
+                              type="text"
+                              {...register(`partslist[${index}].rates`)}
+                              onChange={(e) => {
+                                const rates = e.target.value;
+                                setTotal(
+                                  index,
+                                  watchTest[index].quantity,
+                                  rates
+                                );
+                                handleChange("rates");
+                              }}
+                            />
+                          </NumberInput>
+                    
+                          <Input
+                            type="hidden"
+                            {...register(`partslist[${index}].subtotal`, {
+                              required: "cannot be empty",
+                            })}
+                          />
+                      </>)
+                     }     
+                    
                       <Td>
                         <button
                           type="button"
@@ -638,7 +669,6 @@ const Form = (props) => {
           <GridItem>
             <Button onClick={() => partsAppend({})}>+</Button>
           </GridItem>
-
           <Grid templateColumns="repeat(5, 1fr)" gap={1}>
             <GridItem w="100%" h="10" />
             <GridItem w="100%" h="10" />
@@ -651,7 +681,7 @@ const Form = (props) => {
                   value={result}
                   displayType={"text"}
                   thousandsGroupStyle="thousand"
-                  decimalsScale= "2"
+                  decimalsScale="2"
                   thousandSeparator={true}
                   prefix={"$"}
                 />
@@ -670,6 +700,7 @@ const Form = (props) => {
               />
             </GridItem>
           </Grid>
+
 
           <VStack align="end">
             <Button colorScheme="brand" type="submit">
