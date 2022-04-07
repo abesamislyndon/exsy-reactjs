@@ -18,7 +18,6 @@ const ProtectedRoute = ({
     if (!isAllowed) {
       return <Navigate to={redirectPath} replace />;
     }
-  
     return children ? children : <Outlet />;
   };
 

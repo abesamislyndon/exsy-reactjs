@@ -107,7 +107,7 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {
-        user.user.role == "superadmin" ? (
+        user.user.role == "superadmin" ||  user.user.role == "towncouncilAdmin" ? (
           <Navigation
             // you can use your own router's api to get pathname
             activeItemId="/dashboard"

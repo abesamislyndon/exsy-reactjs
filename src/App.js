@@ -22,7 +22,7 @@ import UserShowDetail from "./components/users/show";
 import Newuser from "./components/users/newuser";
 import Report from "./components/report";
 import Items from "./components/item";
-import mypdf from "./components/jobwork/pdf/jobworkpdf";
+import Mypdf from "./components/jobwork/pdf/jobworkpdf";
 
 const App = () => {
   const userinfo = () => {
@@ -40,10 +40,7 @@ const App = () => {
         <Route
           path="form"
           element={
-            <ProtectedRoute
-              redirectPath="/"
-              isAllowed={!!user}
-            >
+            <ProtectedRoute redirectPath="/" isAllowed={!!user}>
               <Jobwork />
             </ProtectedRoute>
           }
@@ -53,7 +50,10 @@ const App = () => {
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Outstanding />
             </ProtectedRoute>
@@ -64,57 +64,89 @@ const App = () => {
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Completed />
             </ProtectedRoute>
           }
         />
         <Route
-          exact
           path="/jobinfo/:id/"
-          element={<PrivateRoute Component={Jobinfo} />}
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
+            >
+              <Jobinfo />
+            </ProtectedRoute>
+          }
         />
 
         <Route
-          exact
-          path="/client"
-          element={<PrivateRoute Component={Client} />}
+          path="client"
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={!!user && info?.roles?.includes("towncouncilAdmin")}
+            >
+              <Client />
+            </ProtectedRoute>
+          }
         />
         <Route
-          exact
-          path="/division"
-          element={<PrivateRoute Component={Division} />}
+          path="division"
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={!!user && info?.roles?.includes("towncouncilAdmin")}
+            >
+              <Division />
+            </ProtectedRoute>
+          }
         />
-         <Route
+        <Route
           path="users"
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Users />
             </ProtectedRoute>
           }
         />
-          <Route
+        <Route
           path="newuser"
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Newuser />
             </ProtectedRoute>
           }
         />
-
-          <Route
+        <Route
           path="/user/:id/"
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <UserShowDetail />
             </ProtectedRoute>
@@ -128,18 +160,24 @@ const App = () => {
         />
 
         <Route
-          exact
           path="/pdf/:id/"
-          element={<PrivateRoute Component={mypdf} />}
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
+            >
+              <Mypdf />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="dashboard"
           element={
-            <ProtectedRoute
-              redirectPath="/"
-              isAllowed={!!user}
-            >
+            <ProtectedRoute redirectPath="/" isAllowed={!!user}>
               <Dashboard />
             </ProtectedRoute>
           }
@@ -150,7 +188,10 @@ const App = () => {
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info.roles.includes('superadmin') || info.roles.includes('towncouncilAdmin')}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Report />
             </ProtectedRoute>

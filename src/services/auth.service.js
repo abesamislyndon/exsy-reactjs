@@ -28,7 +28,6 @@ const login = async (username, password) => {
     });
   if (response.data.auth_token) {
     localStorage.setItem("user", JSON.stringify(response.data));
-    
     localStorage.setItem("info", JSON.stringify(
       {
         id: response.data.user.id,
