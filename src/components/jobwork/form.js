@@ -122,8 +122,10 @@ const Form = (props) => {
   };
 
   const [images, setImages] = useState(null);
+  const [imagesPreview, setimagesPreview] = useState(null);
   const onImageChange = (event) => {
     setImages(event.target.files[0]);
+    setimagesPreview(URL.createObjectURL(event.target.files[0]));
     /*  
    const images = [];
    for (let i = 0; i < event.target.files.length; i++) {
@@ -346,6 +348,7 @@ const Form = (props) => {
             //  multiple={false}
             //direct-upload = "true"
             />
+                <img src={imagesPreview}/> 
             </GridItem>
           </SimpleGrid>
 
@@ -431,7 +434,8 @@ const Form = (props) => {
                     onChange={(e) => onImageChange(e)}
                   //  multiple={false}
                   />
-                </GridItem>
+                           
+                    </GridItem>
               </SimpleGrid>
             )
           )}
