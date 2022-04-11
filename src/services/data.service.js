@@ -1,13 +1,6 @@
 import axios from "axios";
 import authHeader from "./auth.header";
 import Moment from "moment";
-import React, {
-  useEffect,
-  useState
-} from "react";
-//import {
-//    DirectUpload
-//} from "activestorage";
 import { DirectUpload } from "@rails/activestorage"
 
 const header = authHeader();

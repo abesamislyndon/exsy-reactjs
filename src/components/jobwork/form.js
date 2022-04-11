@@ -31,7 +31,7 @@ import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import DataService from "../../services/data.service";
 import Fileupload from "./fileupload";
 import { DirectUpload } from "activestorage";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaImages } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 
 const Form = (props) => {
@@ -338,7 +338,8 @@ const Form = (props) => {
               </Text>
             </GridItem>
             <GridItem>
-            <Input
+           <label className="custom-file-upload">
+           <Input
               type="file"
               name="photo"
               accept="image/*"
@@ -348,7 +349,10 @@ const Form = (props) => {
             //  multiple={false}
             //direct-upload = "true"
             />
-                <img src={imagesPreview}/> 
+            Attach Photo 
+             </label>   
+           
+                <img src={imagesPreview} className="imgpreview"/> 
             </GridItem>
           </SimpleGrid>
 
@@ -358,7 +362,7 @@ const Form = (props) => {
           {defectsFields.map(
             ({ id, defects, recommendation, photo }, index) => (
               <SimpleGrid
-                columns={3}
+                columns={2}
                 columnGap={3}
                 rowGap={6}
                 w="full"
@@ -425,17 +429,6 @@ const Form = (props) => {
                     <span>Remove</span>
                   </button>
                 </GridItem>
-                <GridItem>
-                  <Input
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    {...register(`defectslist[${index}].defectphoto`)}
-                    //onChange={(e) => setImages(e.target.files[0])}
-                    onChange={(e) => onImageChange(e)}
-                  //  multiple={false}
-                  />
-                           
-                    </GridItem>
               </SimpleGrid>
             )
           )}
@@ -454,6 +447,8 @@ const Form = (props) => {
                { user.user.role === "towncouncilAdmin" || "superadmin" ? (<>
                 <Th>Rates</Th>
                 <Th>Sub Total</Th>
+                <Th>Action</Th>
+            
                </>) : ""} 
                
               </Tr>
@@ -561,7 +556,7 @@ const Form = (props) => {
                           }
                         </Text>
                       </Td>
-                     { user.user.role === "towncouncilAdmin" ? (<>
+                     { user.user.role === "towncouncilAdmin" || user.user.role === "superadmin" ? (<>
                       <Td>
                         <FormControl
                           isInvalid={

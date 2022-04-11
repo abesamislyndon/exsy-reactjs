@@ -425,7 +425,7 @@ const Jobinfodetail = (props) => {
           <Divider />
           {defectsFields.map((field, index) => (
             <SimpleGrid
-              columns={4}
+              columns={2}
               columnGap={3}
               rowGap={6}
               w="full"
@@ -498,20 +498,7 @@ const Jobinfodetail = (props) => {
                   <span>Remove</span>
                 </button>
               </GridItem>
-              <GridItem>
-                <Input
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  {...register(`defect_details[${index}].photo`)}
-                  onChange={(e) => setImages(e.target.files[0])}
-                  data-direct-upload-url="/rails/active_storage/direct_uploads"
-                  //onChange={(e) => onImageChange(e)}
-                  //  multiple={false}
-                />
-              </GridItem>
-              <GridItem>
-              <Img src = {`http://localhost:3001${jobdetail.defect_details.map(img=>img.photo_url)}` } />
-              </GridItem>
+            
             </SimpleGrid>
           ))}
 

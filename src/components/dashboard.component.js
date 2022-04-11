@@ -32,34 +32,57 @@ import {
 import { Bar } from "react-chartjs-2";
 import faker from "faker";
 import DataService from "../services/data.service";
+import ChartService from "../services/chart.services";
 import NumberFormat from "react-number-format";
-import { LineChart, PieChart , AreaChart} from 'react-chartkick'
+import { LineChart, PieChart, BarChart, AreaChart } from 'react-chartkick'
 import 'chartkick/chart.js'
-
-
-
 
 function Dashboard() {
   const [values, setValues] = useState({
-    total: []
+    total: [],
+    outstanding: []
   });
 
   useEffect(() => {
-    getTotalAmount();
+    api_dashboard();
   }, []);
 
-  const getTotalAmount = () => {
+  const getOutstanding = () => {
+    ChartService.Outstanding().then((response) => {
+      setValues({ ...values, outstanding: response });
+    });
+  };
+  const api_dashboard = () => {
     DataService.dashboard_total_Amount().then((response) => {
-      setValues({...values, total: response});
+      setValues({ ...values, total: response });
+    });
+    //   {["X-Small", 5], ["Small", 27]}
+    ChartService.Outstanding().then((response) => {
+      setValues({ ...values, outstanding: response });
     });
   };
 
-  const total_amount = values.total.map((total)=>total.total_amount).toString()
+  const total_amount = values.total.map((total) => total.total_amount).toString()
   return (
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
-        <AreaChart data={{"2021-05-13": 2, "2021-05-14": 5}} />
+          <BarChart data={
+            [
+              [
+                "Jurong-Clementi Town Council",
+                "1080"
+              ],
+              [
+                "Marine Parade Town Council",
+                "1909"
+              ],
+              [
+                "Sembawang Town Council",
+               " 1080"
+              ]
+            ]
+          } />
         </Box>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
         </Box>
@@ -76,18 +99,18 @@ function Dashboard() {
             <Stat>
               <StatLabel>Total Amount Jobwork</StatLabel>
               <StatNumber>
-                { total_amount != "" ? (
-                   <NumberFormat value={total_amount} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-                ): "$0.00"}
-                 
+                {total_amount != "" ? (
+                  <NumberFormat value={total_amount} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                ) : "$0.00"}
+
               </StatNumber>
-         
+
             </Stat>
 
             <Stat>
               <StatLabel>Overall Outstanding Jobwork</StatLabel>
               <StatNumber>
-              {values.total.map((total)=>total.total_outstanding)}
+                {values.total.map((total) => total.total_outstanding)}
               </StatNumber>
             </Stat>
           </StatGroup>
