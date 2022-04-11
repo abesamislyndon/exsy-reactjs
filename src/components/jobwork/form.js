@@ -135,6 +135,7 @@ const Form = (props) => {
     console.log(images);
   };
 
+
   const createJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
@@ -169,6 +170,7 @@ const Form = (props) => {
       }
     }
   };
+
 
   const watchTest = useWatch({
     control,
@@ -336,11 +338,13 @@ const Form = (props) => {
             <GridItem>
             <Input
               type="file"
-              accept="image/png, image/jpeg"
-              {...register('photo')}
+              name="photo"
+              accept="image/*"
+             // {...register('photo')}
               //onChange={(e) => setImages(e.target.files[0])}
               onChange={(e) => onImageChange(e)}
             //  multiple={false}
+            //direct-upload = "true"
             />
             </GridItem>
           </SimpleGrid>
@@ -422,7 +426,7 @@ const Form = (props) => {
                   <Input
                     type="file"
                     accept="image/png, image/jpeg"
-                    {...register(`defectslist[${index}].photo`)}
+                    {...register(`defectslist[${index}].defectphoto`)}
                     //onChange={(e) => setImages(e.target.files[0])}
                     onChange={(e) => onImageChange(e)}
                   //  multiple={false}

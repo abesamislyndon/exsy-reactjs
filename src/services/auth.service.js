@@ -8,7 +8,7 @@ const signup = (username, password) => {
   return axios
     .post(API_URL + "/signup", {
       username,
-      password,
+      password, 
     })
     .then((response) => {
       if (response.data.accessToken) {

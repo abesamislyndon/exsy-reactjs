@@ -5,9 +5,10 @@ import React, {
   useEffect,
   useState
 } from "react";
-import {
-  DirectUpload
-} from "activestorage";
+//import {
+//    DirectUpload
+//} from "activestorage";
+import { DirectUpload } from "@rails/activestorage"
 
 const header = authHeader();
 
@@ -149,14 +150,6 @@ const createJobinfo = (
     gtotal: gtotal,
     status: status,
     defect_details_attributes: defectinfo.map((defect_info) => {
-      //  defectinfo.map((defect_info)=>{
-      //    let reader = new FileReader();
-      //    reader.readAsDataURL(defect_info.photo[0]);
-      //   let imgfile = defect_info.photo[0];
-      //    uploadImg(imgfile);
-      // })
-
-
       return {
         defects: defect_info.defects,
         recommendation: defect_info.recommendation,
@@ -182,29 +175,37 @@ const createJobinfo = (
     }
     ).then((response) => {
       uploadFile(images, response);
+      console.log(images)
     });
 
   const uploadFile = (images, response) => {
     const upload = new DirectUpload(
       images,
-      // "http://localhost:3001/api/v1/direct_uploads"
+      //"http://localhost:3001/rails/active_storage/direct_uploads"
       "http://localhost:3001/api/v1/rails/active_storage/direct_uploads"
+      // "http://localhost:3001/api/v1/upload"
     );
     upload.create((error, blob) => {
       console.log(blob);
-       if (error) {
-         console.log(error);
-       } else {
-          /* fetch(`http://localhost:3001/api/v1/jobinfo/${response.data.id}`,{
-             method: 'PUT',
-             headers: header,
-             body: JSON.stringify({photo: blob.signed_id})
-           })
-           .then(response => response.json())
-           .then(result => console.log(result))
-           */
-          
-       }
+      if (error) {
+        console.log(error);
+      } else {
+        axios
+          .post(
+            'http://localhost:3001/api/v1/upload_attach', {
+            attachment: {
+              name: 'photo',
+              record_type: "Jobinfo",
+              record_id: response.data.id,
+              blob_id: blob.id
+            }
+          }, {
+            headers: header,
+          }
+          ).then((response) => {
+            console.log(images)
+          });
+      }
     });
   };
 };
