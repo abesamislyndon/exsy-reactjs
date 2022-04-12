@@ -52,6 +52,7 @@ const Jobinfodetail = (props) => {
   const getJobDetail = () => {
     DataService.jobinfo_detail(id).then((response) => {
       setJobdetail(response);
+      setValues({...values,status: true})
       setPDF(response)
     });
   };
@@ -69,7 +70,6 @@ const Jobinfodetail = (props) => {
     address: "",
     natureofcomplain: "",
     gtotal: "",
-    status: "",
     clients: [],
     divisions: [],
     clientBelong: [],
@@ -77,6 +77,8 @@ const Jobinfodetail = (props) => {
     jobid: id,
     photo_url: ""
   });
+
+  const [outstand, setOutstand] = useState(jobdetail.status)
 
   useEffect(() => {
     getClient();
@@ -179,7 +181,7 @@ const Jobinfodetail = (props) => {
       });
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data);
+       // console.log(error.response.data);
       }
     }
   };
@@ -223,9 +225,7 @@ const Jobinfodetail = (props) => {
     setValues({ ...values, gtotal: result });
   }, []);
 
-  const samplecheck =  pdfdetail.id;
-  {console.log(jobdetail)}
-
+ 
   return (
     <>
        <div className="container">
@@ -265,18 +265,17 @@ const Jobinfodetail = (props) => {
                 <FormLabel htmlFor="email-alerts" mb="0">
                   Work Status
                 </FormLabel>
+                
                 <Switch
-                  id="email-alerts"
-                  colorScheme="green"
-                  defaultChecked={values.status}
+                  colorScheme="green" 
                   size="lg"
+                  defaultChecked={1}
                   {...register("status")}
                   onChange={(e) =>
                     setValues({ ...values, status: e.target.value })
-                  }
+                  }                
                 />
-           
-              </FormControl>
+             </FormControl>
             </GridItem>
           </SimpleGrid>
 
@@ -332,7 +331,6 @@ const Jobinfodetail = (props) => {
                     );
                   })}
                 </Select>
-                {console.log(values)}
               </FormControl>
               <Text
                 as="sup"
@@ -363,7 +361,6 @@ const Jobinfodetail = (props) => {
                   errors={errors}
                   name="block"
                   render={({ messages }) => {
-                    console.log("messages", messages);
                     return messages
                       ? Object.entries(messages).map(([type, message]) => (
                           <p key={type}>{message}</p>
@@ -420,7 +417,7 @@ const Jobinfodetail = (props) => {
              <Img src = {`http://localhost:3001${jobdetail.photo_url}` } />
             </GridItem>
           </SimpleGrid>
-
+    
           <Heading size="sm">DEFECTS DETECTED</Heading>
           <Divider />
           {defectsFields.map((field, index) => (
@@ -437,8 +434,7 @@ const Jobinfodetail = (props) => {
                     errors?.["defect_details"]?.[index]?.["defects"]?.[
                       "message"
                     ]
-                  }
-                >
+                  }>
                   <FormLabel>Defects</FormLabel>
                   <Textarea
                     type="text"

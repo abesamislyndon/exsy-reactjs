@@ -100,7 +100,7 @@ function Completed() {
               data={data}
               noHeader
               defaultSortField="id"
-              defaultSortAsc={false}
+              defaultSortAsc={true}
               pagination
               highlightOnHovers
               fixedHeader

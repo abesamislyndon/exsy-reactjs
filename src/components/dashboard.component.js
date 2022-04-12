@@ -20,17 +20,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-import faker from "faker";
 import DataService from "../services/data.service";
 import ChartService from "../services/chart.services";
 import NumberFormat from "react-number-format";
@@ -41,33 +30,28 @@ function Dashboard() {
   const [values, setValues] = useState({
     total: [],
     outstanding: []
-  });
-
-  useEffect(() => {
-    api_dashboard();
+   });
+   
+   React.useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const resDataService = await DataService.dashboard_total_Amount();
+        const resChartService = await ChartService.Outstanding();
+        setValues({ outstanding: resChartService, total: resDataService });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDetails();
   }, []);
 
-  const getOutstanding = () => {
-    ChartService.Outstanding().then((response) => {
-      setValues({ ...values, outstanding: response });
-    });
-  };
-  const api_dashboard = () => {
-    DataService.dashboard_total_Amount().then((response) => {
-      setValues({ ...values, total: response });
-    });
-    //   {["X-Small", 5], ["Small", 27]}
-    ChartService.Outstanding().then((response) => {
-      setValues({ ...values, outstanding: response });
-    });
-  };
-
   const total_amount = values.total.map((total) => total.total_amount).toString()
+
   return (
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
-          <BarChart data={values.outstanding} />
+          <BarChart data={values.outstanding} colors = {[["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8"]]} pointWidth = {92}/>
         </Box>
         <Box boxShadow="sm" p="6" rounded="m" bg="white" height="auto" m={2}>
         </Box>
@@ -87,9 +71,7 @@ function Dashboard() {
                 {total_amount != "" ? (
                   <NumberFormat value={total_amount} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 ) : "$0.00"}
-
               </StatNumber>
-
             </Stat>
 
             <Stat>

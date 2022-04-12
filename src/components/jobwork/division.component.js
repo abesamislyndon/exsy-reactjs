@@ -48,19 +48,16 @@ const Division = (props) => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-
-
-
-  const getDivision = () =>{
+  const getDivision = () => {
     DataService.getAllDivision().then((response) => {
       setValues({ ...values, divisionsSelected: response });
     });
-   }
-  
-   useEffect(()=>{
-     getDivision();
-   },[])
-  {console.log(values.divisionsSelected)}
+  }
+
+  useEffect(() => {
+    getDivision();
+  }, [])
+  { console.log(values.divisionsSelected) }
 
   return (
     <>
