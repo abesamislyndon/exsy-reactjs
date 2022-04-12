@@ -67,24 +67,9 @@ function Dashboard() {
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
-          <BarChart data={
-            [
-              [
-                "Jurong-Clementi Town Council",
-                "1080"
-              ],
-              [
-                "Marine Parade Town Council",
-                "1909"
-              ],
-              [
-                "Sembawang Town Council",
-               " 1080"
-              ]
-            ]
-          } />
+          <BarChart data={values.outstanding} />
         </Box>
-        <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
+        <Box boxShadow="sm" p="6" rounded="m" bg="white" height="auto" m={2}>
         </Box>
         <Box
           boxShadow="sm"
