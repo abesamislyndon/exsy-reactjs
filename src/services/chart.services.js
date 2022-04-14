@@ -15,9 +15,22 @@ const Outstanding = async () => {
   }
 };
 
+const outstanding_url_count = "/outstandingcount";
+const Outstandingcount = async () => {
+  try {
+    const response = await axios.get(outstanding_url_count, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 const DataService = {
-    Outstanding
+    Outstanding,
+    Outstandingcount
   };
   
   export default DataService;

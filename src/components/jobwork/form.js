@@ -343,11 +343,7 @@ const Form = (props) => {
               type="file"
               name="photo"
               accept="image/*"
-             // {...register('photo')}
-              //onChange={(e) => setImages(e.target.files[0])}
               onChange={(e) => onImageChange(e)}
-            //  multiple={false}
-            //direct-upload = "true"
             />
             Attach Photo 
              </label>   

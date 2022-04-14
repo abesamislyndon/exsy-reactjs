@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { StageSpinner } from "react-spinners-kit";
 import SidebarWithHeader from "../shared/SidebarProps";
 import {
   Container,
@@ -23,13 +24,15 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import DataService from "../services/data.service";
 import ChartService from "../services/chart.services";
 import NumberFormat from "react-number-format";
-import { LineChart, PieChart, BarChart, AreaChart } from 'react-chartkick'
+import { LineChart, PieChart, BarChart, ColumnChart, AreaChart } from 'react-chartkick'
 import 'chartkick/chart.js'
 
 function Dashboard() {
   const [values, setValues] = useState({
     total: [],
-    outstanding: []
+    outstanding: [],
+    count: [],
+    loading: true
    });
    
    React.useEffect(() => {
@@ -37,7 +40,8 @@ function Dashboard() {
       try {
         const resDataService = await DataService.dashboard_total_Amount();
         const resChartService = await ChartService.Outstanding();
-        setValues({ outstanding: resChartService, total: resDataService });
+        const resChartServicecount = await ChartService.Outstandingcount();
+        setValues({ outstanding: resChartService, total: resDataService, count: resChartServicecount, loading: false });
       } catch (error) {
         console.log(error);
       }
@@ -51,9 +55,14 @@ function Dashboard() {
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
-          <BarChart data={values.outstanding} colors = {[["#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8"]]} pointWidth = {92}/>
+        <h5>Total Outstanding Amount (Town Council)</h5>
+         <BarChart data={values.outstanding} colors = {[["#F1E1DD", "#E79F89", "#E16E65", "#E25088", "#D149AB", "#A948C6", "#7938B8", "#270667"]]} pointWidth = {92}/>
+         <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
         </Box>
         <Box boxShadow="sm" p="6" rounded="m" bg="white" height="auto" m={2}>
+          <h5>Total Outstanding Job (Town Council)</h5>
+        <ColumnChart data={values.count} colors = {[["#D6512B", "#E57930", "#E59337", "#E1B739", "#DEDA4B"]]} pointWidth = {92}/>
+        <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
         </Box>
         <Box
           boxShadow="sm"
@@ -72,6 +81,7 @@ function Dashboard() {
                   <NumberFormat value={total_amount} displayType={'text'} thousandSeparator={true} prefix={'$'} />
                 ) : "$0.00"}
               </StatNumber>
+              <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
             </Stat>
 
             <Stat>
@@ -79,6 +89,7 @@ function Dashboard() {
               <StatNumber>
                 {values.total.map((total) => total.total_outstanding)}
               </StatNumber>
+              <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
             </Stat>
           </StatGroup>
         </Box>

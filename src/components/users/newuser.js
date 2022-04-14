@@ -24,6 +24,7 @@ import DataService from "../../services/users.service";
 
 
 function Newuser(props) {
+  const user = JSON.parse(localStorage.getItem('user'));
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -146,13 +147,28 @@ function Newuser(props) {
               <Select {...register("role")} placeholder="Select option"
                onChange={handleChange("role")}
               >
-                <option value ="personnel">Personnel</option>
-                <option value ="admin">Admin</option>
-                <option value ="superadmin">Super Admin</option>
-                <option value ="towncouncilAdmin">Town Council Admin</option>
-                <option value ="towncouncilPersonnel">Town Council Personnel</option>
-                <option value ="contractorAdmin">Contractor Admin</option>
-                <option value ="contractorPersonnel">Contractor Personnel</option>
+                { 
+                user.user.role === "towncouncilAdmin" ? (
+                  <>
+                   <option value ="towncouncilAdmin">Town Council Admin</option>
+                    <option value ="towncouncilPersonnel">Town Council Personnel</option>
+                  </>
+   
+    
+                ) : (
+                  <>
+                    <option value ="personnel">Personnel</option>
+                  <option value ="admin">Admin</option>
+                  <option value ="superadmin">Super Admin</option>
+                  
+                  <option value ="contractorAdmin">Contractor Admin</option>
+                  <option value ="contractorPersonnel">Contractor Personnel</option>
+                  </>
+                
+                )
+                
+                }
+             
                 </Select>
               </FormControl>
               <Text

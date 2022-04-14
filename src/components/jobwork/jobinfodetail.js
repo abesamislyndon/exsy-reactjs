@@ -39,6 +39,7 @@ import NumberFormat from "react-number-format";
 
 
 const Jobinfodetail = (props) => {
+
   const { id } = useParams();
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
@@ -52,7 +53,6 @@ const Jobinfodetail = (props) => {
   const getJobDetail = () => {
     DataService.jobinfo_detail(id).then((response) => {
       setJobdetail(response);
-      setValues({...values,status: true})
       setPDF(response)
     });
   };
@@ -269,11 +269,12 @@ const Jobinfodetail = (props) => {
                 <Switch
                   colorScheme="green" 
                   size="lg"
-                  defaultChecked={1}
+                 
                   {...register("status")}
                   onChange={(e) =>
                     setValues({ ...values, status: e.target.value })
-                  }                
+                  }   
+                      
                 />
              </FormControl>
             </GridItem>

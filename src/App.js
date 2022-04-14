@@ -93,7 +93,10 @@ const App = () => {
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info?.roles?.includes("towncouncilAdmin")}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Client />
             </ProtectedRoute>
@@ -104,7 +107,10 @@ const App = () => {
           element={
             <ProtectedRoute
               redirectPath="/"
-              isAllowed={!!user && info?.roles?.includes("towncouncilAdmin")}
+              isAllowed={
+                (!!user && info?.roles?.includes("superadmin")) ||
+                info?.roles?.includes("towncouncilAdmin")
+              }
             >
               <Division />
             </ProtectedRoute>
