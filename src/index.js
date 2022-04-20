@@ -9,7 +9,8 @@ import axios from "axios";
 
 let userJson = localStorage.getItem("user");
 let authTokenJson = JSON.parse(userJson);
-axios.defaults.baseURL = "http://0.0.0.0:3001/api/v1/";
+const BASE_URL_API = process.env.REACT_APP_BASE_URL_API;
+axios.defaults.baseURL = BASE_URL_API;
 
 if (userJson) {
   axios.defaults.headers.common["Authorization"] =

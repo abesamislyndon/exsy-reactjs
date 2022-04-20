@@ -4,6 +4,9 @@ import Moment from "moment";
 import { DirectUpload } from "@rails/activestorage"
 
 const header = authHeader();
+const BASE_URL_API = process.env.REACT_APP_BASE_URL_API;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
 /*
    CLIENT SERVICES
@@ -119,6 +122,7 @@ const getAllJobinfo = async () => {
   }
 };
 
+
 const createJobinfo = (
   division_name,
   client_name,
@@ -175,7 +179,7 @@ const createJobinfo = (
     const upload = new DirectUpload(
       images,
       //"http://localhost:3001/rails/active_storage/direct_uploads"
-      "http://localhost:3001/api/v1/rails/active_storage/direct_uploads"
+      `${BASE_URL_API}/rails/active_storage/direct_uploads`
       // "http://localhost:3001/api/v1/upload"
     );
     upload.create((error, blob) => {
@@ -185,7 +189,7 @@ const createJobinfo = (
       } else {
         axios
           .post(
-            'http://localhost:3001/api/v1/upload_attach', {
+            `${BASE_URL_API}/upload_attach`, {
             attachment: {
               name: 'photo',
               record_type: "Jobinfo",
@@ -254,7 +258,7 @@ const updateJobinfo = (
   };
   axios
     .put(
-      `http://localhost:3001/api/v1/jobinfo/${jobid}`, {
+      `/jobinfo/${jobid}`, {
       jobinfo,
     }, {
       headers: header,
@@ -264,7 +268,7 @@ const updateJobinfo = (
   const uploadFile = (images) => {
     const upload = new DirectUpload(
       images,
-      "http://localhost:3001/api/v1/direct_uploads"
+      `${BASE_URL_API}/direct_uploads`
       //  "http://localhost:3001/rails/active_storage/direct_uploads"
     );
     upload.create((error, blob) => {

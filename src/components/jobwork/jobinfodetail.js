@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react"
 import "../../assets/css/jobdetail.scss";
+import { StageSpinner } from "react-spinners-kit";
 import {
   Stack,
   HStack,
@@ -45,6 +46,7 @@ const Jobinfodetail = (props) => {
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [jobdetail, setJobdetail] = useState([]);
   const [pdfdetail, setPDF] = useState([]);
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     getJobDetail();
@@ -75,7 +77,8 @@ const Jobinfodetail = (props) => {
     clientBelong: [],
     error: "",
     jobid: id,
-    photo_url: ""
+    photo_url: "",
+    loading: true
   });
 
   const [outstand, setOutstand] = useState(jobdetail.status)
@@ -86,7 +89,7 @@ const Jobinfodetail = (props) => {
 
   const getClient = () => {
     DataService.getAllClient().then((response) => {
-      setValues({ ...values, clients: response });
+      setValues({ ...values, clients: response, loading:false });
     });
   };
 
@@ -415,7 +418,8 @@ const Jobinfodetail = (props) => {
               </Text>
             </GridItem>
             <GridItem>
-             <Img src = {`http://localhost:3001${jobdetail.photo_url}` } />
+             <Img src = {`${BASE_URL}/${jobdetail.photo_url}` } />
+             <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
             </GridItem>
           </SimpleGrid>
     
