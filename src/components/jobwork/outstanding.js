@@ -25,7 +25,6 @@ function Outstanding() {
     list.then((response) => {
       setValues({ ...values, joblist: response });
     });
-    console.log(values.joblist);
   };
 
   const data = values.joblist;

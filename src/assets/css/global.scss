@@ -59,3 +59,11 @@ input[type="file"] {
 .file-preview {
   margin: 0 10px;
 }
+
+// hide datatables buttons download
+
+.data-table-extensions > .data-table-extensions-action {
+    float: right;
+    position: relative;
+    display: none;
+}

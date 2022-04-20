@@ -35,7 +35,7 @@ import { FaTrashAlt, FaImages } from "react-icons/fa";
 import NumberFormat from "react-number-format";
 
 const Form = (props) => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   const toast = useToast();
   const colSpan = useBreakpointValue({ base: 2, md: 1 });
   const [values, setValues] = useState({
@@ -79,8 +79,8 @@ const Form = (props) => {
       sorCode: "",
       quantity: 0,
       item: "",
-      rates: 0.00,
-      subtotal: 0.00,
+      rates: 0.0,
+      subtotal: 0.0,
     },
   ]);
 
@@ -99,7 +99,7 @@ const Form = (props) => {
     defaultValues: {
       defectslist: [{ defects: "", recommendation: "", photo: "" }],
       partslist: [
-        { sorCode: "", item: "", quantity: "", rates: 0.00, subtotal: 0.00 },
+        { sorCode: "", item: "", quantity: "", rates: 0.0, subtotal: 0.0 },
       ],
     },
   });
@@ -137,7 +137,6 @@ const Form = (props) => {
     console.log(images);
   };
 
-
   const createJobinfo = async (event, data) => {
     const defectinfo = getValues("defectslist");
     const partsinfo = getValues("partslist");
@@ -171,8 +170,9 @@ const Form = (props) => {
         console.log(error.response.headers);
       }
     }
-  };
 
+    setimagesPreview(null);
+  };
 
   const watchTest = useWatch({
     control,
@@ -338,17 +338,17 @@ const Form = (props) => {
               </Text>
             </GridItem>
             <GridItem>
-           <label className="custom-file-upload">
-           <Input
-              type="file"
-              name="photo"
-              accept="image/*"
-              onChange={(e) => onImageChange(e)}
-            />
-            Attach Photo 
-             </label>   
-           
-                <img src={imagesPreview} className="imgpreview"/> 
+              <label className="custom-file-upload">
+                <Input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => onImageChange(e)}
+                />
+                Attach Photo
+              </label>
+
+              <img src={imagesPreview} className="imgpreview" />
             </GridItem>
           </SimpleGrid>
 
@@ -376,7 +376,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                    // onChange={handleChangeDefect("defects")}
+                      // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -392,7 +392,7 @@ const Form = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                        "message"
                       ]
                     }
                   >
@@ -402,7 +402,7 @@ const Form = (props) => {
                       {...register(`defectslist[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                    //onChange={handleChangeDefect("recommendation")}
+                      //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -413,17 +413,19 @@ const Form = (props) => {
                   >
                     {
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                      "message"
+                        "message"
                       ]
                     }
                   </Text>
-                  <button
-                    type="button"
+
+                  <Button
+                    size="xs"
+                    rightIcon={<FaTrashAlt />}
                     onClick={() => defectsRemove(index)}
                     className="remove-btn"
                   >
-                    <span>Remove</span>
-                  </button>
+                    remove
+                  </Button>
                 </GridItem>
               </SimpleGrid>
             )
@@ -440,13 +442,15 @@ const Form = (props) => {
                 <Th> SOR Code</Th>
                 <Th>Item</Th>
                 <Th>Quantity</Th>
-               { user.user.role === "towncouncilAdmin" || "superadmin" ? (<>
-                <Th>Rates</Th>
-                <Th>Sub Total</Th>
-                <Th>Action</Th>
-            
-               </>) : ""} 
-               
+                {user.user.role === "towncouncilAdmin" || "superadmin" ? (
+                  <>
+                    <Th>Rates</Th>
+                    <Th>Sub Total</Th>
+                    <Th>Action</Th>
+                  </>
+                ) : (
+                  ""
+                )}
               </Tr>
             </Thead>
             <Tbody>
@@ -454,7 +458,10 @@ const Form = (props) => {
                 ({ id, sorCode, quantity, item, rates, subtotal }, index) => {
                   const setTotal = (index, quantity, rates) => {
                     const amount = parseInt(quantity) * parseFloat(rates);
-                    setValue(`partslist[${index}].subtotal`, parseFloat(amount));
+                    setValue(
+                      `partslist[${index}].subtotal`,
+                      parseFloat(amount)
+                    );
                   };
 
                   return (
@@ -463,7 +470,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -483,7 +490,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -493,7 +500,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -513,7 +520,7 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
@@ -523,7 +530,7 @@ const Form = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         >
@@ -547,84 +554,87 @@ const Form = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                            "message"
+                              "message"
                             ]
                           }
                         </Text>
                       </Td>
-                     { user.user.role === "towncouncilAdmin" || user.user.role === "superadmin" ? (<>
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
-                            ]
-                          }
-                        >
+                      {user.user.role === "towncouncilAdmin" ||
+                      user.user.role === "superadmin" ? (
+                        <>
+                          <Td>
+                            <FormControl
+                              isInvalid={
+                                errors?.["partslist"]?.[index]?.["rates"]?.[
+                                  "message"
+                                ]
+                              }
+                            >
+                              <NumberInput>
+                                <NumberInputField
+                                  precision={2}
+                                  type="text"
+                                  {...register(`partslist[${index}].rates`, {
+                                    required: "cannot be empty",
+                                  })}
+                                  onChange={(e) => {
+                                    const rates = e.target.value;
+                                    setTotal(
+                                      index,
+                                      watchTest[index].quantity,
+                                      rates
+                                    );
+                                    handleChange("rates");
+                                  }}
+                                />
+                              </NumberInput>
+                            </FormControl>
+                            <Text
+                              as="sup"
+                              color="tomato"
+                              textAlign={3}
+                              className="login-error-msg"
+                            >
+                              {
+                                errors?.["partslist"]?.[index]?.["rates"]?.[
+                                  "message"
+                                ]
+                              }
+                            </Text>
+                          </Td>
+
+                          <Td>
+                            <FormControl
+                              isInvalid={
+                                errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                                  "message"
+                                ]
+                              }
+                            >
+                              <Input
+                                type="text"
+                                {...register(`partslist[${index}].subtotal`, {
+                                  required: "cannot be empty",
+                                })}
+                              />
+                            </FormControl>
+                            <Text
+                              as="sup"
+                              color="tomato"
+                              textAlign={3}
+                              className="login-error-msg"
+                            >
+                              {
+                                errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                                  "message"
+                                ]
+                              }
+                            </Text>
+                          </Td>
+                        </>
+                      ) : (
+                        <>
                           <NumberInput>
-                            <NumberInputField
-                              precision={2}
-                              type="text"
-                              {...register(`partslist[${index}].rates`, {
-                                required: "cannot be empty",
-                              })}
-                              onChange={(e) => {
-                                const rates = e.target.value;
-                                setTotal(
-                                  index,
-                                  watchTest[index].quantity,
-                                  rates
-                                );
-                                handleChange("rates");
-                              }}
-                            />
-                          </NumberInput>
-
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partslist"]?.[index]?.["rates"]?.[
-                            "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
-
-                      <Td>
-                        <FormControl
-                          isInvalid={
-                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
-                            ]
-                          }
-                        >
-                          <Input
-                            type="text"
-                            {...register(`partslist[${index}].subtotal`, {
-                              required: "cannot be empty",
-                            })}
-                          />
-                        </FormControl>
-                        <Text
-                          as="sup"
-                          color="tomato"
-                          textAlign={3}
-                          className="login-error-msg"
-                        >
-                          {
-                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                            "message"
-                            ]
-                          }
-                        </Text>
-                      </Td>
-                      </>) : (<>
-                        <NumberInput>
                             <NumberInputField
                               precision={2}
                               type="text"
@@ -640,24 +650,25 @@ const Form = (props) => {
                               }}
                             />
                           </NumberInput>
-                    
+
                           <Input
                             type="hidden"
                             {...register(`partslist[${index}].subtotal`, {
                               required: "cannot be empty",
                             })}
                           />
-                      </>)
-                     }     
-                    
+                        </>
+                      )}
+
                       <Td>
-                        <button
-                          type="button"
+                        <Button
+                          size="xs"
+                          rightIcon={<FaTrashAlt />}
                           onClick={() => partsRemove(index)}
                           className="remove-btn"
                         >
-                          <FaTrashAlt color="gray.300" />
-                        </button>
+                          remove
+                        </Button>
                       </Td>
                     </Tr>
                   );
@@ -699,7 +710,6 @@ const Form = (props) => {
               />
             </GridItem>
           </Grid>
-
 
           <VStack align="end">
             <Button colorScheme="brand" type="submit">
