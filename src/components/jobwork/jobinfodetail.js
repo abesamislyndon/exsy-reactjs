@@ -38,6 +38,9 @@ import DataService from "../../services/data.service";
 import { useParams, Link } from "react-router-dom";
 import { FaRegFilePdf, FaTrash } from "react-icons/fa";
 import NumberFormat from "react-number-format";
+import SimpleReactLightbox from 'simple-react-lightbox'
+import { SRLWrapper } from "simple-react-lightbox";
+
 
 const Jobinfodetail = (props) => {
   const { id } = useParams();
@@ -443,7 +446,13 @@ const Jobinfodetail = (props) => {
                 </Text>
               </GridItem>
               <GridItem>
-                <Img src={`${BASE_URL}/${jobdetail.photo_url}`} />
+                <SimpleReactLightbox>
+                  <SRLWrapper>
+                    <a href={`${BASE_URL}${jobdetail.photo_url}`}>
+                      <Img src={`${BASE_URL}/${jobdetail.photo_url}`}  className="photo"/>
+                    </a>
+                  </SRLWrapper>
+                </SimpleReactLightbox>
                 <StageSpinner
                   size={30}
                   color="#75C46B"
