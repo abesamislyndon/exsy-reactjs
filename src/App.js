@@ -23,6 +23,9 @@ import Newuser from "./components/users/newuser";
 import Report from "./components/report";
 import Items from "./components/item";
 import Mypdf from "./components/jobwork/pdf/jobworkpdf";
+import Personnelcompleted from "./components/jobwork/personnel/jobwork/completed"
+import Personneloutstanding from "./components/jobwork/personnel/jobwork/outstanding"
+import Personneljobinfo from "./components/jobwork/personnel/jobwork/jobdetail"
 
 const App = () => {
   const userinfo = () => {
@@ -84,6 +87,20 @@ const App = () => {
               }
             >
               <Jobinfo />
+            </ProtectedRoute>
+          }
+        />
+
+    <Route
+          path="/personneljobinfo/:id/"
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={
+                (!!user && info?.roles?.includes("personnel"))
+              }
+            >
+              <Personneljobinfo />
             </ProtectedRoute>
           }
         />
@@ -200,6 +217,35 @@ const App = () => {
               }
             >
               <Report />
+            </ProtectedRoute>
+          }
+        />
+
+
+      <Route
+          path="personnel-completed"
+          element={
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={
+                (!!user && info?.roles?.includes("personnel")) 
+              }
+            >
+              <Personnelcompleted />
+            </ProtectedRoute>
+          }
+        />
+
+  <Route
+          path="personnel-outstanding"
+          element={    
+            <ProtectedRoute
+              redirectPath="/"
+              isAllowed={
+                (!!user && info?.roles?.includes("personnel")) 
+              }
+            >
+              <Personneloutstanding />
             </ProtectedRoute>
           }
         />

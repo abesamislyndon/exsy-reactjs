@@ -132,6 +132,7 @@ const createJobinfo = (
   block,
   gtotal,
   status,
+  userid,
   defectinfo,
   partsinfo,
   images,
@@ -146,6 +147,7 @@ const createJobinfo = (
     block: block,
     gtotal: gtotal,
     status: status,
+    userid: userid,
     defect_details_attributes: defectinfo.map((defect_info) => {
       return {
         defects: defect_info.defects,
@@ -317,6 +319,30 @@ const Completed_jobwork = async () => {
   }
 };
 
+const API_URL_JOB_COMPLETED_PERSONNEL = "/personnelcompleted";
+const Completed_jobwork_personnel = async () => {
+  try {
+    const response = await axios.get(API_URL_JOB_COMPLETED_PERSONNEL, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const API_URL_JOB_OUTSTANDING_PERSONNEL = "/personneloutstanding";
+const Outstanding_jobwork_personnel = async () => {
+  try {
+    const response = await axios.get(API_URL_JOB_OUTSTANDING_PERSONNEL, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 const removePartslist = (id) => {
   axios.delete(`partsreplace/${id}`, {
@@ -353,7 +379,9 @@ const DataService = {
   Completed_jobwork,
   removePartslist,
   deleteJobinfo,
-  removeDefect
+  removeDefect,
+  Completed_jobwork_personnel,
+  Outstanding_jobwork_personnel
 };
 
 export default DataService;

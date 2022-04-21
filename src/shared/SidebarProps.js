@@ -267,6 +267,14 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 elemBefore: () => <FiClipboard />,
                 subNav: [
                   {
+                    title: "Outstanding",
+                    itemId: "/personnel-outstanding",
+                  },
+                  {
+                    title: "Completed",
+                    itemId: "/personnel-completed",
+                  },
+                  {
                     title: "Form",
                     itemId: "/form",
                   },
