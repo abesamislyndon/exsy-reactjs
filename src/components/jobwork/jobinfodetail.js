@@ -339,6 +339,14 @@ const Jobinfodetail = (props) => {
                     })}
                     onChange={handleChange("division_name")}
                   >
+                    <option
+                      value={jobdetail.division_name}
+                      selected={
+                        jobdetail.division_name
+                      }
+                    >
+                      {jobdetail.division_name}
+                    </option>
                     {values.clientBelong?.map((division, i) => {
                       return (
                         <option
@@ -384,8 +392,8 @@ const Jobinfodetail = (props) => {
                     render={({ messages }) => {
                       return messages
                         ? Object.entries(messages).map(([type, message]) => (
-                            <p key={type}>{message}</p>
-                          ))
+                          <p key={type}>{message}</p>
+                        ))
                         : null;
                     }}
                   />
@@ -458,7 +466,7 @@ const Jobinfodetail = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defect_details"]?.[index]?.["defects"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   >
@@ -468,7 +476,7 @@ const Jobinfodetail = (props) => {
                       {...register(`defect_details[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                      // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -479,7 +487,7 @@ const Jobinfodetail = (props) => {
                   >
                     {
                       errors?.["defect_details"]?.[index]?.["defects"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   </Text>
@@ -488,7 +496,7 @@ const Jobinfodetail = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   >
@@ -498,7 +506,7 @@ const Jobinfodetail = (props) => {
                       {...register(`defect_details[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                      //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -509,7 +517,7 @@ const Jobinfodetail = (props) => {
                   >
                     {
                       errors?.["defect_details"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   </Text>
@@ -555,7 +563,7 @@ const Jobinfodetail = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -575,7 +583,7 @@ const Jobinfodetail = (props) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["sorcode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -585,7 +593,7 @@ const Jobinfodetail = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -605,7 +613,7 @@ const Jobinfodetail = (props) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -615,7 +623,7 @@ const Jobinfodetail = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -639,7 +647,7 @@ const Jobinfodetail = (props) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -649,7 +657,7 @@ const Jobinfodetail = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -679,7 +687,7 @@ const Jobinfodetail = (props) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["rates"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -689,7 +697,7 @@ const Jobinfodetail = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -708,7 +716,7 @@ const Jobinfodetail = (props) => {
                         >
                           {
                             errors?.["partsreplaces"]?.[index]?.["subtotal"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>

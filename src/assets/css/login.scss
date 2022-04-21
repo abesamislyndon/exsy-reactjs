@@ -20,6 +20,12 @@
 }
 
 .container {
+    
     background-color: #fff;
     padding: 30px;
+}
+
+.bglogin{
+    flex-flow: column nowrap;
+    height: calc(100vh - 100px);
 }

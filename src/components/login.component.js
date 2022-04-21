@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../assets/css/login.scss";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
+import logo from '../assets/img/bg.jpeg';
 import {
   CircularProgress,
   Flex,
@@ -23,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useForm , Controller} from "react-hook-form";
+
 
 
 const CFaUserAlt = chakra(FaUserAlt);
@@ -77,7 +79,7 @@ const Login = () => {
 
   return (
     <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
-      <Flex p={8} flex={1} align={"center"} justify={"center"}>
+      <Flex p={8} flex={2} align={"center"} justify={"center"}>
         <Stack spacing={4} w={"full"} maxW={"md"}>
           <Heading fontSize={"1xl"}>Sign in to your account</Heading>
           {showError()}
@@ -167,8 +169,9 @@ const Login = () => {
           alt={"Login Image"}
           objectFit={"cover"}
           src={
-            "https://images.unsplash.com/photo-1507562534834-42ebd36b00ea?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=900&q=80"
+            logo
           }
+         
         />
       </Flex>
     </Stack>

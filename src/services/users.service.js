@@ -8,6 +8,8 @@ import React, {
 
 
 const header = authHeader();
+const BASE_URL_API = process.env.REACT_APP_BASE_URL_API;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 /*
    USERS SERVICES
@@ -44,7 +46,6 @@ const createUser = async (
 
   };
 
- 
   axios
     .post(
       API_URL_USER, {
@@ -88,7 +89,7 @@ const userDetail = async (id) => {
     };
     axios
       .put(
-        `http://localhost:3001/api/v1/users/${userid}`, {
+        `${BASE_URL_API}/users/${userid}`, {
           user,
         }, {
           headers: header,
