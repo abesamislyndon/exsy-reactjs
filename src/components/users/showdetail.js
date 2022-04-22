@@ -17,6 +17,7 @@ import {
   useBreakpointValue,
   Button,
   useToast,
+  Badge
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { ErrorMessage } from "@hookform/error-message";
@@ -45,6 +46,9 @@ const ShowDetail = () => {
     role: "",
     username: "",
     userid: id,
+    error: "",
+    password: "",
+    password_confirmation: ""
   });
 
   const {
@@ -63,28 +67,40 @@ const ShowDetail = () => {
     // console.log(result);
   };
 
-   const updateuser = async (event, data) => {
-  
-    try {
-      await DataService.updateUser(
-        getValues("email"),
-        getValues("role"),
-        getValues("username"),
-        values.userid
-      );
+  const updateuser = async (event, data) => {
+
+    if (values.password !== values.password_confirmation) {
       toast({
-        title: `Successfuly Updated User`,
+        title: `Password Don't Match`,
         position: "top-right",
-        status: "success",
+        status: "error",
         isClosable: true,
       });
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-        //        console.log(error.response.status);
-        //      console.log(error.response.headers);
+    } else {
+      try {
+        await DataService.updateUser(
+          getValues("email"),
+          getValues("role"),
+          getValues("username"),
+          getValues("password"),
+          getValues("password_confirmation"),
+          values.userid
+        );
+
+        toast({
+          title: `Successfully Updated`,
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        });
+      } catch (error) {
+        if (error.response) {
+          alert('asd')
+        }
       }
     }
+
+
   };
 
 
@@ -95,9 +111,9 @@ const ShowDetail = () => {
         autoComplete="on"
         encType="multipart/form-data"
       >
-          <Stack spacing={5}>
-         <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full">
-            
+        <Stack spacing={5}>
+          <SimpleGrid columns={3} columnGap={3} rowGap={6} w="full">
+
             <GridItem>
               <FormControl isInvalid={errors.role?.message}>
                 <FormLabel>Role:</FormLabel>
@@ -111,7 +127,7 @@ const ShowDetail = () => {
                   <option selected value={userdetail.role}>
                     {userdetail.role}
                   </option>
-  
+
                 </Select>
               </FormControl>
               <Text
@@ -125,47 +141,72 @@ const ShowDetail = () => {
             </GridItem>
 
             <GridItem>
-                <FormControl isInvalid={errors.email?.message}>
-                  <FormLabel>Email:</FormLabel>
-                  <Input
-                    {...register("email", { required: "cannot be empty" })}
-                    onChange={handleChange("email")}
-                  />
-                </FormControl>
-                <Text
-                  as="sup"
-                  color="tomato"
-                  textAlign={3}
-                  className="login-error-msg"
-                >
-                  {errors.email?.message}
-                </Text>
-              </GridItem>
+              <FormControl isInvalid={errors.email?.message}>
+                <FormLabel>Email:</FormLabel>
+                <Input
+                  {...register("email", { required: "cannot be empty" })}
+                  onChange={handleChange("email")}
+                />
+              </FormControl>
+              <Text
+                as="sup"
+                color="tomato"
+                textAlign={3}
+                className="login-error-msg"
+              >
+                {errors.email?.message}
+              </Text>
+            </GridItem>
 
-              <GridItem>
-                <FormControl isInvalid={errors.username?.message}>
-                  <FormLabel>Username:</FormLabel>
-                  <Input
-                    {...register("username", { required: "cannot be empty" })}
-                    onChange={handleChange("username")}
-                  />
-                </FormControl>
-                <Text
-                  as="sup"
-                  color="tomato"
-                  textAlign={3}
-                  className="login-error-msg"
-                >
-                  {errors.username?.message}
-                </Text>
-              </GridItem>
+            <GridItem>
+              <FormControl isInvalid={errors.username?.message}>
+                <FormLabel>Username:</FormLabel>
+                <Input
+                  {...register("username", { required: "cannot be empty" })}
+                  onChange={handleChange("username")}
+                />
+              </FormControl>
+              <Text
+                as="sup"
+                color="tomato"
+                textAlign={3}
+                className="login-error-msg"
+              >
+                {errors.username?.message}
+              </Text>
+            </GridItem>
+          </SimpleGrid>
+          <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
+            <GridItem>
+              <Badge variant='solid' colorScheme='orange'>
+                Leave Blank if you dont want to change password
+              </Badge>
+            </GridItem>
+          </SimpleGrid>
+          <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
+            <GridItem>
+              <FormLabel>Password:</FormLabel>
+              <Input
+                type="password"
+                {...register("password")}
+                onChange={handleChange("password")}
+              />
+            </GridItem>
+            <GridItem>
+              <FormLabel>Password Confirmation:</FormLabel>
+              <Input
+                type="password"
+                {...register("password_confirmation")}
+                onChange={handleChange("password_confirmation")}
+              />
+            </GridItem>
           </SimpleGrid>
           <VStack align="end">
             <Button colorScheme="brand" type="submit" size="lg">
-              Submit
+              Update
             </Button>
           </VStack>
-          </Stack>
+        </Stack>
       </form>
     </div>
   );

@@ -6,6 +6,9 @@ import React, {
   useState
 } from "react";
 
+import {
+  useToast
+} from "@chakra-ui/react";
 
 const header = authHeader();
 const BASE_URL_API = process.env.REACT_APP_BASE_URL_API;
@@ -75,18 +78,24 @@ const userDetail = async (id) => {
     }
   };
 
-  const updateUser = (
+ const updateUser = (
     email,
     role,
     username,
+    password,
+    password_confirmation,
     userid
   ) => {
     const user = {
       email: email,
       role: role,
-      username: username
+      username: username,
+      password: password,
+      password_confirmation: password_confirmation
 
     };
+
+  
     axios
       .put(
         `${BASE_URL_API}/users/${userid}`, {
@@ -94,7 +103,19 @@ const userDetail = async (id) => {
         }, {
           headers: header,
         }
-      );
+      ).then((response) => {
+         console.log(response)
+    })
+  };
+
+  const destroyUser = async (id) => {
+    axios
+      .delete(`/users/${id}`, {
+        headers: header,
+      })
+      .then((result) => {
+        return result;
+      });
   };
   
 
@@ -102,7 +123,8 @@ const DataService = {
     getAllUsers,
     userDetail,
     updateUser,
-    createUser
+    createUser,
+    destroyUser
 }
 
 export default DataService;

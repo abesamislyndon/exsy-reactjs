@@ -20,20 +20,76 @@ import {
   Badge,
   Box,
 } from "@chakra-ui/react";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import DataService from "../../services/data.service";
-import ChartService from "../../services/chart.services";
-import NumberFormat from "react-number-format";
-import { LineChart, PieChart, BarChart, ColumnChart, AreaChart } from 'react-chartkick'
 import 'chartkick/chart.js'
-import Personelcompleted from "../../components/jobwork/personnel/jobwork/completed"
+
 
 function PersonnelDashboard() {
 
+  const [values, setValues] = useState({
+    countdone: [],
+    countoutstanding: [],
+    loading: true
+   });
+   
+   React.useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const resDataServicePersonnelOut = await DataService.dashboard_total_count_personnel();
+        const resDataServicePersonnelDone = await DataService.dashboard_total_count_done_personnel();
+        setValues({countoutstanding: resDataServicePersonnelOut, countdone: resDataServicePersonnelDone, loading: false });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDetails();
+  }, []);
 
+  const total_count_outstanding = values.countoutstanding.map((total) => total.count).toString()
+  const total_count_done = values.countdone.map((total) => total.count).toString()
   return (
     <SidebarWithHeader>
-        Dashboard
+         <SimpleGrid columns={{ sm: 1, md: 2 }}>
+        <Box
+          boxShadow="sm"
+          p="6"
+          rounded="md"
+          bg="white"
+          height="140px"
+          m={2}
+          padding="5"
+        >
+          <StatGroup justifyContent="space-between">
+            <Stat>
+              <StatLabel>My overall Outstanding Jobwork</StatLabel>
+              <StatNumber>
+                {total_count_outstanding}
+              </StatNumber>
+              <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
+            </Stat>
+          </StatGroup>
+        </Box>
+
+        <Box
+          boxShadow="sm"
+          p="6"
+          rounded="md"
+          bg="white"
+          height="140px"
+          m={2}
+          padding="5"
+        >
+          <StatGroup justifyContent="space-between">
+            <Stat>
+              <StatLabel>My Overall Done Jobwork</StatLabel>
+              <StatNumber>
+                {total_count_done}
+              </StatNumber>
+              <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
+            </Stat>
+          </StatGroup>
+        </Box>
+      </SimpleGrid>
     </SidebarWithHeader>
   );
 }

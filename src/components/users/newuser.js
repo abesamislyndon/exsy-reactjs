@@ -14,7 +14,8 @@ import {
   Text,
   FormControl,
   FormLabel,
-  Select
+  Select,
+  useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
@@ -22,17 +23,16 @@ import "rsuite-table/dist/css/rsuite-table.css";
 import authHeader from "../../services/auth.header";
 import DataService from "../../services/users.service";
 
-
 function Newuser(props) {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
+  const toast = useToast();
   const [values, setValues] = useState({
     username: "",
     email: "",
     password: "",
     password_confirmation: "",
-    role: ""
+    role: "",
   });
-
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -42,20 +42,45 @@ function Newuser(props) {
     register,
     formState: { errors },
     handleSubmit,
-    reset
+    reset,
   } = useForm({ shouldFocusError: false });
 
   const createUser = async () => {
+
+
+  if (values.password !==  values.password_confirmation) {
+       toast({
+        title: `Password Don't Match`,
+        position: "top-right",
+        status: "error",
+        isClosable: true,
+      });
+  } else {
     try {
-      DataService.createUser(values.username, values.email, values.password, values.password_confirmation, values.role);
+      DataService.createUser(
+        values.username,
+        values.email,
+        values.password,
+        values.password_confirmation,
+        values.role
+      );
+      toast({
+        title: `Succesfully Created New User`,
+        position: "top-right",
+        status: "error",
+        isClosable: true,
+      });
       onClose();
       reset();
     } catch (error) {
       console.log(error);
     }
     setTimeout(() => {
-        props.divlists();
+      props.userlist();
     }, 500);
+  }
+
+   
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,16 +90,17 @@ function Newuser(props) {
       <Button onClick={onOpen} leftIcon={<FaPlus />} size="sm">
         Add User
       </Button>
-      <br/><br/>
+      <br />
+      <br />
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add User</ModalHeader>
           <ModalCloseButton />
-          <form onSubmit={handleSubmit(createUser)}  autoComplete="off">
+          <form onSubmit={handleSubmit(createUser)} autoComplete="off">
             <ModalBody pb={6}>
-            <FormControl isInvalid={errors.username?.message}>
-              <FormLabel>Username</FormLabel>
+              <FormControl isInvalid={errors.username?.message}>
+                <FormLabel>Username</FormLabel>
                 <Input
                   {...register("username", { required: "cannot be empty" })}
                   onChange={handleChange("username")}
@@ -89,9 +115,9 @@ function Newuser(props) {
                 {errors.username?.message}
               </Text>
 
-              <br/>
+              <br />
               <FormControl isInvalid={errors.email?.message}>
-              <FormLabel>email</FormLabel>
+                <FormLabel>email</FormLabel>
                 <Input
                   {...register("email", { required: "cannot be empty" })}
                   onChange={handleChange("email")}
@@ -106,11 +132,11 @@ function Newuser(props) {
                 {errors.email?.message}
               </Text>
 
-              <br/>
+              <br />
               <FormControl isInvalid={errors.password?.message}>
-              <FormLabel>Password</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <Input
-                 type = "password"
+                  type="password"
                   {...register("password", { required: "cannot be empty" })}
                   onChange={handleChange("password")}
                 />
@@ -123,12 +149,14 @@ function Newuser(props) {
               >
                 {errors.password?.message}
               </Text>
-              <br/>
+              <br />
               <FormControl isInvalid={errors.password_confirmation?.message}>
-              <FormLabel>Password Confirmation</FormLabel>
+                <FormLabel>Password Confirmation</FormLabel>
                 <Input
-                 type = "password"
-                  {...register("password_confirmation", { required: "cannot be empty" })}
+                  type="password"
+                  {...register("password_confirmation", {
+                    required: "cannot be empty",
+                  })}
                   onChange={handleChange("password_confirmation")}
                 />
               </FormControl>
@@ -141,34 +169,35 @@ function Newuser(props) {
                 {errors.password_confirmation?.message}
               </Text>
 
-              <br/>
+              <br />
               <FormControl isInvalid={errors.role?.message}>
-              <FormLabel>Role:</FormLabel>
-              <Select {...register("role")} placeholder="Select option"
-               onChange={handleChange("role")}
-              >
-                { 
-                user.user.role === "towncouncilAdmin" ? (
-                  <>
-                   <option value ="towncouncilAdmin">Town Council Admin</option>
-                    <option value ="towncouncilPersonnel">Town Council Personnel</option>
-                  </>
-   
-    
-                ) : (
-                  <>
-                    <option value ="personnel">Personnel</option>
-                  <option value ="admin">Admin</option>
-                  <option value ="superadmin">Super Admin</option>
-                  
-                  <option value ="contractorAdmin">Contractor Admin</option>
-                  <option value ="contractorPersonnel">Contractor Personnel</option>
-                  </>
-                
-                )
-                
-                }
-             
+                <FormLabel>Role:</FormLabel>
+                <Select
+                  {...register("role")}
+                  placeholder="Select option"
+                  onChange={handleChange("role")}
+                >
+                  {user.user.role === "towncouncilAdmin" ? (
+                    <>
+                      <option value="towncouncilAdmin">
+                        Town Council Admin
+                      </option>
+                      <option value="towncouncilPersonnel">
+                        Town Council Personnel
+                      </option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="personnel">Personnel</option>
+                      <option value="admin">Admin</option>
+                      <option value="superadmin">Super Admin</option>
+
+                      <option value="contractorAdmin">Contractor Admin</option>
+                      <option value="contractorPersonnel">
+                        Contractor Personnel
+                      </option>
+                    </>
+                  )}
                 </Select>
               </FormControl>
               <Text
@@ -179,7 +208,6 @@ function Newuser(props) {
               >
                 {errors.role?.message}
               </Text>
-
             </ModalBody>
             <ModalFooter>
               <Button type="submit" mr={3}>

@@ -344,6 +344,34 @@ const Outstanding_jobwork_personnel = async () => {
 };
 
 
+const API_URL_COUNT_OUTSTANDING_PERSONNEL = "/personneloutstandingcount";
+const dashboard_total_count_personnel = async () => {
+  try {
+    const response = await axios.get(API_URL_COUNT_OUTSTANDING_PERSONNEL, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const API_URL_COUNT_JOBDONE_PERSONNEL = "/personneldonecount";
+const dashboard_total_count_done_personnel = async () => {
+  try {
+    const response = await axios.get(API_URL_COUNT_JOBDONE_PERSONNEL, {
+      headers: header,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+
 const removePartslist = (id) => {
   axios.delete(`partsreplace/${id}`, {
     headers: header,
@@ -381,7 +409,9 @@ const DataService = {
   deleteJobinfo,
   removeDefect,
   Completed_jobwork_personnel,
-  Outstanding_jobwork_personnel
+  Outstanding_jobwork_personnel,
+  dashboard_total_count_personnel,
+  dashboard_total_count_done_personnel 
 };
 
 export default DataService;

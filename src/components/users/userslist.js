@@ -8,10 +8,11 @@ import DataTable from "react-data-table-component";
 import DataTableExtensions from "react-data-table-component-extensions";
 import "react-data-table-component-extensions/dist/index.css";
 
-function Userlist() {
+function Userlist(props) {
   const [values, setValues] = useState({
     userslist: [],
   });
+
 
   useEffect(() => {
     getallUsers();
@@ -22,6 +23,16 @@ function Userlist() {
     list.then((response) => {
       setValues({ ...values, userslist: response });
     });
+  };
+
+  const deleteUser = (id) => {
+    let confirmDelete = window.confirm("Delete User?");
+    if (confirmDelete) {
+      DataService.destroyUser(id);
+      setTimeout(() => {
+        getallUsers();
+      }, 500);
+    }
   };
 
   const data = values.userslist;
@@ -40,21 +51,36 @@ function Userlist() {
       },
       {
         name: "Role",
-        selector: (row) => row.email,
-        sortable: true,
-      },
-      {
-        name: "Username",
         selector: (row) => row.role,
         sortable: true,
       },
       {
+        name: "Username",
+        selector: (row) => row.username,
+        sortable: true,
+      },
+      {
         cell: (data) => (
-          <Link to={`/user/${data.id}`}>
+          <Link to={`/user/${data.id}`} userlist = {getallUsers}>
             <Button leftIcon={<FaEdit />} size="xs">
               view
             </Button>
           </Link>
+        ),
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true,
+      },
+      {
+        cell: (data) => (
+          <Button
+                  size="sm"
+                  onClick={(e) => {
+                    deleteUser(data.id);
+                  }}
+                >
+                  {<FaTrashAlt />}
+                </Button>
         ),
         ignoreRowClick: true,
         allowOverflow: true,
