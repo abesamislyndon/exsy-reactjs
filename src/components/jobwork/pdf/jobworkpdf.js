@@ -10,9 +10,6 @@ import {
 
 import { useParams, Link } from "react-router-dom";
 import DataService from "../../../services/data.service";
-import { Tr } from "@chakra-ui/react";
-import { FaWeight } from "react-icons/fa";
-// Create styles
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#fff",
@@ -139,7 +136,7 @@ function JobworkPdf() {
           </View>
           <View>
             <Text style={styles.textsmall}>
-              Date Entry: {jobdetail.dateEntry}
+              Date Entry: {jobdetail.dateentry}
             </Text>
           </View>
           <View style={styles.movedown}>

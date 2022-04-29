@@ -189,7 +189,7 @@ const App = () => {
               redirectPath="/"
               isAllowed={
                 (!!user && info?.roles?.includes("superadmin")) ||
-                info?.roles?.includes("towncouncilAdmin")
+                info?.roles?.includes("towncouncilAdmin") || info?.roles?.includes("personnel")
               }
             >
               <Mypdf />

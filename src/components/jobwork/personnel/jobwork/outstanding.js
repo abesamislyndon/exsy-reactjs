@@ -38,7 +38,7 @@ function Completed() {
       },
       {
         name: "DATE",
-        selector: (row) => row.dateEntry,
+        selector: (row) => row.dateentry,
         sortable: true,
       },
       {

@@ -261,7 +261,7 @@ const Jobinfodetail = (props) => {
                     name="startDate"
                     render={({ field }) => (
                       <DatePicker
-                        placeholderText={jobdetail.dateEntry}
+                        placeholderText={jobdetail.dateentry}
                         onChange={(date) => field.onChange(date)}
                         selected={field.value}
                         dateFormat="MM/dd/yy"
