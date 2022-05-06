@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../assets/css/login.scss";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
-import logo from '../assets/img/bg.jpeg';
+import bg from '../assets/img/bg2.jpg';
 import {
   CircularProgress,
   Flex,
@@ -79,7 +79,7 @@ const Login = () => {
 
   return (
     <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
-      <Flex p={8} flex={2} align={"center"} justify={"center"}>
+      <Flex p={8} flex={2} align={"center"} justify={"center"} className="bglogin1">
         <Stack spacing={4} w={"full"} maxW={"md"}>
           <Heading fontSize={"1xl"}>Sign in to your account</Heading>
           {showError()}
@@ -94,6 +94,7 @@ const Login = () => {
                   <Input
                     borderColor="gray.300"
                     background="white"
+                    boxShadow="10"
                     placeholder="username"
                     {...register("username", { required: "username required" })}
                     onChange={handleChange("username")}
@@ -137,15 +138,14 @@ const Login = () => {
                 <Text as="sup" color="tomato" className="login-error-msg">
                   {errors.password?.message}
                 </Text>
-                <FormHelperText textAlign="right">
-                  <Link>forgot password?</Link>
-                </FormHelperText>
+               <br/>
               </FormControl>
 
               <Button
                 borderRadius={0}
                 type="submit"
                 variant="solid"
+                bg="black"
                 colorScheme="brand"
                 width="full"
               >
@@ -164,16 +164,7 @@ const Login = () => {
         </Stack>
       </Flex>
 
-      <Flex flex={1}>
-        <Image
-          alt={"Login Image"}
-          objectFit={"cover"}
-          src={
-            logo
-          }
-         
-        />
-      </Flex>
+
     </Stack>
   );
 };

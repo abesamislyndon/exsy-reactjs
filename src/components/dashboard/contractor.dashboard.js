@@ -55,12 +55,12 @@ function ContractorDashboard() {
     <SidebarWithHeader>
       <SimpleGrid columns={{ sm: 1, md: 2 }}>
         <Box boxShadow="sm" p="6" rounded="md" bg="white" height="auto" m={2}>
-        <h5>Total Outstanding Amount (Town Council)</h5>
+        <h5>Total Outstanding in Amount (Client) </h5>
          <BarChart data={values.outstanding} colors = {[["#F1E1DD", "#E79F89", "#E16E65", "#E25088", "#D149AB", "#A948C6", "#7938B8", "#270667"]]} pointWidth = {92}/>
          <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
         </Box>
         <Box boxShadow="sm" p="6" rounded="m" bg="white" height="auto" m={2}>
-          <h5>Total Outstanding Job (Town Council)</h5>
+          <h5>Total Outstanding Jobwork (Client) </h5>
         <ColumnChart data={values.count} colors = {[["#D6512B", "#E57930", "#E59337", "#E1B739", "#DEDA4B"]]} pointWidth = {92}/>
         <StageSpinner  size={30}  color="#75C46B" loading={values.loading}  /> 
         </Box>

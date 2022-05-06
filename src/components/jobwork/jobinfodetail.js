@@ -423,12 +423,12 @@ const Jobinfodetail = (props) => {
               </SimpleGrid>
             </HStack>
 
-            <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
+            <Heading size="sm">REMARKS / FINDINGS</Heading>
             <Divider />
             <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
               <GridItem>
                 <FormControl isInvalid={errors.natureofcomplain?.message}>
-                  <FormLabel>Description of complaine</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <Textarea
                     {...register("natureofcomplain", {
                       required: "cannot be empty",
@@ -509,7 +509,7 @@ const Jobinfodetail = (props) => {
                       ]
                     }
                   >
-                    <FormLabel>Remedial Action:</FormLabel>
+                    <FormLabel>Actions:</FormLabel>
                     <Textarea
                       type="text"
                       {...register(`defect_details[${index}].recommendation`, {
@@ -546,13 +546,13 @@ const Jobinfodetail = (props) => {
               <Button onClick={() => defectsAppend({})}>+</Button>
             </GridItem>
 
-            <Heading size="sm">PARTS TO REPLACED</Heading>
+            <Heading size="sm">Solutions</Heading>
 
             <Table size="sm" className="table-custom">
               <Thead>
                 <Tr>
                   <Th> SOR Code</Th>
-                  <Th>Item</Th>
+                  <Th width="40%">Item</Th>
                   <Th>Quantity</Th>
                   <Th>Rates</Th>
                   <Th>Sub Total</Th>
@@ -606,8 +606,7 @@ const Jobinfodetail = (props) => {
                             ]
                           }
                         >
-                          <Input
-                            type="text"
+                          <Textarea
                             {...register(`partsreplaces[${index}].item`, {
                               required: "cannot be empty",
                             })}

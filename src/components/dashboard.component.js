@@ -18,7 +18,6 @@ function Dashboard() {
       ) : (
         <PersonnelDashboards />
       )}
-     {console.log(user)}
       </>
   );
 }

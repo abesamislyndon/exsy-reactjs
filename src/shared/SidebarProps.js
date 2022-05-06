@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
+import logo from "../assets/img/logo.svg";
 
 import {
   IconButton,
@@ -23,6 +24,7 @@ import {
   MenuItem,
   MenuList,
   Collapse,
+  Image
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -101,9 +103,13 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="1l" fontWeight="bold">
-          Job Work System v1.0
-        </Text>
+      <Image
+          alt={"Login Image"}
+          src={
+            logo
+          }
+         className="logo"
+        />
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {
@@ -129,17 +135,17 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 elemBefore: () => <FiClipboard />,
                 subNav: [
                   {
+                    title: "New Entry",
+                    itemId: "/form",
+                  },
+                  {
                     title: "Outstanding",
                     itemId: "/outstanding",
                   },
                   {
                     title: "Completed",
                     itemId: "/completed",
-                  },
-                  {
-                    title: "Form",
-                    itemId: "/form",
-                  },
+                  }
                 ],
               },
           /*   {
@@ -223,17 +229,17 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 elemBefore: () => <FiClipboard />,
                 subNav: [
                   {
+                    title: "New Entry",
+                    itemId: "/form",
+                  },
+                  {
                     title: "Outstanding",
                     itemId: "/outstanding",
                   },
                   {
                     title: "Completed",
                     itemId: "/completed",
-                  },
-                  {
-                    title: "Form",
-                    itemId: "/form",
-                  },
+                  }
                 ],
               },
               
@@ -267,17 +273,17 @@ const SidebarContent = ({ icon, onClose, ...rest }: SidebarProps) => {
                 elemBefore: () => <FiClipboard />,
                 subNav: [
                   {
+                    title: "New Entry",
+                    itemId: "/form",
+                  },
+                  {
                     title: "Outstanding",
                     itemId: "/personnel-outstanding",
                   },
                   {
                     title: "Completed",
                     itemId: "/personnel-completed",
-                  },
-                  {
-                    title: "Form",
-                    itemId: "/form",
-                  },
+                  }
                 ],
               },
               ]
@@ -344,16 +350,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontFamily="monospace"
         fontWeight="bold"
       >
-        Logo
       </Text>
 
       <HStack spacing={{ base: "0", md: "6" }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton
@@ -362,12 +361,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               _focus={{ boxShadow: "none" }}
             >
               <HStack>
-                <Avatar
-                  size={"sm"}
-                  src={
-                    "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-                  }
-                />
+          
                 <VStack
                   display={{ base: "none", md: "flex" }}
                   alignItems="flex-start"

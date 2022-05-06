@@ -5,12 +5,18 @@
         color:#fff;
         padding:15px;
     }
-th, tr, td{
+th, tr{
     border: 1px solid #EDF2F6 !important;
     
 }
 input{
     border: 0px;
+}
+
+td{
+    .chakra-input, .chakra-numberinput__field , .chakra-textarea{
+        font-size: 0.9em;
+    }
 }
 
 }

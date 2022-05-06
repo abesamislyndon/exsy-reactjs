@@ -140,7 +140,7 @@ function JobworkPdf() {
             </Text>
           </View>
           <View style={styles.movedown}>
-            <Text style={styles.textmedium}>NATURAL OF COMPLAINT FINDING:</Text>
+            <Text style={styles.textmedium}>REMARKS / FINDINGS</Text>
           </View>
           <View>
             <Text style={styles.textsmall}>{jobdetail.natureofcomplain}</Text>
@@ -177,7 +177,7 @@ function JobworkPdf() {
           </View>
 
           <View style={styles.movedown}>
-            <Text style={styles.textmedium}>PARTS TO BE REPLACED</Text>
+            <Text style={styles.textmedium}>ACTIONS</Text>
           </View>
           <View style={styles.table}>
             <View style={styles.tableRow}>

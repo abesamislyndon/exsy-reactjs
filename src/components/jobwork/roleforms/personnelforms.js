@@ -125,14 +125,6 @@ const Personnelform = (props) => {
   const onImageChange = (event) => {
     setImages(event.target.files[0]);
     setimagesPreview(URL.createObjectURL(event.target.files[0]));
-    /*  
-   const images = [];
-   for (let i = 0; i < event.target.files.length; i++) {
-     images.push(event.target.files[i]);
-   }
-   setImages(images);
-   */
-
     console.log(images);
   };
 
@@ -323,12 +315,12 @@ const Personnelform = (props) => {
             </SimpleGrid>
           </HStack>
 
-          <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
+          <Heading size="sm">REMARKS / FINDINGS</Heading>
           <Divider />
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
               <FormControl isInvalid={errors.complain_desc?.message}>
-                <FormLabel>Description of complaine</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <Textarea
                   {...register("complain_desc", {
                     required: "cannot be empty",
@@ -404,7 +396,7 @@ const Personnelform = (props) => {
                       ]
                     }
                   >
-                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                    <FormLabel>Actions:</FormLabel>
                     <Textarea
                       type="text"
                       {...register(`defectslist[${index}].recommendation`, {
@@ -443,14 +435,14 @@ const Personnelform = (props) => {
             <Button onClick={() => defectsAppend({})}>+</Button>
           </GridItem>
 
-          <Heading size="sm">PARTS TO REPLACED</Heading>
+          <Heading size="sm">SOLUTIONS</Heading>
           <Table size="sm" className="table-custom">
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
-                <Th>Item</Th>
+                <Th width="45%">Item</Th>
                 <Th>Quantity</Th>
-                <Th>Action</Th>
+                <Th>Delete</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -500,8 +492,7 @@ const Personnelform = (props) => {
                             ]
                           }
                         >
-                          <Input
-                            type="text"
+                          <Textarea
                             {...register(`partslist[${index}].item`, {
                               required: "cannot be empty",
                             })}

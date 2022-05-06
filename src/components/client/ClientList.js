@@ -31,25 +31,6 @@ function ClientList(props) {
             }}
           </Cell>
         </Column>
-        <Column width={120} fixed="right">
-          <HeaderCell>Action</HeaderCell>
-          <Cell>
-            {(rowData) => {
-              let id = rowData.id;
-              return (
-                <Button
-                  size="sm"
-                  onClick={(e) => {
-                    props.handleDelete(rowData.id);
-                  }}
-                >
-                  {" "}
-                  {<FaTrashAlt />}
-                </Button>
-              );
-            }}
-          </Cell>
-        </Column>
       </Table>
     </>
   );

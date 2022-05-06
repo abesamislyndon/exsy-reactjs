@@ -150,6 +150,7 @@ const Contractoradminform = (props) => {
         values.block,
         values.gtotal,
         values.status,
+        values.userid,
         defectinfo,
         partsinfo,
         images
@@ -313,12 +314,12 @@ const Contractoradminform = (props) => {
             </SimpleGrid>
           </HStack>
 
-          <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
+          <Heading size="sm">REMARKS / FINDINGS</Heading>
           <Divider />
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
               <FormControl isInvalid={errors.complain_desc?.message}>
-                <FormLabel>Description of complaine</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <Textarea
                   {...register("complain_desc", {
                     required: "cannot be empty",
@@ -374,7 +375,7 @@ const Contractoradminform = (props) => {
                       {...register(`defectslist[${index}].defects`, {
                         required: "cannot be empty",
                       })}
-                      // onChange={handleChangeDefect("defects")}
+                    // onChange={handleChangeDefect("defects")}
                     />
                   </FormControl>
                   <Text
@@ -390,17 +391,17 @@ const Contractoradminform = (props) => {
                   <FormControl
                     isInvalid={
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   >
-                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                    <FormLabel>Actions:</FormLabel>
                     <Textarea
                       type="text"
                       {...register(`defectslist[${index}].recommendation`, {
                         required: "cannot be empty",
                       })}
-                      //onChange={handleChangeDefect("recommendation")}
+                    //onChange={handleChangeDefect("recommendation")}
                     />
                   </FormControl>
                   <Text
@@ -411,7 +412,7 @@ const Contractoradminform = (props) => {
                   >
                     {
                       errors?.["defectslist"]?.[index]?.["recommendation"]?.[
-                        "message"
+                      "message"
                       ]
                     }
                   </Text>
@@ -433,22 +434,16 @@ const Contractoradminform = (props) => {
             <Button onClick={() => defectsAppend({})}>+</Button>
           </GridItem>
 
-          <Heading size="sm">PARTS TO REPLACED</Heading>
+          <Heading size="sm">SOLUTIONS</Heading>
           <Table size="sm" className="table-custom">
             <Thead>
               <Tr>
                 <Th> SOR Code</Th>
-                <Th>Item</Th>
+                <Th width="45%">Item</Th>
                 <Th>Quantity</Th>
-                {user.user.role === "towncouncilAdmin" || "superadmin" ? (
-                  <>
-                    <Th>Rates</Th>
-                    <Th>Sub Total</Th>
-                    <Th>Action</Th>
-                  </>
-                ) : (
-                  ""
-                )}
+                <Th>Rates</Th>
+                <Th>Sub Total</Th>
+                <Th>Delete</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -468,7 +463,7 @@ const Contractoradminform = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -488,7 +483,7 @@ const Contractoradminform = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["sorCode"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -498,12 +493,11 @@ const Contractoradminform = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
-                          <Input
-                            type="text"
+                          <Textarea
                             {...register(`partslist[${index}].item`, {
                               required: "cannot be empty",
                             })}
@@ -518,7 +512,7 @@ const Contractoradminform = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["item"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
@@ -528,7 +522,7 @@ const Contractoradminform = (props) => {
                         <FormControl
                           isInvalid={
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         >
@@ -552,91 +546,27 @@ const Contractoradminform = (props) => {
                         >
                           {
                             errors?.["partslist"]?.[index]?.["quantity"]?.[
-                              "message"
+                            "message"
                             ]
                           }
                         </Text>
                       </Td>
-                      {user.user.role === "towncouncilAdmin" ||
-                      user.user.role === "superadmin" ? (
-                        <>
-                          <Td>
-                            <FormControl
-                              isInvalid={
-                                errors?.["partslist"]?.[index]?.["rates"]?.[
-                                  "message"
-                                ]
-                              }
-                            >
-                              <NumberInput>
-                                <NumberInputField
-                                  precision={2}
-                                  type="text"
-                                  {...register(`partslist[${index}].rates`, {
-                                    required: "cannot be empty",
-                                  })}
-                                  onChange={(e) => {
-                                    const rates = e.target.value;
-                                    setTotal(
-                                      index,
-                                      watchTest[index].quantity,
-                                      rates
-                                    );
-                                    handleChange("rates");
-                                  }}
-                                />
-                              </NumberInput>
-                            </FormControl>
-                            <Text
-                              as="sup"
-                              color="tomato"
-                              textAlign={3}
-                              className="login-error-msg"
-                            >
-                              {
-                                errors?.["partslist"]?.[index]?.["rates"]?.[
-                                  "message"
-                                ]
-                              }
-                            </Text>
-                          </Td>
 
-                          <Td>
-                            <FormControl
-                              isInvalid={
-                                errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                                  "message"
-                                ]
-                              }
-                            >
-                              <Input
-                                type="text"
-                                {...register(`partslist[${index}].subtotal`, {
-                                  required: "cannot be empty",
-                                })}
-                              />
-                            </FormControl>
-                            <Text
-                              as="sup"
-                              color="tomato"
-                              textAlign={3}
-                              className="login-error-msg"
-                            >
-                              {
-                                errors?.["partslist"]?.[index]?.["subtotal"]?.[
-                                  "message"
-                                ]
-                              }
-                            </Text>
-                          </Td>
-                        </>
-                      ) : (
-                        <>
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["rates"]?.[
+                            "message"
+                            ]
+                          }
+                        >
                           <NumberInput>
                             <NumberInputField
                               precision={2}
                               type="text"
-                              {...register(`partslist[${index}].rates`)}
+                              {...register(`partslist[${index}].rates`, {
+                                required: "cannot be empty",
+                              })}
                               onChange={(e) => {
                                 const rates = e.target.value;
                                 setTotal(
@@ -648,15 +578,51 @@ const Contractoradminform = (props) => {
                               }}
                             />
                           </NumberInput>
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["rates"]?.[
+                            "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
 
+                      <Td>
+                        <FormControl
+                          isInvalid={
+                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                            "message"
+                            ]
+                          }
+                        >
                           <Input
-                            type="hidden"
+                            type="text"
                             {...register(`partslist[${index}].subtotal`, {
                               required: "cannot be empty",
                             })}
                           />
-                        </>
-                      )}
+                        </FormControl>
+                        <Text
+                          as="sup"
+                          color="tomato"
+                          textAlign={3}
+                          className="login-error-msg"
+                        >
+                          {
+                            errors?.["partslist"]?.[index]?.["subtotal"]?.[
+                            "message"
+                            ]
+                          }
+                        </Text>
+                      </Td>
+
+
 
                       <Td>
                         <Button

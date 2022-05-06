@@ -168,8 +168,7 @@ const Towncounciladminform = (props) => {
         console.log(error.response.headers);
       }
     }
-
-    setimagesPreview(null);
+setimagesPreview(null);
   };
 
   const watchTest = useWatch({
@@ -313,12 +312,12 @@ const Towncounciladminform = (props) => {
             </SimpleGrid>
           </HStack>
 
-          <Heading size="sm">NATURAL OF COMPLAINT / FINDING</Heading>
+          <Heading size="sm">REMARKS / FINDINGS</Heading>
           <Divider />
           <SimpleGrid columns={2} columnGap={3} rowGap={6} w="full">
             <GridItem>
               <FormControl isInvalid={errors.complain_desc?.message}>
-                <FormLabel>Description of complaine</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <Textarea
                   {...register("complain_desc", {
                     required: "cannot be empty",
@@ -394,7 +393,7 @@ const Towncounciladminform = (props) => {
                       ]
                     }
                   >
-                    <FormLabel>Recommendation / Remedial Action:</FormLabel>
+                    <FormLabel>Actions:</FormLabel>
                     <Textarea
                       type="text"
                       {...register(`defectslist[${index}].recommendation`, {
@@ -433,12 +432,12 @@ const Towncounciladminform = (props) => {
             <Button onClick={() => defectsAppend({})}>+</Button>
           </GridItem>
 
-          <Heading size="sm">PARTS TO REPLACED</Heading>
+          <Heading size="sm">SOLUTIONS</Heading>
           <Table size="sm" className="table-custom">
             <Thead>
               <Tr>
-                <Th> SOR Code</Th>
-                <Th>Item</Th>
+                <Th>SOR Code</Th>
+                <Th width="45%">Item</Th>
                 <Th>Quantity</Th>
                 {user.user.role === "towncouncilAdmin" || "superadmin" ? (
                   <>
