@@ -25,8 +25,6 @@ import {
 import { FaUserAlt, FaLock, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useForm , Controller} from "react-hook-form";
 
-
-
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 

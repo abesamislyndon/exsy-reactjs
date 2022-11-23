@@ -49,7 +49,7 @@ const Personnelform = (props) => {
     divisions: [],
     clientBelong: [],
     error: "",
-    userid: user.user.id
+    userid: user.user.id,
   });
 
   useEffect(() => {
@@ -189,12 +189,12 @@ const Personnelform = (props) => {
         autoComplete="off"
         encType="multipart/form-data"
       >
-            <Input
-                 type="hidden"
-                 value={user.user.id}
-                  {...register("userid")}
-                  onChange={handleChange("userid")}
-                />
+        <Input
+          type="hidden"
+          value={user.user.id}
+          {...register("userid")}
+          onChange={handleChange("userid")}
+        />
 
         <Stack spacing={35}>
           <GridItem>
@@ -279,7 +279,7 @@ const Personnelform = (props) => {
             <GridItem>
               <FormControl isInvalid={errors.block?.message}>
                 <FormLabel>Block:</FormLabel>
-              
+
                 <Input
                   {...register("block", { required: "cannot be empty" })}
                   onChange={handleChange("block")}
@@ -300,7 +300,7 @@ const Personnelform = (props) => {
                   <FormLabel>Address:</FormLabel>
                   <Input
                     {...register("address", { required: "cannot be empty" })}
-                    onChange={handleChange("address")}
+                    onChangeText={text=>setValue({...values, address: text})}
                   />
                 </FormControl>
                 <Text

@@ -85,7 +85,6 @@ const divBelong = async(divId) => {
 /*
    JOBINFO SERVICES
 */
-
 const API_URL_JOBINFO = "/jobinfo";
 const getAllJobinfo = async() => {
     try {
@@ -147,6 +146,8 @@ const createJobinfo = (division_name, client_name, dateentry, natureofcomplain, 
         });
     };
 };
+
+
 
 const updateJobinfo = (division_name, client_name, dateentry, natureofcomplain, address, block, gtotal, status, defectinfo, partsinfo, images, jobid) => {
     const jobinfo = {

@@ -36,7 +36,7 @@ function TowncouncilDashboard() {
    });
    
    React.useEffect(() => {
-    const fetchDetails = async () => {
+     const fetchDetails = async () => {
       try {
         const resDataService = await DataService.dashboard_total_Amount();
         const resChartService = await ChartService.Outstanding();

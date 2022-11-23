@@ -10,11 +10,7 @@ import "react-data-table-component-extensions/dist/index.css";
 
 function Reportresult(props) {
     const [valuesquery, setValuesQuery] = useState([]);
-
     const data = props.queryresult
-
-console.log(data)
-
     const columns = useMemo(
         () => [
 

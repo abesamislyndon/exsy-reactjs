@@ -30,12 +30,7 @@ function Completed() {
   const data = values.joblist;
   const columns = useMemo(
     () => [
-      {
-        name: "JW ID",
-        selector: (row) => row.id,
-        sortable: true,
-        width: "8rem",
-      },
+
       {
         name: "DATE",
         selector: (row) => row.dateentry,

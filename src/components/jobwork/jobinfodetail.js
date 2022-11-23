@@ -50,6 +50,7 @@ const Jobinfodetail = (props) => {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [pdfdetail, setPDF] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const BASE_URL_PHOTO = process.env.REACT_APP_BASE_URL_PHOTO;
 
   React.useEffect(() => {
     getJobDetail();
@@ -448,8 +449,8 @@ const Jobinfodetail = (props) => {
               <GridItem>
                 <SimpleReactLightbox>
                   <SRLWrapper>
-                    <a href={`${BASE_URL}${jobdetail.photo_url}`}>
-                      <Img src={`${BASE_URL}/${jobdetail.photo_url}`}  className="photo"/>
+                    <a href={`${BASE_URL_PHOTO}${jobdetail.photo_url}`}>
+                      <Img src={`${BASE_URL_PHOTO}${jobdetail.photo_url}`}  className="photo"/>
                     </a>
                   </SRLWrapper>
                 </SimpleReactLightbox>
